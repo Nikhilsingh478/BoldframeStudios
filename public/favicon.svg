@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 80 80">
+  <!-- Outer Circle -->
+  <circle cx="40" cy="40" r="38" stroke="#67E8F9" stroke-width="2" fill="none"/>
+  
+  <!-- Frame -->
+  <rect x="10" y="10" width="60" height="60" stroke="#5B3CFF" stroke-width="2" fill="none"/>
+
+  <!-- B Letter (Bolder) -->
+  <path d="M30 25 L30 55 M30 25 L45 25 C50 25 50 32 45 32 L30 32 M30 32 L47 32 C52 32 52 40 52 43 C52 48 48 55 42 55 L30 55"
+        stroke="#E6EEF3" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
