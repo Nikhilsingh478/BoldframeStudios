@@ -19,7 +19,7 @@ export default function App() {
 
   const openContactModal = () => setIsContactModalOpen(true);
 
-  // Load EmailJS and SweetAlert scripts
+  // Load SweetAlert script
   useEffect(() => {
     // SweetAlert2
     const sweetAlertScript = document.createElement('script');
@@ -27,20 +27,8 @@ export default function App() {
     sweetAlertScript.async = true;
     document.body.appendChild(sweetAlertScript);
 
-    // EmailJS
-    const emailScript = document.createElement('script');
-    emailScript.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-    emailScript.async = true;
-    emailScript.onload = () => {
-      (window as any).emailjs?.init('NwMPwoO6mOuR1IeSD');
-    };
-    document.body.appendChild(emailScript);
-
     return () => {
       document.body.removeChild(sweetAlertScript);
-      if (document.body.contains(emailScript)) {
-        document.body.removeChild(emailScript);
-      }
     };
   }, []);
 

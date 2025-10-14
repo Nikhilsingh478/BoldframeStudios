@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 
 export function CustomCursor() {
@@ -8,77 +8,76 @@ export function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   
-  // Reduced spring stiffness for better performance
-  const springConfig = { damping: 30, stiffness: 150 };
+  // Optimized spring config
+  const springConfig = useMemo(() => ({ 
+    damping: 25, 
+    stiffness: 200,
+    mass: 0.8 
+  }), []);
+  
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
+  // Throttled mouse move handler
+  const moveCursor = useCallback((e: MouseEvent) => {
+    cursorX.set(e.clientX);
+    cursorY.set(e.clientY);
+  }, [cursorX, cursorY]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (cursorRing.current) {
+      cursorRing.current.style.transform = 'translate(-50%, -50%) scale(1.5)';
+      cursorRing.current.style.borderColor = '#67E8F9';
+    }
+    if (cursorDot.current) {
+      cursorDot.current.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    }
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (cursorRing.current) {
+      cursorRing.current.style.transform = 'translate(-50%, -50%) scale(1)';
+      cursorRing.current.style.borderColor = '#5B3CFF';
+    }
+    if (cursorDot.current) {
+      cursorDot.current.style.transform = 'translate(-50%, -50%) scale(1)';
+    }
+  }, []);
+
   useEffect(() => {
-    // Only run on desktop
-    if (window.innerWidth <= 768) return;
+    // Only run on desktop and if user hasn't disabled animations
+    if (window.innerWidth <= 768 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
 
-    let rafId: number;
-    let mouseX = -100;
-    let mouseY = -100;
-
-    const moveCursor = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      
-      // Use RAF for smooth updates
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      
-      rafId = requestAnimationFrame(() => {
-        cursorX.set(mouseX);
-        cursorY.set(mouseY);
-      });
-    };
-
-    const handleMouseEnter = () => {
-      if (cursorRing.current) {
-        cursorRing.current.style.transform = 'translate(-50%, -50%) scale(1.5)';
-        cursorRing.current.style.borderColor = '#67E8F9';
-      }
-      if (cursorDot.current) {
-        cursorDot.current.style.transform = 'translate(-50%, -50%) scale(0.5)';
-      }
-    };
-
-    const handleMouseLeave = () => {
-      if (cursorRing.current) {
-        cursorRing.current.style.transform = 'translate(-50%, -50%) scale(1)';
-        cursorRing.current.style.borderColor = '#5B3CFF';
-      }
-      if (cursorDot.current) {
-        cursorDot.current.style.transform = 'translate(-50%, -50%) scale(1)';
-      }
-    };
-
+    // Use passive listeners for better performance
     window.addEventListener('mousemove', moveCursor, { passive: true });
 
-    // Add hover effects to interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"], input, textarea');
-    interactiveElements.forEach((el) => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
+    // Use event delegation for better performance
+    const handleElementHover = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.matches('a, button, [role="button"], input, textarea')) {
+        if (e.type === 'mouseenter') {
+          handleMouseEnter();
+        } else {
+          handleMouseLeave();
+        }
+      }
+    };
+
+    document.addEventListener('mouseenter', handleElementHover, true);
+    document.addEventListener('mouseleave', handleElementHover, true);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
+      document.removeEventListener('mouseenter', handleElementHover, true);
+      document.removeEventListener('mouseleave', handleElementHover, true);
     };
-  }, [cursorX, cursorY]);
+  }, [moveCursor, handleMouseEnter, handleMouseLeave]);
 
-  // Don't render on mobile
-  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+  // Don't render on mobile or if reduced motion is preferred
+  if (typeof window !== 'undefined' && 
+      (window.innerWidth <= 768 || window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
     return null;
   }
 

@@ -196,11 +196,17 @@
 
 html {
   font-size: var(--font-size);
-  /* Smooth scrolling removed for performance */
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Reduce motion for accessibility */
@@ -213,6 +219,18 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Performance hints */
+.glass {
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* Optimize images */
+img {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 200px;
 }
 
 /* Custom focus styles */
