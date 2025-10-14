@@ -196,7 +196,7 @@
 
 html {
   font-size: var(--font-size);
-  scroll-behavior: smooth;
+  /* Smooth scrolling removed for performance */
 }
 
 body {
@@ -222,11 +222,13 @@ body {
   box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.1);
 }
 
-/* Glass morphism utility */
+/* Glass morphism utility - optimized for performance */
 .glass {
   background: rgba(15, 19, 22, 0.6);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(124, 138, 150, 0.1);
+  will-change: auto;
 }
 
 /* Custom Scrollbar (Desktop Only) */
@@ -273,5 +275,31 @@ body {
   .cursor-dot,
   .cursor-ring {
     display: none !important;
+  }
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth transitions for buttons */
+@layer utilities {
+  .btn-hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(91, 60, 255, 0.2);
+  }
+
+  .btn-hover-lift:active {
+    transform: translateY(-2px);
   }
 }

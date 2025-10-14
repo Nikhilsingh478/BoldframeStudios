@@ -54,7 +54,8 @@ export function MagneticButton({
         stiffness: 120,
         mass: 0.5,
       }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ y: -4, boxShadow: '0 8px 16px rgba(91, 60, 255, 0.3)' }}
+      whileTap={{ scale: 0.95, y: -2 }}
     >
       {children}
     </motion.button>

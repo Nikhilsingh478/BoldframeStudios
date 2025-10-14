@@ -8,7 +8,8 @@ export function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   
-  const springConfig = { damping: 25, stiffness: 200 };
+  // Reduced spring stiffness for better performance
+  const springConfig = { damping: 30, stiffness: 150 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
@@ -16,9 +17,23 @@ export function CustomCursor() {
     // Only run on desktop
     if (window.innerWidth <= 768) return;
 
+    let rafId: number;
+    let mouseX = -100;
+    let mouseY = -100;
+
     const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Use RAF for smooth updates
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      
+      rafId = requestAnimationFrame(() => {
+        cursorX.set(mouseX);
+        cursorY.set(mouseY);
+      });
     };
 
     const handleMouseEnter = () => {
@@ -41,7 +56,7 @@ export function CustomCursor() {
       }
     };
 
-    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousemove', moveCursor, { passive: true });
 
     // Add hover effects to interactive elements
     const interactiveElements = document.querySelectorAll('a, button, [role="button"], input, textarea');
@@ -52,6 +67,9 @@ export function CustomCursor() {
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       interactiveElements.forEach((el) => {
         el.removeEventListener('mouseenter', handleMouseEnter);
         el.removeEventListener('mouseleave', handleMouseLeave);

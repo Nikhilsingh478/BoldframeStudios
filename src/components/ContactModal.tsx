@@ -10,9 +10,16 @@ interface ContactModalProps {
   onClose: () => void;
 }
 
+// EmailJS Configuration
+const EMAILJS_PUBLIC_KEY = 'NwMPwoO6mOuR1IeSD';
+const EMAILJS_SERVICE_ID = 'service_7ys7xff';
+const EMAILJS_ADMIN_TEMPLATE_ID = 'template_hl5a33o';
+const EMAILJS_CLIENT_TEMPLATE_ID = 'template_tgqw9ag';
+
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     phone: '',
     message: '',
   });
@@ -48,83 +55,87 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setIsSubmitting(true);
 
     try {
-      // EmailJS configuration (set to null to disable)
-      const EMAILJS_ENABLED = false; // Set to true and configure credentials to enable
-      const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY_HERE';
-      const EMAILJS_SERVICE_ID = 'service_7ys7xff';
-      const EMAILJS_TEMPLATE_ID = 'template_hl5a33o';
+      const emailjs = (window as any).emailjs;
       
-      if (EMAILJS_ENABLED && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY_HERE') {
-        // Only attempt EmailJS if explicitly enabled with valid credentials
-        const emailjs = (window as any).emailjs;
-        
-        if (emailjs && typeof emailjs.send === 'function') {
-          await emailjs.send(
-            EMAILJS_SERVICE_ID,
-            EMAILJS_TEMPLATE_ID,
-            {
-              name: formData.name,
-              phone: formData.phone,
-              message: formData.message,
-              title: 'New Contact Form Submission',
-            },
-            EMAILJS_PUBLIC_KEY
-          );
-          console.log('✅ Email sent successfully via EmailJS');
-        } else {
-          throw new Error('EmailJS not properly loaded');
-        }
-      } else {
-        // Demo mode: Log to console
-        console.log('📧 Contact Form Submission (Demo Mode):', {
-          name: formData.name,
-          phone: formData.phone,
-          message: formData.message,
-          timestamp: new Date().toISOString(),
-          note: 'Set EMAILJS_ENABLED to true in ContactModal.tsx to enable real email sending'
-        });
-        
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
+      if (!emailjs || typeof emailjs.send !== 'function') {
+        throw new Error('EmailJS not loaded. Please refresh the page and try again.');
       }
+
+      console.log('📧 Sending emails...');
+
+      // Send both emails in parallel
+      await Promise.all([
+        // 1️⃣ Admin notification email
+        emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_ADMIN_TEMPLATE_ID,
+          {
+            to_email: 'nikhilwebworks@gmail.com',
+            from_name: formData.name,
+            from_email: formData.email,
+            phone: formData.phone || 'Not provided',
+            message: formData.message,
+            reply_to: formData.email,
+          },
+          EMAILJS_PUBLIC_KEY
+        ).then((response: any) => {
+          console.log('✅ Admin email sent:', response);
+          return response;
+        }),
+
+        // 2️⃣ Client auto-reply email
+        emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_CLIENT_TEMPLATE_ID,
+          {
+            to_email: formData.email,
+            to_name: formData.name,
+            from_name: 'BoldFrame Studios',
+            reply_to: 'nikhilwebworks@gmail.com',
+          },
+          EMAILJS_PUBLIC_KEY
+        ).then((response: any) => {
+          console.log('✅ Client auto-reply sent:', response);
+          return response;
+        }),
+      ]);
+
+      console.log('🎉 All emails sent successfully!');
       
       // Show success message
       if ((window as any).Swal) {
         await (window as any).Swal.fire({
           icon: 'success',
-          title: 'Message Sent!',
-          html: `<p style="color: #E6EEF3;">We'll get back to you within 24 hours.</p>${
-            !EMAILJS_ENABLED ? '<p style="color: #7C8A96; font-size: 0.875rem; margin-top: 8px;">(Demo mode - check console for submission data)</p>' : ''
-          }`,
+          title: '✅ Message Sent!',
+          html: '<p style="color: #E6EEF3;">We\'ve received your details and will get back to you within 24 hours.</p>',
           background: '#0F1316',
           color: '#E6EEF3',
           confirmButtonColor: '#5B3CFF',
           confirmButtonText: 'Great!',
           showConfirmButton: true,
-          timer: undefined,
         });
       } else {
-        alert('Message sent successfully! We\'ll get back to you soon.');
+        alert('Message sent successfully! Check your email for confirmation.');
       }
 
       // Reset form and close modal
-      setFormData({ name: '', phone: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', message: '' });
       onClose();
-    } catch (error) {
-      console.error('Error submitting form:', error);
+    } catch (error: any) {
+      console.error('❌ Error submitting form:', error);
       
       // Show error message
       if ((window as any).Swal) {
         (window as any).Swal.fire({
           icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong. Please try again or contact us directly.',
+          title: '⚠️ Oops...',
+          text: 'Something went wrong. Please try again or contact us directly at nikhilwebworks@gmail.com',
           background: '#0F1316',
           color: '#E6EEF3',
           confirmButtonColor: '#5B3CFF',
         });
       } else {
-        alert('Failed to send message. Please try again.');
+        alert('Failed to send message. Please email us at nikhilwebworks@gmail.com');
       }
     } finally {
       setIsSubmitting(false);
@@ -141,7 +152,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/80 z-50"
+            style={{ backdropFilter: 'blur(4px)' }}
           />
 
           {/* Modal */}
@@ -150,7 +162,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 400 }}
               className="glass rounded-2xl p-8 max-w-lg w-full relative"
               onClick={(e) => e.stopPropagation()}
             >
@@ -191,23 +203,37 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
 
                 <div>
+                  <Label htmlFor="email" className="text-[#E6EEF3] mb-2 block">
+                    Email *
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="bg-[#0F1316] border-[#7C8A96]/30 text-[#E6EEF3] focus:border-[#67E8F9]"
+                    placeholder="you@example.com"
+                  />
+                </div>
+
+                <div>
                   <Label htmlFor="phone" className="text-[#E6EEF3] mb-2 block">
-                    Phone *
+                    Phone Number
                   </Label>
                   <Input
                     id="phone"
                     type="tel"
-                    required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="bg-[#0F1316] border-[#7C8A96]/30 text-[#E6EEF3] focus:border-[#67E8F9]"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+1 (555) 000-0000 (optional)"
                   />
                 </div>
 
                 <div>
                   <Label htmlFor="message" className="text-[#E6EEF3] mb-2 block">
-                    Project Details *
+                    Project Details / Message *
                   </Label>
                   <Textarea
                     id="message"
@@ -222,9 +248,10 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-[#5B3CFF] to-[#7055ff] text-[#E6EEF3] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#5B3CFF]/30"
+                  className="w-full py-4 bg-gradient-to-r from-[#5B3CFF] to-[#7055ff] text-[#E6EEF3] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#5B3CFF]/30 flex items-center justify-center"
                   whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                  style={{ fontWeight: 600 }}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </motion.button>

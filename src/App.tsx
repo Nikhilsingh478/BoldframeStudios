@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { Loader } from './components/Loader';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Services } from './components/Services';
+import { ServicesCarousel } from './components/ServicesCarousel';
 import { Work } from './components/Work';
 import { Playroom } from './components/Playroom';
 import { Testimonials } from './components/Testimonials';
 import { About } from './components/About';
 import { ContactModal } from './components/ContactModal';
 import { FloatingContact } from './components/FloatingContact';
+import { BackToTop } from './components/BackToTop';
 import { Footer } from './components/Footer';
 import { CustomCursor } from './components/CustomCursor';
 
@@ -26,20 +27,20 @@ export default function App() {
     sweetAlertScript.async = true;
     document.body.appendChild(sweetAlertScript);
 
-    // EmailJS (optional - only load if you have valid credentials)
-    // Uncomment and add your public key when ready:
-    /*
+    // EmailJS
     const emailScript = document.createElement('script');
     emailScript.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
     emailScript.async = true;
     emailScript.onload = () => {
-      (window as any).emailjs?.init('YOUR_PUBLIC_KEY_HERE');
+      (window as any).emailjs?.init('NwMPwoO6mOuR1IeSD');
     };
     document.body.appendChild(emailScript);
-    */
 
     return () => {
       document.body.removeChild(sweetAlertScript);
+      if (document.body.contains(emailScript)) {
+        document.body.removeChild(emailScript);
+      }
     };
   }, []);
 
@@ -53,7 +54,7 @@ export default function App() {
           <Header onContactClick={openContactModal} />
           <main>
             <Hero onContactClick={openContactModal} />
-            <Services />
+            <ServicesCarousel />
             <Playroom />
             <Work />
             <Testimonials />
@@ -67,6 +68,7 @@ export default function App() {
           />
           
           <FloatingContact onContactClick={openContactModal} />
+          <BackToTop />
         </div>
       )}
     </>
