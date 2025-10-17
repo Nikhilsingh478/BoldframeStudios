@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useRef, useState, MouseEvent } from 'react';
+import { useRef, useState, MouseEvent, useCallback, memo } from 'react';
 
 interface MagneticButtonProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface MagneticButtonProps {
   strength?: number;
 }
 
-export function MagneticButton({
+export const MagneticButton = memo(function MagneticButton({
   children,
   className = '',
   onClick,
@@ -17,7 +17,7 @@ export function MagneticButton({
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleMouseMove = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     if (!ref.current) return;
 
     const rect = ref.current.getBoundingClientRect();
@@ -27,15 +27,18 @@ export function MagneticButton({
     const distanceX = e.clientX - centerX;
     const distanceY = e.clientY - centerY;
 
-    setPosition({
-      x: distanceX * strength,
-      y: distanceY * strength,
+    // Use RAF to throttle updates
+    requestAnimationFrame(() => {
+      setPosition({
+        x: distanceX * strength,
+        y: distanceY * strength,
+      });
     });
-  };
+  }, [strength]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setPosition({ x: 0, y: 0 });
-  };
+  }, []);
 
   return (
     <motion.button
@@ -54,10 +57,10 @@ export function MagneticButton({
         stiffness: 120,
         mass: 0.5,
       }}
-      whileHover={{ y: -4, boxShadow: '0 8px 16px rgba(91, 60, 255, 0.3)' }}
-      whileTap={{ scale: 0.95, y: -2 }}
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.95 }}
     >
       {children}
     </motion.button>
   );
-}
+});

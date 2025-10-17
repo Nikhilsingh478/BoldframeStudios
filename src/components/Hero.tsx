@@ -27,36 +27,17 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Professional animated background - geometric shapes */}
-      <div className="absolute inset-0 opacity-20">
-        {/* Main gradient orb */}
+      {/* Professional animated background - geometric shapes - optimized */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        {/* Main gradient orb - reduced blur for performance */}
         <motion.div
-          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px]"
+          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[80px]"
           style={{
             background: 'radial-gradient(circle, rgba(91, 60, 255, 0.3), transparent 70%)',
           }}
           animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Secondary gradient orb */}
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[100px]"
-          style={{
-            background: 'radial-gradient(circle, rgba(103, 232, 249, 0.25), transparent 70%)',
-          }}
-          animate={{
             scale: [1, 1.15, 1],
-            x: [0, -40, 0],
-            y: [0, 40, 0],
+            x: [0, 40, 0],
           }}
           transition={{
             duration: 15,
@@ -65,15 +46,31 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
           }}
         />
 
-        {/* Geometric shapes */}
+        {/* Secondary gradient orb - reduced blur for performance */}
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[80px]"
+          style={{
+            background: 'radial-gradient(circle, rgba(103, 232, 249, 0.25), transparent 70%)',
+          }}
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, -30, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+
+        {/* Geometric shapes - simplified animations for performance */}
         <motion.div
           className="absolute top-1/3 right-1/3 w-32 h-32 border border-[#5B3CFF]/20 rounded-lg"
           animate={{
-            rotate: [0, 90, 0],
-            scale: [1, 1.1, 1],
+            rotate: [0, 360],
           }}
           transition={{
-            duration: 20,
+            duration: 25,
             repeat: Infinity,
             ease: 'linear',
           }}
@@ -83,30 +80,16 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
           className="absolute bottom-1/3 left-1/4 w-24 h-24 border border-[#67E8F9]/20"
           style={{ clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)' }}
           animate={{
-            rotate: [0, -90, 0],
-            y: [0, -20, 0],
+            rotate: [0, -360],
           }}
           transition={{
-            duration: 18,
+            duration: 30,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: 'linear',
           }}
         />
 
-        <motion.div
-          className="absolute top-2/3 right-1/4 w-20 h-20 rounded-full border border-[#5B3CFF]/30"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Floating abstract lines */}
+        {/* Floating abstract lines - static for better performance */}
         <svg className="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
           <motion.path
             d="M 100 300 Q 300 200 500 300"
@@ -115,7 +98,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 0.3 }}
-            transition={{ duration: 3, delay: 0.5 }}
+            transition={{ duration: 2.5, delay: 0.3 }}
           />
           <motion.path
             d="M 600 400 Q 800 300 1000 400"
@@ -124,7 +107,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 0.3 }}
-            transition={{ duration: 3, delay: 1 }}
+            transition={{ duration: 2.5, delay: 0.5 }}
           />
         </svg>
       </div>
@@ -213,16 +196,9 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
               transition={{ type: 'spring', damping: 20, stiffness: 100 }}
               className="relative perspective-1000"
             >
-              {/* Background Layer - Blurred gradient with subtle animation */}
-              <div className="absolute -inset-8 opacity-40">
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-[#5B3CFF]/30 via-[#67E8F9]/20 to-[#5B3CFF]/30 blur-3xl"
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 5, 0],
-                  }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                />
+              {/* Background Layer - Static gradient for better performance */}
+              <div className="absolute -inset-8 opacity-40 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#5B3CFF]/30 via-[#67E8F9]/20 to-[#5B3CFF]/30 blur-3xl" />
               </div>
 
               {/* Main Device Container */}
@@ -343,22 +319,20 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
                 </div>
               </div>
 
-              {/* Floating elements around device */}
+              {/* Floating elements around device - simplified animation */}
               <motion.div
-                className="absolute -top-4 -right-4 w-16 h-16 rounded-lg bg-gradient-to-br from-[#5B3CFF] to-[#7055ff] opacity-60 blur-xl"
+                className="absolute -top-4 -right-4 w-16 h-16 rounded-lg bg-gradient-to-br from-[#5B3CFF] to-[#7055ff] opacity-60 blur-xl pointer-events-none"
                 animate={{
-                  y: [0, -10, 0],
-                  rotate: [0, 5, 0],
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <motion.div
-                className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-gradient-to-br from-[#67E8F9] to-[#85f0ff] opacity-60 blur-xl"
-                animate={{
-                  y: [0, 10, 0],
-                  scale: [1, 1.1, 1],
+                  y: [0, -8, 0],
                 }}
                 transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-gradient-to-br from-[#67E8F9] to-[#85f0ff] opacity-60 blur-xl pointer-events-none"
+                animate={{
+                  y: [0, 8, 0],
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
               />
             </motion.div>
           </motion.div>

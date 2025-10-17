@@ -10,11 +10,11 @@ interface ContactModalProps {
   onClose: () => void;
 }
 
-// EmailJS Configuration
-const EMAILJS_PUBLIC_KEY = 'NwMPwoO6mOuR1IeSD';
-const EMAILJS_SERVICE_ID = 'service_7ys7xff';
-const EMAILJS_ADMIN_TEMPLATE_ID = 'template_hl5a33o';
-const EMAILJS_CLIENT_TEMPLATE_ID = 'template_tgqw9ag';
+// EmailJS Configuration - Use environment variables for security
+const EMAILJS_PUBLIC_KEY = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
+const EMAILJS_SERVICE_ID = import.meta.env?.VITE_EMAILJS_SERVICE_ID || 'service_7ys7xff';
+const EMAILJS_ADMIN_TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_ADMIN_TEMPLATE_ID || 'template_hl5a33o';
+const EMAILJS_CLIENT_TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_CLIENT_TEMPLATE_ID || 'template_tgqw9ag';
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
@@ -24,27 +24,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Initialize EmailJS
-  useEffect(() => {
-    // Load EmailJS from CDN
-    const loadEmailJS = async () => {
-      if (!(window as any).emailjs) {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-        script.async = true;
-        document.head.appendChild(script);
-        
-        script.onload = () => {
-          (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
-        };
-      } else {
-        (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
-      }
-    };
-    
-    loadEmailJS();
-  }, []);
 
   // Trap focus inside modal
   useEffect(() => {
@@ -82,24 +61,48 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         throw new Error('EmailJS not loaded. Please refresh the page and try again.');
       }
 
-      console.log('📧 Sending message...');
+      console.log('📧 Sending emails...');
 
-      // Send only admin notification email (much faster)
-      const adminResponse = await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_ADMIN_TEMPLATE_ID,
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone || 'Not provided',
-          message: formData.message,
-        },
-        EMAILJS_PUBLIC_KEY
-      );
+      // Send both emails in parallel
+      await Promise.all([
+        // 1️⃣ Admin notification email
+        emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_ADMIN_TEMPLATE_ID,
+          {
+            to_email: 'nikhilwebworks@gmail.com',
+            from_name: formData.name,
+            from_email: formData.email,
+            phone: formData.phone || 'Not provided',
+            message: formData.message,
+            reply_to: formData.email,
+          },
+          EMAILJS_PUBLIC_KEY
+        ).then((response: any) => {
+          console.log('✅ Admin email sent:', response);
+          return response;
+        }),
+
+        // 2️⃣ Client auto-reply email
+        emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_CLIENT_TEMPLATE_ID,
+          {
+            to_email: formData.email,
+            to_name: formData.name,
+            from_name: 'BoldFrame Studios',
+            reply_to: 'nikhilwebworks@gmail.com',
+          },
+          EMAILJS_PUBLIC_KEY
+        ).then((response: any) => {
+          console.log('✅ Client auto-reply sent:', response);
+          return response;
+        }),
+      ]);
+
+      console.log('🎉 All emails sent successfully!');
       
-      console.log('✅ Message sent:', adminResponse);
-
-      // Show success message immediately
+      // Show success message
       if ((window as any).Swal) {
         await (window as any).Swal.fire({
           icon: 'success',
@@ -111,17 +114,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
           confirmButtonText: 'Great!',
           showConfirmButton: true,
         });
-        
-        // Reset form and close modal after success popup
-        setFormData({ name: '', email: '', phone: '', message: '' });
-        onClose();
       } else {
-        // Fallback if SweetAlert is not available
-        alert('Message sent successfully! We will get back to you within 24 hours.');
-        setFormData({ name: '', email: '', phone: '', message: '' });
-        onClose();
+        alert('Message sent successfully! Check your email for confirmation.');
       }
-      
+
+      // Reset form and close modal
+      setFormData({ name: '', email: '', phone: '', message: '' });
+      onClose();
     } catch (error: any) {
       console.error('❌ Error submitting form:', error);
       

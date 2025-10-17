@@ -67,16 +67,14 @@ export function ServicesCarousel() {
 
   return (
     <section id="services" className="py-32 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 opacity-10">
+      {/* Background gradient - optimized */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
         <motion.div
-          className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#5B3CFF] rounded-full blur-[120px]"
+          className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#5B3CFF] rounded-full blur-[80px]"
           animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 30, 0],
-            y: [0, -20, 0],
+            scale: [1, 1.15, 1],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
 
