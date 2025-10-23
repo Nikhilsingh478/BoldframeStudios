@@ -14,7 +14,6 @@ interface ContactModalProps {
 const EMAILJS_PUBLIC_KEY = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
 const EMAILJS_SERVICE_ID = import.meta.env?.VITE_EMAILJS_SERVICE_ID || 'service_7ys7xff';
 const EMAILJS_ADMIN_TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_ADMIN_TEMPLATE_ID || 'template_hl5a33o';
-const EMAILJS_CLIENT_TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_CLIENT_TEMPLATE_ID || 'template_tgqw9ag';
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
@@ -61,46 +60,24 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         throw new Error('EmailJS not loaded. Please refresh the page and try again.');
       }
 
-      console.log('📧 Sending emails...');
+      console.log('📧 Sending admin email...');
 
-      // Send both emails in parallel
-      await Promise.all([
-        // 1️⃣ Admin notification email
-        emailjs.send(
-          EMAILJS_SERVICE_ID,
-          EMAILJS_ADMIN_TEMPLATE_ID,
-          {
-            to_email: 'nikhilwebworks@gmail.com',
-            from_name: formData.name,
-            from_email: formData.email,
-            phone: formData.phone || 'Not provided',
-            message: formData.message,
-            reply_to: formData.email,
-          },
-          EMAILJS_PUBLIC_KEY
-        ).then((response: any) => {
-          console.log('✅ Admin email sent:', response);
-          return response;
-        }),
+      // Send only admin notification email
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_ADMIN_TEMPLATE_ID,
+        {
+          to_email: 'nikhilwebworks@gmail.com',
+          from_name: formData.name,
+          from_email: formData.email,
+          phone: formData.phone || 'Not provided',
+          message: formData.message,
+          reply_to: formData.email,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
 
-        // 2️⃣ Client auto-reply email
-        emailjs.send(
-          EMAILJS_SERVICE_ID,
-          EMAILJS_CLIENT_TEMPLATE_ID,
-          {
-            to_email: formData.email,
-            to_name: formData.name,
-            from_name: 'BoldFrame Studios',
-            reply_to: 'nikhilwebworks@gmail.com',
-          },
-          EMAILJS_PUBLIC_KEY
-        ).then((response: any) => {
-          console.log('✅ Client auto-reply sent:', response);
-          return response;
-        }),
-      ]);
-
-      console.log('🎉 All emails sent successfully!');
+      console.log('✅ Admin email sent successfully:', response);
       
       // Show success message
       if ((window as any).Swal) {
