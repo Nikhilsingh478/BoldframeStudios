@@ -6,72 +6,194 @@ import { CaseStudyModal } from './CaseStudyModal';
 
 const projects = [
   {
-    title: 'Zenith Commerce',
-    category: 'E-Commerce Platform',
-    image: 'https://images.unsplash.com/photo-1658297063569-162817482fb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjB3ZWJzaXRlfGVufDF8fHx8MTc2MDMzOTkwNnww&ixlib=rb-4.1.0&q=80&w=1080',
-    heroImage: 'https://images.unsplash.com/photo-1658297063569-162817482fb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjB3ZWJzaXRlfGVufDF8fHx8MTc2MDMzOTkwNnww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'A complete e-commerce rebuild focused on conversion optimization and blazing-fast performance.',
-    timeline: '3 months',
-    tech: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Stripe', 'Vercel'],
-    challenge: 'The client had a legacy PHP site with poor mobile experience and a 12s load time that was killing conversions.',
-    solution: 'We built a modern JAMstack solution with server-side rendering, edge caching, and optimized images to deliver sub-2s page loads.',
+    title: 'Huuman',
+    category: 'Web App (Frontend)',
+    image: '/p1.webp',
+    heroImage: '/p1.webp',
+    description:
+      "A redesigned concept for my cousin's personal brand 'Huuman'. Frontend only — HTML, CSS, JS with GSAP animations and Shery.js creative effects. The project focuses on creative, responsive GSAP-powered motion and optimized hero imagery.",
+    timeline: '2–3 months',
+    tech: ['HTML', 'CSS', 'JavaScript', 'GSAP', 'Tailwind CSS', 'Shery.js'],
+    challenge:
+      'Many large images and a video — optimizing them while keeping responsive GSAP animations intact.',
+    solution:
+      'Used lazy-loading, converted assets to .webp, and applied targeted image optimization for the hero to reduce payload while preserving visual fidelity.',
     outcomes: [
-      { metric: 'Conversion Rate', value: '+45%' },
-      { metric: 'Page Load', value: '1.8s' },
-      { metric: 'Mobile Traffic', value: '+68%' },
+      { metric: 'LCP', value: '2.24 s' },
+      { metric: 'CLS', value: '0.00' },
+      { metric: 'INP', value: '24 ms' },
+      { metric: 'LCP Element', value: 'h1' },
+      { metric: 'Worst cluster', value: '5 shifts' },
     ],
-    gallery: [],
+    gallery: ['/p1.webp', '/p2.webp', '/p3.webp'],
     highlights: [
-      '45% increase in conversion rate',
-      'Sub-2s page load time',
-      'Fully responsive across all devices',
+      'Full GSAP + Shery.js creative animations',
+      'Hero image optimized (.webp + lazy-loading)',
+      'Responsive animation behaviour across viewports',
     ],
+    url: 'https://huuman-responsive-updated.vercel.app/',
   },
+
   {
-    title: 'Pulse Fitness',
-    category: 'Mobile Application',
-    image: 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBpbnRlcmZhY2V8ZW58MXx8fHwxNzYwMzQxMzExfDA&ixlib=rb-4.1.0&q=80&w=1080',
-    heroImage: 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBpbnRlcmZhY2V8ZW58MXx8fHwxNzYwMzQxMzExfDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'A comprehensive fitness tracking platform with real-time social features and personalized workout plans.',
-    timeline: '4 months',
-    tech: ['React Native', 'Node.js', 'PostgreSQL', 'WebSockets', 'AWS'],
-    challenge: 'Building a performant mobile app with real-time features while maintaining battery efficiency and offline support.',
-    solution: 'Implemented efficient state management, optimistic UI updates, and smart caching strategies for seamless offline-first experience.',
+    title: 'Roseberry Massage Spa',
+    category: 'Landing / Web App (Spa)',
+    image: '/p2.webp',
+    heroImage: '/p2.webp',
+    description:
+      'Redesigned landing page for a London spa — booking-focused web app with contact form, WhatsApp CTA, service pages and session booking flows. UI, palette and motion crafted to drive bookings and brand trust.',
+    timeline: '1 month',
+    tech: ['HTML', 'CSS', 'JavaScript', 'GSAP', 'Tailwind CSS'],
+    challenge:
+      'Creating a professional, conversion-focused design where every animation and pixel has purpose — not just visual flair.',
+    solution:
+      'Deliberate UI decisions, purposeful motion language, and testing visuals with people to ensure the design drives trust and conversions.',
     outcomes: [
-      { metric: 'Active Users', value: '100K+' },
-      { metric: 'Session Time', value: '28min' },
-      { metric: 'Retention', value: '84%' },
+      { metric: 'LCP', value: '2.33 s' },
+      { metric: 'CLS', value: '0' },
+      { metric: 'INP', value: '40 ms' },
+      // {
+      //   metric: 'Notes',
+      //   value:
+      //     'Highly praised by peers — strong brand identity and meaningful animation',
+      // },
     ],
-    gallery: [],
+    gallery: ['/p4.webp', '/p5.webp', '/p6.webp'],
     highlights: [
-      '100K+ active users',
-      'Real-time workout tracking',
-      'Seamless social integration',
+      'Booking-first landing flow with clear CTAs (WhatsApp + form)',
+      'Professional pixel-level UI & purposeful animations',
+      'Designed to increase bookings and brand recognition',
     ],
+    url: 'https://spas-one.vercel.app/',
   },
+
   {
-    title: 'Nexus Dashboard',
-    category: 'Web Application',
-    image: 'https://images.unsplash.com/photo-1677214467820-ab069619bbb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3ZWIlMjBkZXNpZ258ZW58MXx8fHwxNzYwMzAwMTQ5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    heroImage: 'https://images.unsplash.com/photo-1677214467820-ab069619bbb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3ZWIlMjBkZXNpZ258ZW58MXx8fHwxNzYwMzAwMTQ5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'An enterprise analytics dashboard handling millions of data points with custom visualizations and real-time updates.',
-    timeline: '5 months',
-    tech: ['React', 'D3.js', 'GraphQL', 'Redis', 'Docker'],
-    challenge: 'Displaying massive datasets with complex visualizations while maintaining 60fps performance and sub-second query times.',
-    solution: 'Implemented virtual scrolling, data pagination, worker threads for calculations, and smart caching with incremental loading.',
+    title: 'HBL (Company Redesign)',
+    category: 'Web App / Corporate Website',
+    image: '/p3.webp',
+    heroImage: '/p3.webp',
+    description:
+      'A clean, minimal redesign for HBL — modernized UI and color palette that communicates the brand’s core offerings with simplicity and clarity. Built to be friendly across devices while keeping a creative touch.',
+    timeline: '2 weeks',
+    tech: [
+      'HTML',
+      'CSS',
+      'JavaScript',
+      'Tailwind CSS',
+      'React',
+      'TypeScript',
+      'Locomotive Scroll',
+    ],
+    challenge:
+      'Making a design that looks simple but has clear personality — minimal UI that remains highly usable across devices.',
+    solution:
+      'Focused on typography, spacing and micro-interactions. Added smooth locomotion scroll for polished UX without overwhelming the content.',
     outcomes: [
-      { metric: 'Load Time', value: '-50%' },
-      { metric: 'Data Points', value: '10M+' },
-      { metric: 'User Satisfaction', value: '96%' },
+      { metric: 'LCP', value: '0.98 s' },
+      { metric: 'CLS', value: '0' },
+      { metric: 'INP', value: '40 ms' },
     ],
-    gallery: [],
+    gallery: ['/p7.webp', '/p8.webp', '/p9.webp'],
     highlights: [
-      'Enterprise-grade analytics',
-      'Custom data visualization',
-      '50% reduction in load time',
+      'Minimal, professional corporate UI',
+      'Fast performance and crisp LCP < 1s',
+      'Smooth scrolling + thoughtful micro-interactions',
     ],
+    url: 'https://hbl-eight.vercel.app/',
+  },
+
+  {
+    title: 'Organic Green Tea Store',
+    category: 'E-commerce Web App (frontend ready)',
+    image: '/p4.webp',
+    heroImage: '/p4.webp',
+    description:
+      'An e-commerce app focused on organic tea — frontend (user & admin) complete. User-facing sales-driven UI inspired by successful organic brands; admin dashboard with hyper-detailed tracking and graphs.',
+    timeline: 'In progress (frontend complete)',
+    tech: [
+      'HTML',
+      'CSS',
+      'JavaScript',
+      'Tailwind CSS',
+      'React',
+      'TypeScript',
+      'shadcn/ui',
+    ],
+    challenge:
+      'Design a storefront and admin interface that are both sales-driven and easy to manage — complex dashboards and clear user flows.',
+    solution:
+      'Built a conversion-first UI for users and a focused admin dashboard with graphs and tracking to simplify store operations.',
+    outcomes: [
+      { metric: 'User LCP', value: '0.42 s' },
+      { metric: 'User CLS', value: '0' },
+      { metric: 'User INP', value: '8 ms' },
+      { metric: 'Admin LCP', value: '0.99 s' },
+      { metric: 'Admin CLS', value: '0' },
+      { metric: 'Admin INP', value: '16 ms' },
+    ],
+    gallery: ['/p10.webp', '/p11.webp', '/p12.webp'],
+    highlights: [
+      'Frontend ready for both user and admin',
+      'Sales-driven UI + intuitive checkout flows',
+      'Admin dashboard with actionable analytics',
+    ],
+    url: 'https://organic-india-clone-garden.vercel.app/',
+  },
+
+  {
+    title: 'Halloween — Creative Festive Project',
+    category: 'Creative / Festive Webpage',
+    image: '/p5.webp',
+    heroImage: '/p5.webp',
+    description:
+      'A Halloween-themed creative webpage built for fun/seasonal showcase. Focused on spooky micro-interactions and custom GSAP motion.',
+    timeline: '2 weeks',
+    tech: ['HTML', 'CSS', 'JavaScript', 'GSAP'],
+    challenge:
+      'Deliver playful, performant animations without hurting page load or responsiveness.',
+    solution:
+      'Optimized assets, tuned animation timelines, and kept DOM light for smooth playback.',
+    outcomes: [
+      { metric: 'LCP', value: '0.88 s' },
+      { metric: 'CLS', value: '0.00' },
+      { metric: 'INP', value: '48 ms' },
+    ],
+    gallery: ['/p13.webp', '/p14.webp', '/p15.webp'],
+    highlights: [
+      'Seasonal creative motion using GSAP',
+      'Lightweight and performant',
+      'Perfect for portfolio/showcase',
+    ],
+    url: 'https://halloween-two-rho.vercel.app/',
+  },
+
+  {
+    title: 'Christmas — Parallax & Festive Webpage',
+    category: 'Creative / Festive Webpage',
+    image: '/p6.webp',
+    heroImage: '/p6.webp',
+    description:
+      'A Christmas-themed page with parallax effects (Rellax.js) and layered motion. Built to showcase parallax composition and polished festival visuals.',
+    timeline: '2 weeks',
+    tech: ['HTML', 'CSS', 'JavaScript', 'GSAP', 'Rellax.js'],
+    challenge:
+      'Create immersive parallax while keeping performance optimal on a variety of devices.',
+    solution:
+      'Layered images, optimized assets, and limited parallax intensity on small screens for stable UX.',
+    outcomes: [
+      { metric: 'LCP', value: '0.53 s' },
+      { metric: 'CLS', value: '0' },
+      { metric: 'INP', value: '0 ms' },
+    ],
+    gallery: ['/p16.webp', '/p17.webp', '/p18.webp'],
+    highlights: [
+      'Polished parallax composition',
+      'Strong festive visuals and motion',
+      'Fast LCP and stable layout',
+    ],
+    url: 'https://christmas-webpage.vercel.app/',
   },
 ];
+
 
 export function Work() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);

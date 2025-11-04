@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, ArrowRight } from 'lucide-react';
+import { X, ArrowRight } from 'lucide-react';
 import { useEffect } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
@@ -18,6 +18,7 @@ interface CaseStudy {
     value: string;
   }[];
   gallery: string[];
+  url?: string; // Optional live site URL
 }
 
 interface CaseStudyModalProps {
@@ -28,12 +29,7 @@ interface CaseStudyModalProps {
 
 export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalProps) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
+    document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
@@ -45,7 +41,6 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
         onClose();
       }
     };
-
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
@@ -106,7 +101,7 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
                         {caseStudy.timeline}
                       </span>
                     </div>
-                    <h2 className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
+                    <h2 className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4 font-semibold">
                       {caseStudy.title}
                     </h2>
                     <p className="text-[#98A3AA] text-lg leading-relaxed">
@@ -116,7 +111,7 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
 
                   {/* Tech Stack */}
                   <div className="mb-12">
-                    <h3 className="text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
+                    <h3 className="text-[#E6EEF3] mb-4 font-semibold">
                       Tech Stack
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -134,17 +129,13 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
                   {/* Challenge & Solution */}
                   <div className="grid md:grid-cols-2 gap-8 mb-12">
                     <div>
-                      <h3 className="text-[#E6EEF3] mb-3" style={{ fontWeight: 600 }}>
-                        Challenge
-                      </h3>
+                      <h3 className="text-[#E6EEF3] mb-3 font-semibold">Challenge</h3>
                       <p className="text-[#98A3AA] leading-relaxed">
                         {caseStudy.challenge}
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-[#E6EEF3] mb-3" style={{ fontWeight: 600 }}>
-                        Solution
-                      </h3>
+                      <h3 className="text-[#E6EEF3] mb-3 font-semibold">Solution</h3>
                       <p className="text-[#98A3AA] leading-relaxed">
                         {caseStudy.solution}
                       </p>
@@ -153,7 +144,7 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
 
                   {/* Outcomes */}
                   <div className="mb-12">
-                    <h3 className="text-[#E6EEF3] mb-6" style={{ fontWeight: 600 }}>
+                    <h3 className="text-[#E6EEF3] mb-6 font-semibold">
                       Key Outcomes
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -165,7 +156,7 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
                           transition={{ delay: index * 0.1 }}
                           className="glass p-6 rounded-xl text-center"
                         >
-                          <div className="text-3xl text-[#5B3CFF] mb-2" style={{ fontWeight: 700 }}>
+                          <div className="text-3xl text-[#5B3CFF] mb-2 font-bold">
                             {outcome.value}
                           </div>
                           <div className="text-[#98A3AA] text-sm">
@@ -176,17 +167,21 @@ export function CaseStudyModal({ isOpen, onClose, caseStudy }: CaseStudyModalPro
                     </div>
                   </div>
 
-                  {/* CTA */}
-                  <div className="pt-8 border-t border-[#7C8A96]/20">
-                    <motion.a
-                      href="#"
-                      className="inline-flex items-center gap-2 text-[#67E8F9] hover:text-[#E6EEF3] transition-colors"
-                      whileHover={{ x: 5 }}
-                    >
-                      <span style={{ fontWeight: 600 }}>View live site</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.a>
-                  </div>
+                  {/* CTA (Live Site) */}
+                  {caseStudy.url && (
+                    <div className="pt-8 border-t border-[#7C8A96]/20">
+                      <motion.a
+                        href={caseStudy.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-[#67E8F9] hover:text-[#E6EEF3] transition-colors"
+                        whileHover={{ x: 5 }}
+                      >
+                        <span className="font-semibold">View live site</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </motion.a>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>

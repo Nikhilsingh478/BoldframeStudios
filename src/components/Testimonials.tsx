@@ -4,42 +4,50 @@ import { Quote } from 'lucide-react';
 
 const testimonials = [
   {
-    quote: 'BoldFrame delivered a pixel-perfect product that exceeded our KPIs.',
-    author: 'Sarah Chen',
-    role: 'VP Product',
-    company: 'Zenith Commerce',
+    quote:
+      'The Huuman redesign brought our concept to life — smooth GSAP motion, responsive behavior, and stunning visuals. Exactly how we imagined our brand should feel.',
+    // author: 'Aarav Malhotra',
+    role: 'Founder',
+    company: 'Huuman',
   },
   {
-    quote: 'Lightning-fast execution with engineering excellence.',
-    author: 'Marcus Rodriguez',
-    role: 'CTO',
-    company: 'Pulse Fitness',
+    quote:
+      'Our spa website turned out elegant, fast, and inviting. The booking experience feels natural and beautifully animated — clients often compliment the site.',
+    // author: 'Sophie Williams',
+    role: 'Owner',
+    company: 'Roseberry Massage Spa',
   },
   {
-    quote: 'Our conversion rate doubled within the first month.',
-    author: 'Emily Thompson',
-    role: 'Head of Growth',
-    company: 'Nexus Analytics',
+    quote:
+      'The redesign for HBL modernized our entire digital presence. It’s sleek, minimal, and loads under a second — a major credibility boost for our brand.',
+    // author: 'Rohit Sharma',
+    role: 'Marketing Head',
+    company: 'HBL Industries',
+  },
+  {
+    quote:
+      'The organic store frontend feels both fresh and premium. From product pages to admin dashboards, everything runs fast and looks professional.',
+    // author: 'Priya Singh',
+    role: 'Operations Manager',
+    company: 'Organic Green Tea Store',
   },
 ];
 
 const clientLogos = [
-  { name: 'Zenith', color: '#67E8F9' },
-  { name: 'Pulse', color: '#5B3CFF' },
-  { name: 'Nexus', color: '#7C8A96' },
-  { name: 'Apex', color: '#67E8F9' },
-  { name: 'Vertex', color: '#5B3CFF' },
-  { name: 'Summit', color: '#7C8A96' },
+  { name: 'Huuman', color: '#67E8F9' },
+  { name: 'Roseberry Spa', color: '#5B3CFF' },
+  { name: 'HBL', color: '#7C8A96' },
+  { name: 'Organic Tea', color: '#67E8F9' },
 ];
 
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // rotate testimonials every 5s
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -68,7 +76,10 @@ export function Testimonials() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
+            <h2
+              className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4"
+              style={{ fontWeight: 600 }}
+            >
               Trusted by Teams
             </h2>
           </motion.div>
@@ -91,9 +102,12 @@ export function Testimonials() {
                   "{testimonial.quote}"
                 </p>
                 <div>
-                  <div className="text-[#E6EEF3]" style={{ fontWeight: 600 }}>
+                  {/* <div
+                    className="text-[#E6EEF3]"
+                    style={{ fontWeight: 600 }}
+                  >
                     {testimonial.author}
-                  </div>
+                  </div> */}
                   <div className="text-[#98A3AA] text-sm">
                     {testimonial.role} • {testimonial.company}
                   </div>
@@ -109,7 +123,9 @@ export function Testimonials() {
                 key={index}
                 onClick={() => setActiveIndex(index)}
                 className={`w-2 h-2 rounded-full transition-all ${
-                  activeIndex === index ? 'bg-[#5B3CFF] w-8' : 'bg-[#7C8A96]'
+                  activeIndex === index
+                    ? 'bg-[#5B3CFF] w-8'
+                    : 'bg-[#7C8A96]'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -117,7 +133,7 @@ export function Testimonials() {
           </div>
         </div>
 
-        {/* Client Logos Carousel */}
+        {/* Client Logos Infinite Loop Carousel */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -130,12 +146,13 @@ export function Testimonials() {
           <div className="overflow-hidden relative">
             <motion.div
               className="flex gap-16"
-              animate={{ x: [0, -1200] }}
+              animate={{ x: ['0%', '-50%'] }}
               transition={{
-                duration: 30,
-                repeat: Infinity,
+                duration: 25,
                 ease: 'linear',
+                repeat: Infinity,
               }}
+              style={{ width: '200%' }}
             >
               {[...clientLogos, ...clientLogos].map((logo, index) => (
                 <div
