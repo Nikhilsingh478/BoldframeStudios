@@ -1,6 +1,13 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
 import { MagneticButton } from './MagneticButton';
+// Optional per-section SEO override (example):
+// import { Helmet } from 'react-helmet-async';
+// Inside the component return, you may add:
+// <Helmet>
+//   <title>Nikhil Webworks | Hero</title>
+//   <meta name="description" content="Hero section overview." />
+// </Helmet>
 import { TrendingUp, Users, Zap } from 'lucide-react';
 
 export function Hero({ onContactClick }: { onContactClick: () => void }) {

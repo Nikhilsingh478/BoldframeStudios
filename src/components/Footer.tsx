@@ -1,6 +1,13 @@
 import { motion } from 'motion/react';
 import { MagneticButton } from './MagneticButton';
 import { Github, Linkedin } from 'lucide-react';
+// Optional per-section SEO override (example):
+// import { Helmet } from 'react-helmet-async';
+// Inside the component return, you may add:
+// <Helmet>
+//   <title>Nikhil Webworks | Footer</title>
+//   <meta name="description" content="Footer links and contact CTA." />
+// </Helmet>
 
 export function Footer({ onContactClick }: { onContactClick: () => void }) {
   return (

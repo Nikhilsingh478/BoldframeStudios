@@ -1,5 +1,12 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
+// Optional per-section SEO override (example):
+// import { Helmet } from 'react-helmet-async';
+// Inside the component return, you may add:
+// <Helmet>
+//   <title>Nikhil Webworks | Work</title>
+//   <meta name="description" content="Featured case studies and projects." />
+// </Helmet>
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ExternalLink } from 'lucide-react';
 import { CaseStudyModal } from './CaseStudyModal';

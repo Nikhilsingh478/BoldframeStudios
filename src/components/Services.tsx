@@ -1,6 +1,13 @@
 import { motion } from 'motion/react';
 import { Palette, Code, Layers, Zap } from 'lucide-react';
 import { useState } from 'react';
+// Optional per-section SEO override (example):
+// import { Helmet } from 'react-helmet-async';
+// Inside the component return, you may add:
+// <Helmet>
+//   <title>Nikhil Webworks | Services</title>
+//   <meta name="description" content="Services section overview." />
+// </Helmet>
 
 const services = [
   {

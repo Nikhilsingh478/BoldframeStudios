@@ -1,4 +1,11 @@
 import { motion } from 'motion/react';
+// Optional per-section SEO override (example):
+// import { Helmet } from 'react-helmet-async';
+// Inside the component return, you may add:
+// <Helmet>
+//   <title>Nikhil Webworks | About</title>
+//   <meta name="description" content="About section details." />
+// </Helmet>
 import { Lightbulb, Pencil, Rocket } from 'lucide-react';
 
 const process = [

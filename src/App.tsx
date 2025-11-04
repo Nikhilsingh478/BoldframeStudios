@@ -1,4 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Loader } from './components/Loader';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -59,6 +60,43 @@ export default function App() {
 
   return (
     <>
+      <Helmet>
+        <title>Nikhil Webworks | Modern Web Agency</title>
+        <meta name="description" content="We build lightning-fast, elegant, SEO-ready websites and web apps tailored for modern businesses." />
+        <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
+        <meta name="author" content="Nikhil Webworks" />
+        <link rel="canonical" href="https://nikhilwebworks.com/" />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Nikhil Webworks" />
+        <meta property="og:description" content="Portfolio and agency site of Nikhil Webworks — building fast, modern, SEO-optimized websites." />
+        <meta property="og:url" content="https://nikhilwebworks.com/" />
+        <meta property="og:image" content="https://nikhilwebworks.com/preview.jpg" />
+        <meta property="og:site_name" content="Nikhil Webworks" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Nikhil Webworks" />
+        <meta name="twitter:description" content="Portfolio and agency site of Nikhil Webworks." />
+        <meta name="twitter:image" content="https://nikhilwebworks.com/preview.jpg" />
+        {/* Viewport & Fallbacks */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="robots" content="index, follow" />
+        {/* Structured Data (JSON-LD) */}
+        <script type="application/ld+json">{`
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Nikhil Webworks",
+  "url": "https://nikhilwebworks.com",
+  "logo": "https://nikhilwebworks.com/logo.png",
+  "sameAs": [
+    "https://www.linkedin.com/in/nikhilwebworks",
+    "https://www.instagram.com/nikhilwebworks"
+  ]
+}
+        `}</script>
+      </Helmet>
       {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
       
       {!isLoading && (

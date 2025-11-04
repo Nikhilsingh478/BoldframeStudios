@@ -1,6 +1,13 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+// Optional per-section SEO override (example):
+// import { Helmet } from 'react-helmet-async';
+// Inside the rendered fragment when open, you may add:
+// <Helmet>
+//   <title>Nikhil Webworks | Contact</title>
+//   <meta name="description" content="Contact modal for project inquiries." />
+// </Helmet>
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
