@@ -65,6 +65,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'dist', // updated to 'dist' for Vercel
+    modulePreload: true,
     rollupOptions: {
       output: {
         manualChunks: {
