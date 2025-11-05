@@ -65,6 +65,26 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'dist', // updated to 'dist' for Vercel
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['motion'],
+          radix: [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-hover-card',
+          ],
+          vendor: [
+            'lucide-react',
+            'embla-carousel-react',
+            'recharts',
+          ],
+        },
+      },
+    },
   },
   server: {
     port: 3000,

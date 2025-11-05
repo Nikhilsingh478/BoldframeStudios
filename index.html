@@ -18,7 +18,7 @@
     />
     <meta property="og:image" content="/preview.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://boldframestudios.com" />
+    <meta property="og:url" content="https://boldframe-studios.vercel.app/" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -39,18 +39,31 @@
     />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://boldframestudios.com" />
+    <link rel="canonical" href="https://boldframe-studios.vercel.app/" />
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <!-- Fonts -->
+    <!-- Fonts: preconnect + preload stylesheet for faster first paint -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
   </head>
 
   <body>
