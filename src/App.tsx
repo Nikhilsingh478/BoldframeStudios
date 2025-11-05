@@ -61,7 +61,7 @@ export default function App() {
   return (
     <>
       <Helmet>
-        <title>Nikhil Webworks | Modern Web Agency</title>
+        <title>BoldFrame Studios</title>
         <meta name="description" content="We build lightning-fast, elegant, SEO-ready websites and web apps tailored for modern businesses." />
         <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
         <meta name="author" content="Nikhil Webworks" />
