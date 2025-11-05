@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet-async';
 import { Loader } from './components/Loader';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { CustomCursor } from './components/CustomCursor';
 
 // Lazy load non-critical components for better performance
 const ServicesCarousel = lazy(() => import('./components/ServicesCarousel').then(m => ({ default: m.ServicesCarousel })));
@@ -15,6 +14,7 @@ const ContactModal = lazy(() => import('./components/ContactModal').then(m => ({
 const FloatingContact = lazy(() => import('./components/FloatingContact').then(m => ({ default: m.FloatingContact })));
 const BackToTop = lazy(() => import('./components/BackToTop').then(m => ({ default: m.BackToTop })));
 const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
+const CustomCursor = lazy(() => import('./components/ui/CustomCursor'));
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -101,7 +101,9 @@ export default function App() {
       
       {!isLoading && (
         <div className="min-h-screen bg-[#0B0D0F]">
-          <CustomCursor />
+          <Suspense fallback={null}>
+            <CustomCursor />
+          </Suspense>
           <Header onContactClick={openContactModal} />
           <main>
             <Hero onContactClick={openContactModal} />

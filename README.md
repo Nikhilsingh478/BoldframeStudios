@@ -18,6 +18,7 @@
   - [Troubleshooting](#troubleshooting)
   - [Docs & References](#docs--references)
   - [License](#license)
+  - [Custom Cursor (Performance-Safe)](#custom-cursor-performance-safe)
 
   ## Features
   - requestAnimationFrame‑based custom cursor with tuned damping/stiffness
@@ -154,6 +155,15 @@
   - `EMAILJS_TEMPLATE_SETUP.md`
   - `guidelines/Guidelines.md`
   - `Attributions.md`
+
+  ## Custom Cursor (Performance-Safe)
+  - Location: `src/components/ui/CustomCursor.tsx`
+  - Lazy-mounted in `src/App.tsx` via `lazy(() => import('./components/ui/CustomCursor'))` inside a `<Suspense fallback={null}>` to avoid any pre-LCP cost.
+  - Mobile-safe: disabled on touch devices or when `window.innerWidth < 768`.
+  - Reduced motion: respects `prefers-reduced-motion` and degrades to a static minimal dot (no rAF).
+  - Implementation: single `requestAnimationFrame` loop; GPU transforms only (`translate3d`, `scale`, `opacity`); passive listeners; no per-frame React state.
+  - Tuning: adjust lerp factors in `tick()` for ring lag (`0.12`) and dot speed (`0.45`).
+  - Cleanup: removes event listeners, cancels rAF, and restores native cursor on unmount.
 
   ## License
   Proprietary — All rights reserved by BoldFrame Studios (or the project owner). Do not redistribute without permission.
