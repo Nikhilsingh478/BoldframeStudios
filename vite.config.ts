@@ -1,10 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import path from 'path';
 
 export default defineConfig({
   base: './', // ensures relative paths for Vercel/static deployment
-  plugins: [react()],
+  plugins: [
+    react(),
+    ViteImageOptimizer({
+      png: { quality: 80 },
+      jpeg: { quality: 80, progressive: true },
+      jpg: { quality: 80, progressive: true },
+      webp: { quality: 80 },
+      avif: { quality: 50 },
+      svg: { multipass: true },
+      // Strip metadata to reduce bytes
+      cache: true,
+    }),
+  ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {

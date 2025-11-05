@@ -22,7 +22,7 @@ export default function App() {
 
   const openContactModal = () => setIsContactModalOpen(true);
 
-  // Load EmailJS and SweetAlert scripts - optimized with defer
+  // Load EmailJS and SweetAlert scripts - optimized with defer and idle
   useEffect(() => {
     // Capture environment variable outside of callback scope
     const emailJsPublicKey = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
@@ -37,8 +37,7 @@ export default function App() {
       return script;
     };
 
-    // Load scripts only after initial render
-    const timer = setTimeout(() => {
+    const init = () => {
       const sweetAlertScript = loadScript('https://cdn.jsdelivr.net/npm/sweetalert2@11');
       const emailScript = loadScript(
         'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
@@ -46,16 +45,31 @@ export default function App() {
           (window as any).emailjs?.init(emailJsPublicKey);
         }
       );
-
       return () => {
         if (document.body.contains(sweetAlertScript)) document.body.removeChild(sweetAlertScript);
         if (document.body.contains(emailScript)) document.body.removeChild(emailScript);
       };
-    }, 100);
-
-    return () => {
-      clearTimeout(timer);
     };
+
+    // Load scripts only when idle or after slight delay as a fallback
+    let cleanup: (() => void) | undefined;
+    if ('requestIdleCallback' in window) {
+      const idleId = (window as any).requestIdleCallback(() => {
+        cleanup = init();
+      }, { timeout: 2000 });
+      return () => {
+        if ((window as any).cancelIdleCallback) (window as any).cancelIdleCallback(idleId);
+        if (cleanup) cleanup();
+      };
+    } else {
+      const timer = setTimeout(() => {
+        cleanup = init();
+      }, 300);
+      return () => {
+        clearTimeout(timer);
+        if (cleanup) cleanup();
+      };
+    }
   }, []);
 
   return (
@@ -65,19 +79,19 @@ export default function App() {
         <meta name="description" content="We build lightning-fast, elegant, SEO-ready websites and web apps tailored for modern businesses." />
         <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
         <meta name="author" content="Nikhil Webworks" />
-        <link rel="canonical" href="https://nikhilwebworks.com/" />
+        <link rel="canonical" href="https://boldframe-studios.vercel.app/" />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Nikhil Webworks" />
-        <meta property="og:description" content="Portfolio and agency site of Nikhil Webworks — building fast, modern, SEO-optimized websites." />
-        <meta property="og:url" content="https://nikhilwebworks.com/" />
-        <meta property="og:image" content="https://nikhilwebworks.com/preview.jpg" />
-        <meta property="og:site_name" content="Nikhil Webworks" />
+        <meta property="og:title" content="BoldFrame Studios" />
+        <meta property="og:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
+        <meta property="og:url" content="https://boldframe-studios.vercel.app/" />
+        <meta property="og:image" content="/preview.png" />
+        <meta property="og:site_name" content="BoldFrame Studios" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Nikhil Webworks" />
-        <meta name="twitter:description" content="Portfolio and agency site of Nikhil Webworks." />
-        <meta name="twitter:image" content="https://nikhilwebworks.com/preview.jpg" />
+        <meta name="twitter:title" content="BoldFrame Studios" />
+        <meta name="twitter:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
+        <meta name="twitter:image" content="/preview.png" />
         {/* Viewport & Fallbacks */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -87,13 +101,26 @@ export default function App() {
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Nikhil Webworks",
-  "url": "https://nikhilwebworks.com",
-  "logo": "https://nikhilwebworks.com/logo.png",
+  "name": "BoldFrame Studios",
+  "url": "https://boldframe-studios.vercel.app/",
+  "logo": "/favicon.svg",
   "sameAs": [
-    "https://www.linkedin.com/in/nikhilwebworks",
-    "https://www.instagram.com/nikhilwebworks"
+    "https://github.com/Nikhilsingh478",
+    "https://www.linkedin.com/in/nikhilsingh14788"
   ]
+}
+        `}</script>
+        <script type="application/ld+json">{`
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "BoldFrame Studios",
+  "url": "https://boldframe-studios.vercel.app/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://boldframe-studios.vercel.app/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
 }
         `}</script>
       </Helmet>

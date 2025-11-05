@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://nikhilwebworks.com/sitemap.xml
+Sitemap: https://boldframe-studios.vercel.app/sitemap.xml
 
 
