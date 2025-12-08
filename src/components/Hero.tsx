@@ -402,7 +402,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      {/* <motion.div
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         style={{ opacity }}
         animate={{ y: [0, 8, 0] }} // Reduced movement
@@ -415,7 +415,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
             transition={{ duration: 1.5, repeat: Infinity }} // Reduced from 2s
           />
         </div>
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }
