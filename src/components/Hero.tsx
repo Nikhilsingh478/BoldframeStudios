@@ -35,143 +35,36 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Professional animated background - optimized for performance */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {/* Main gradient orb - reduced blur and duration */}
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[60px]"
-          style={{
-            background: 'radial-gradient(circle, rgba(91, 60, 255, 0.3), transparent 70%)',
-          }}
-          animate={{
-            scale: [1, 1.1, 1],
-            x: [0, 20, 0],
-          }}
-          transition={{
-            duration: 8, // Reduced from 15s
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+      {/* Video Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Desktop Video - Added poster for LCP optimization */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover hidden md:block"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/videos/horizontalbfs.webp"
+        >
+          <source src="/videos/horizontal.webm" type="video/webm" />
+        </video>
 
-        {/* Secondary gradient orb - reduced blur and duration */}
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[60px]"
-          style={{
-            background: 'radial-gradient(circle, rgba(103, 232, 249, 0.25), transparent 70%)',
-          }}
-          animate={{
-            scale: [1, 1.05, 1],
-            x: [0, -15, 0],
-          }}
-          transition={{
-            duration: 10, // Reduced from 18s
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+        {/* Mobile Video - Added poster for LCP optimization */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover md:hidden"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/videos/verticalbfs.webp"
+        >
+          <source src="/videos/vertical.webm" type="video/webm" />
+        </video>
 
-        {/* Geometric shapes - faster rotations */}
-        <motion.div
-          className="absolute top-1/3 right-1/3 w-32 h-32 border border-[#5B3CFF]/20 rounded-lg"
-          animate={{
-            rotate: [0, 180],
-          }}
-          transition={{
-            duration: 15, // Reduced from 25s
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        />
-
-        <motion.div
-          className="absolute bottom-1/3 left-1/4 w-24 h-24 border border-[#67E8F9]/20"
-          style={{ clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)' }}
-          animate={{
-            rotate: [0, -180],
-          }}
-          transition={{
-            duration: 18, // Reduced from 30s
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        />
-
-        {/* Mobile-only professional background elements */}
-        <div className="block lg:hidden">
-          {/* Grid pattern for mobile */}
-          <div 
-            className="absolute inset-0 opacity-[0.02]"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(91, 60, 255, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(91, 60, 255, 0.3) 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px',
-            }}
-          />
-          
-          {/* Floating tech elements for mobile */}
-          <motion.div
-            className="absolute top-20 right-8 w-16 h-16 rounded-full bg-gradient-to-br from-[#5B3CFF]/10 to-[#67E8F9]/10 border border-[#5B3CFF]/20"
-            animate={{
-              y: [0, -20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-          
-          <motion.div
-            className="absolute bottom-32 left-6 w-12 h-12 bg-gradient-to-tr from-[#67E8F9]/10 to-[#5B3CFF]/10 rounded-lg border border-[#67E8F9]/20"
-            animate={{
-              y: [0, 15, 0],
-              rotate: [0, 90, 0],
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-          
-          {/* Binary code stream effect for mobile */}
-          <div className="absolute top-40 left-4 opacity-10 text-xs font-mono text-[#67E8F9]">
-            <motion.div
-              animate={{ y: [0, 100] }}
-              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-            >
-              10101001<br />
-              11001100<br />
-              10110101<br />
-              10011001<br />
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Floating abstract lines - faster animation */}
-        <svg className="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
-          <motion.path
-            d="M 100 300 Q 300 200 500 300"
-            stroke="#5B3CFF"
-            strokeWidth="2"
-            fill="none"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.3 }}
-            transition={{ duration: 1.5, delay: 0.2 }} // Reduced from 2.5s
-          />
-          <motion.path
-            d="M 600 400 Q 800 300 1000 400"
-            stroke="#67E8F9"
-            strokeWidth="2"
-            fill="none"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.3 }}
-            transition={{ duration: 1.5, delay: 0.3 }} // Reduced from 2.5s
-          />
-        </svg>
+        {/* Light Overlay for text readability */}
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -382,7 +275,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
               </div>
 
               {/* Floating elements around device - faster animation */}
-              <motion.div
+              {/* <motion.div
                 className="absolute -top-4 -right-4 w-16 h-16 rounded-lg bg-gradient-to-br from-[#5B3CFF] to-[#7055ff] opacity-60 blur-xl pointer-events-none"
                 animate={{
                   y: [0, -6, 0],
@@ -395,7 +288,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
                   y: [0, 6, 0],
                 }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} // Reduced from 6s
-              />
+              /> */}
             </motion.div>
           </motion.div>
         </div>
