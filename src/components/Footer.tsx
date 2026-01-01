@@ -112,7 +112,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           {/* Copyright and Links */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-[#7C8A96]/20">
             <p className="text-[#98A3AA] text-sm">
-              © 2025 BoldFrame Studios. All rights reserved.
+              © 2026 BoldFrame Studios. All rights reserved.
             </p>
             <div className="flex gap-6">
               <button
