@@ -191,14 +191,14 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 }} // Reduced from 0.6s
                 >
-                  Craft.
+                  Websites
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.35 }} // Reduced from 0.6s
                 >
-                  Move.
+                  That
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
@@ -217,7 +217,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
               transition={{ duration: 0.6, delay: 0.65, type: 'spring', damping: 20, stiffness: 150 }} // Reduced from 0.8s
               className="text-[#98A3AA] tracking-[0.2em] mb-12 text-xs md:text-sm"
             >
-              CRAFTING SEAMLESS WEB EXPERIENCES
+              A frontend-focused studio building high-performance landing pages designed to convert.
             </motion.p>
 
             {/* CTAs */}

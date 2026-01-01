@@ -15,62 +15,45 @@ const FloatingContact = lazy(() => import('./components/FloatingContact').then(m
 const BackToTop = lazy(() => import('./components/BackToTop').then(m => ({ default: m.BackToTop })));
 const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
 const CustomCursor = lazy(() => import('./components/ui/CustomCursor'));
+const LegalModals = lazy(() => import('./components/LegalModals').then(m => ({ default: m.LegalModals })));
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
-  const openContactModal = () => setIsContactModalOpen(true);
-
-  // Load EmailJS and SweetAlert scripts - optimized with defer and idle
-  useEffect(() => {
-    // Capture environment variable outside of callback scope
+  // Load EmailJS and SweetAlert only when needed
+  const loadContactScripts = () => {
     const emailJsPublicKey = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
     
-    const loadScript = (src: string, onLoad?: () => void): HTMLScriptElement => {
+    const loadScript = (src: string, onLoad?: () => void) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        if (onLoad) onLoad();
+        return;
+      }
       const script = document.createElement('script');
       script.src = src;
       script.async = true;
       script.defer = true;
       if (onLoad) script.onload = onLoad;
       document.body.appendChild(script);
-      return script;
     };
 
-    const init = () => {
-      const sweetAlertScript = loadScript('https://cdn.jsdelivr.net/npm/sweetalert2@11');
-      const emailScript = loadScript(
-        'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
-        () => {
-          (window as any).emailjs?.init(emailJsPublicKey);
+    loadScript('https://cdn.jsdelivr.net/npm/sweetalert2@11');
+    loadScript(
+      'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
+      () => {
+        if ((window as any).emailjs) {
+          (window as any).emailjs.init(emailJsPublicKey);
         }
-      );
-      return () => {
-        if (document.body.contains(sweetAlertScript)) document.body.removeChild(sweetAlertScript);
-        if (document.body.contains(emailScript)) document.body.removeChild(emailScript);
-      };
-    };
+      }
+    );
+  };
 
-    // Load scripts only when idle or after slight delay as a fallback
-    let cleanup: (() => void) | undefined;
-    if ('requestIdleCallback' in window) {
-      const idleId = (window as any).requestIdleCallback(() => {
-        cleanup = init();
-      }, { timeout: 2000 });
-      return () => {
-        if ((window as any).cancelIdleCallback) (window as any).cancelIdleCallback(idleId);
-        if (cleanup) cleanup();
-      };
-    } else {
-      const timer = setTimeout(() => {
-        cleanup = init();
-      }, 300);
-      return () => {
-        clearTimeout(timer);
-        if (cleanup) cleanup();
-      };
-    }
-  }, []);
+  const openContactModal = () => {
+    loadContactScripts();
+    setIsContactModalOpen(true);
+  };
 
   return (
     <>
@@ -143,11 +126,20 @@ export default function App() {
             </Suspense>
           </main>
           <Suspense fallback={null}>
-            <Footer onContactClick={openContactModal} />
+            <Footer 
+              onContactClick={openContactModal} 
+              onPrivacyClick={() => setActiveLegalModal('privacy')}
+              onTermsClick={() => setActiveLegalModal('terms')}
+            />
             
             <ContactModal
               isOpen={isContactModalOpen}
               onClose={() => setIsContactModalOpen(false)}
+            />
+
+            <LegalModals
+              activeModal={activeLegalModal}
+              onClose={() => setActiveLegalModal(null)}
             />
             
             <FloatingContact onContactClick={openContactModal} />

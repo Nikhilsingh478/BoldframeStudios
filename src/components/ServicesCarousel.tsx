@@ -1,35 +1,25 @@
 import { motion, useMotionValue, useTransform } from 'motion/react';
 import { useState, useRef, useEffect } from 'react';
-import { Palette, Code, Layers, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Palette, Code, Zap, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 
 const services = [
   {
     icon: Palette,
-    title: 'Design Systems',
-    description: 'Pixel-perfect UI, engineered for performance.',
-    metric: '99% satisfaction',
-    details: ['Component libraries', 'Brand consistency', 'Scalable architecture'],
+    title: 'Conversion-Focused Landing Pages',
+    description: 'High-impact landing pages designed to communicate clearly, load fast, and convert visitors into leads or bookings.',
+    bullets: ['UI/UX focused on clarity', 'Mobile-first layouts', 'CTA & funnel alignment'],
   },
   {
     icon: Code,
-    title: 'Fast Frontends',
-    description: 'Modern React applications built to scale.',
-    metric: '60% faster sites',
-    details: ['Next.js & React', 'Performance optimization', 'SEO-ready'],
-  },
-  {
-    icon: Layers,
-    title: 'Product Thinking',
-    description: 'Full-stack solutions that drive results.',
-    metric: '2x conversions',
-    details: ['User research', 'MVP development', 'Data-driven iteration'],
+    title: 'Frontend Website Development',
+    description: 'Modern, fast, and SEO-ready frontend websites built using proven technologies.',
+    bullets: ['React / Next.js', 'Performance optimization', 'Clean, scalable code'],
   },
   {
     icon: Zap,
-    title: 'Continuous Delivery',
-    description: 'Optimized for speed and accessibility.',
-    metric: '95+ Lighthouse',
-    details: ['CI/CD pipelines', 'Automated testing', 'Zero-downtime deploys'],
+    title: 'Performance & Optimization',
+    description: 'Websites engineered for speed, accessibility, and real-world performance.',
+    bullets: ['90+ Lighthouse scores', 'SEO-ready structure', 'Core Web Vitals focus'],
   },
 ];
 
@@ -87,10 +77,10 @@ export function ServicesCarousel() {
           className="text-center mb-16"
         >
           <h2 className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
-            What We Do
+            What We Build
           </h2>
           <p className="text-[#98A3AA] max-w-2xl mx-auto text-[clamp(0.875rem,1.5vw,1rem)]">
-            End-to-end digital solutions that blend design, performance, and conversion optimization.
+            We focus on designing and building high-performance landing pages and frontend websites that help businesses convert traffic into action.
           </p>
         </motion.div>
 
@@ -127,7 +117,7 @@ export function ServicesCarousel() {
           <div
             ref={scrollRef}
             onScroll={checkScroll}
-            className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+            className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide justify-center"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {services.map((service, index) => (
@@ -139,9 +129,9 @@ export function ServicesCarousel() {
                 transition={{ duration: 0.6, delay: index * 0.1, type: 'spring', damping: 18, stiffness: 120 }}
                 onHoverStart={() => setHoveredIndex(index)}
                 onHoverEnd={() => setHoveredIndex(null)}
-                className="flex-shrink-0 w-80 snap-center"
+                className="flex-shrink-0 w-96 snap-center"
               >
-                <div className="glass rounded-2xl p-8 h-full relative overflow-hidden group hover:shadow-lg hover:shadow-[#5B3CFF]/10 transition-all">
+                <div className="glass rounded-2xl p-8 h-full relative overflow-hidden group hover:shadow-lg hover:shadow-[#5B3CFF]/10 transition-all flex flex-col">
                   {/* Icon */}
                   <motion.div
                     animate={{ scale: hoveredIndex === index ? 1.1 : 1 }}
@@ -157,33 +147,19 @@ export function ServicesCarousel() {
                   </h3>
 
                   {/* Description */}
-                  <p className="text-[#98A3AA] text-sm mb-4 leading-relaxed">
+                  <p className="text-[#98A3AA] text-sm mb-6 leading-relaxed">
                     {service.description}
                   </p>
 
-                  {/* Details */}
-                  <ul className="space-y-2 mb-6">
-                    {service.details.map((detail) => (
-                      <li key={detail} className="text-[#7C8A96] text-xs flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-full bg-[#67E8F9]" />
-                        {detail}
-                      </li>
+                  {/* Bullets */}
+                  <div className="mt-auto space-y-2">
+                    {service.bullets.map((bullet, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-[#E6EEF3]/80">
+                        <Check className="w-4 h-4 text-[#67E8F9]" />
+                        <span>{bullet}</span>
+                      </div>
                     ))}
-                  </ul>
-
-                  {/* Metric Badge */}
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{
-                      height: hoveredIndex === index ? 'auto' : 0,
-                      opacity: hoveredIndex === index ? 1 : 0,
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className="text-[#67E8F9] text-sm overflow-hidden"
-                    style={{ fontWeight: 600 }}
-                  >
-                    ✓ {service.metric}
-                  </motion.div>
+                  </div>
 
                   {/* Hover Effect Gradient */}
                   <motion.div
@@ -217,18 +193,13 @@ export function ServicesCarousel() {
                   <p className="text-[#98A3AA] text-sm">{service.description}</p>
                 </div>
               </div>
-              <div className="pl-16">
-                <div className="text-[#67E8F9] text-sm mb-3" style={{ fontWeight: 600 }}>
-                  ✓ {service.metric}
-                </div>
-                <ul className="space-y-1">
-                  {service.details.map((detail) => (
-                    <li key={detail} className="text-[#7C8A96] text-xs flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-[#67E8F9]" />
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-4 space-y-2">
+                {service.bullets.map((bullet, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm text-[#E6EEF3]/80">
+                    <Check className="w-4 h-4 text-[#67E8F9]" />
+                    <span>{bullet}</span>
+                  </div>
+                ))}
               </div>
             </motion.div>
           ))}
@@ -237,3 +208,4 @@ export function ServicesCarousel() {
     </section>
   );
 }
+

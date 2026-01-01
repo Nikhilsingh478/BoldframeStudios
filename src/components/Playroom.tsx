@@ -29,10 +29,10 @@ export function Playroom() {
           className="text-center mb-16"
         >
           <h2 className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
-            Impact in Action
+            Performance That Matters
           </h2>
           <p className="text-[#98A3AA] max-w-2xl mx-auto text-[clamp(0.875rem,1.5vw,1rem)]">
-            See the measurable difference our approach makes.
+            The kind of performance improvements we design for.
           </p>
         </motion.div>
 

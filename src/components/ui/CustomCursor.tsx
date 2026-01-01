@@ -156,7 +156,7 @@ export default function CustomCursor() {
         width: '100vw',
         height: '100vh',
         pointerEvents: 'none',
-        zIndex: 9999,
+        zIndex: 2147483647,
         opacity: 0,
         transition: 'opacity 200ms ease',
       }}

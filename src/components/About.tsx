@@ -113,7 +113,7 @@ export function About() {
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
-                { value: '50+', label: 'Projects Shipped' },
+                { value: '10+', label: 'Projects Shipped' },
                 { value: '98%', label: 'Client Satisfaction' },
                 { value: '3x', label: 'Avg. Performance Gain' },
                 { value: '24/7', label: 'Support & Maintenance' },

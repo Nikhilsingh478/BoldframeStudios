@@ -9,7 +9,13 @@ import { Github, Linkedin } from 'lucide-react';
 //   <meta name="description" content="Footer links and contact CTA." />
 // </Helmet>
 
-export function Footer({ onContactClick }: { onContactClick: () => void }) {
+interface FooterProps {
+  onContactClick: () => void;
+  onPrivacyClick?: () => void;
+  onTermsClick?: () => void;
+}
+
+export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterProps) {
   return (
     <footer className="glass border-t border-[#7C8A96]/20 py-16">
       <div className="container mx-auto px-6">
@@ -109,18 +115,18 @@ export function Footer({ onContactClick }: { onContactClick: () => void }) {
               © 2025 BoldFrame Studios. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a
-                href="#"
+              <button
+                onClick={onPrivacyClick}
                 className="text-[#98A3AA] hover:text-[#E6EEF3] text-sm transition-colors"
               >
                 Privacy Policy
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={onTermsClick}
                 className="text-[#98A3AA] hover:text-[#E6EEF3] text-sm transition-colors"
               >
                 Terms of Service
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -128,3 +134,4 @@ export function Footer({ onContactClick }: { onContactClick: () => void }) {
     </footer>
   );
 }
+

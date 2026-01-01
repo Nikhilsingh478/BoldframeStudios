@@ -14,7 +14,7 @@ import { CaseStudyModal } from './CaseStudyModal';
 const projects = [
   {
     title: 'Huuman',
-    category: 'Web App (Frontend)',
+    category: 'Frontend Web App · Brand Experience Redesign',
     image: '/p1.webp',
     heroImage: '/p1.webp',
     description:
@@ -43,7 +43,7 @@ const projects = [
 
   {
     title: 'Roseberry Massage Spa',
-    category: 'Landing / Web App (Spa)',
+    category: 'Booking-Focused Landing Page · Spa Website',
     image: '/p2.webp',
     heroImage: '/p2.webp',
     description:
@@ -75,7 +75,7 @@ const projects = [
 
   {
     title: 'HBL (Company Redesign)',
-    category: 'Web App / Corporate Website',
+    category: 'Corporate Frontend Website · UI Redesign',
     image: '/p3.webp',
     heroImage: '/p3.webp',
     description:
@@ -110,7 +110,7 @@ const projects = [
 
   {
     title: 'Organic Green Tea Store',
-    category: 'E-commerce Web App (frontend ready)',
+    category: 'E-commerce Frontend · Conversion-Focused UI',
     image: '/p4.webp',
     heroImage: '/p4.webp',
     description:
@@ -147,8 +147,8 @@ const projects = [
   },
 
   {
-    title: 'Halloween — Creative Festive Project',
-    category: 'Creative / Festive Webpage',
+    title: 'Halloween',
+    category: 'Creative Landing Page · Seasonal Campaign',
     image: '/p5.webp',
     heroImage: '/p5.webp',
     description:
@@ -174,8 +174,8 @@ const projects = [
   },
 
   {
-    title: 'Christmas — Parallax & Festive Webpage',
-    category: 'Creative / Festive Webpage',
+    title: 'Christmas',
+    category: 'Parallax Landing Page · Festive Campaign',
     image: '/p6.webp',
     heroImage: '/p6.webp',
     description:
