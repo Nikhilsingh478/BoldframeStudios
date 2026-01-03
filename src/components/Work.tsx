@@ -208,7 +208,7 @@ export function Work() {
 
   return (
     <>
-      <section id="work" className="py-32 bg-[#0F1316]">
+      <section id="work" className="py-20 md:py-32 bg-[#0F1316]">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -225,7 +225,7 @@ export function Work() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {projects.map((project, index) => (
               <motion.div
                 key={project.title}
