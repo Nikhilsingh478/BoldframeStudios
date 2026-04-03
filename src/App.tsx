@@ -62,12 +62,12 @@ export default function App() {
         <meta name="description" content="We build lightning-fast, elegant, SEO-ready websites and web apps tailored for modern businesses." />
         <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
         <meta name="author" content="Nikhil Webworks" />
-        <link rel="canonical" href="https://boldframe-studios.vercel.app/" />
+        <link rel="canonical" href="https://boldframestudios.in/" />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="BoldFrame Studios" />
         <meta property="og:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
-        <meta property="og:url" content="https://boldframe-studios.vercel.app/" />
+        <meta property="og:url" content="https://boldframestudios.in/" />
         <meta property="og:image" content="/preview.png" />
         <meta property="og:site_name" content="BoldFrame Studios" />
         {/* Twitter Card */}
@@ -85,7 +85,7 @@ export default function App() {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "BoldFrame Studios",
-  "url": "https://boldframe-studios.vercel.app/",
+  "url": "https://boldframestudios.in/",
   "logo": "/favicon.svg",
   "sameAs": [
     "https://github.com/Nikhilsingh478",
@@ -98,10 +98,10 @@ export default function App() {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "BoldFrame Studios",
-  "url": "https://boldframe-studios.vercel.app/",
+  "url": "https://boldframestudios.in/",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://boldframe-studios.vercel.app/?q={search_term_string}",
+    "target": "https://boldframestudios.in/?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }
