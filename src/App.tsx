@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Loader } from './components/Loader';
