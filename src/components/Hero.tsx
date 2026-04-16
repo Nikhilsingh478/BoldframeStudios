@@ -48,6 +48,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
           poster="/videos/horizontalbfs.webp"
         >
           <source src="/videos/horizontal.webm" type="video/webm" />
+          <track kind="captions" src="" label="No dialogue" default />
         </video>
 
         {/* Mobile Video - Added poster for LCP optimization */}
@@ -61,6 +62,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
           poster="/videos/verticalbfs.webp"
         >
           <source src="/videos/vertical.webm" type="video/webm" />
+          <track kind="captions" src="" label="No dialogue" default />
         </video>
 
         {/* Light Overlay for text readability */}

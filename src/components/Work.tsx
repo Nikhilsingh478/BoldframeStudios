@@ -203,7 +203,6 @@ const projects = [
 
 
 export function Work() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedCase, setSelectedCase] = useState<typeof projects[0] | null>(null);
 
   return (
@@ -239,8 +238,6 @@ export function Work() {
                   damping: 18,
                   stiffness: 120,
                 }}
-                onHoverStart={() => setHoveredIndex(index)}
-                onHoverEnd={() => setHoveredIndex(null)}
                 onClick={() => setSelectedCase(project)}
                 className="group relative overflow-hidden rounded-xl cursor-pointer"
               >
@@ -252,12 +249,9 @@ export function Work() {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
 
-                  {/* Blur overlay on hover */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute inset-0 backdrop-blur-sm bg-[#0B0D0F]/60 flex flex-col items-center justify-center p-6"
+                  {/* Blur overlay on hover — CSS transition avoids non-composited Framer Motion animation on backdrop-filter */}
+                  <div
+                    className="absolute inset-0 backdrop-blur-sm bg-[#0B0D0F]/60 flex flex-col items-center justify-center p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   >
                     <div className="text-center">
                       <div className="w-12 h-12 rounded-full bg-[#5B3CFF] flex items-center justify-center mx-auto mb-4">
@@ -280,7 +274,7 @@ export function Work() {
                         Click to see full case study →
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
 
                 {/* Info bar */}
@@ -288,7 +282,7 @@ export function Work() {
                   <h3 className="text-[#E6EEF3] mb-1" style={{ fontWeight: 600 }}>
                     {project.title}
                   </h3>
-                  <p className="text-[#7C8A96] text-sm">{project.category}</p>
+                  <p className="text-[#A8B6BE] text-sm">{project.category}</p>
                 </div>
               </motion.div>
             ))}

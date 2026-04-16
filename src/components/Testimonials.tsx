@@ -63,6 +63,7 @@ export function Testimonials() {
             y: [-50, -70, -50],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ willChange: 'transform' }}
         />
       </div>
 
@@ -116,19 +117,23 @@ export function Testimonials() {
             ))}
           </div>
 
-          {/* Dots indicator */}
+          {/* Dots indicator — padded to meet 44×44px minimum touch target */}
           <div className="flex justify-center gap-2 mt-8">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  activeIndex === index
-                    ? 'bg-[#5B3CFF] w-8'
-                    : 'bg-[#7C8A96]'
-                }`}
                 aria-label={`Go to testimonial ${index + 1}`}
-              />
+                className="p-3 -m-3 flex items-center justify-center"
+              >
+                <span
+                  className={`block rounded-full transition-all ${
+                    activeIndex === index
+                      ? 'bg-[#5B3CFF] w-8 h-2'
+                      : 'bg-[#7C8A96] w-2 h-2'
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>
@@ -152,7 +157,7 @@ export function Testimonials() {
                 ease: 'linear',
                 repeat: Infinity,
               }}
-              style={{ width: '200%' }}
+              style={{ width: '200%', willChange: 'transform' }}
             >
               {[...clientLogos, ...clientLogos].map((logo, index) => (
                 <div

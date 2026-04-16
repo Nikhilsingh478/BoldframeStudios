@@ -15,19 +15,25 @@ export const MagneticButton = memo(function MagneticButton({
   strength = 0.3,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    if (!ref.current) return;
+  const handleMouseEnter = useCallback(() => {
+    if (ref.current) {
+      rectRef.current = ref.current.getBoundingClientRect();
+    }
+  }, []);
 
-    const rect = ref.current.getBoundingClientRect();
+  const handleMouseMove = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    const rect = rectRef.current;
+    if (!rect) return;
+
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
     const distanceX = e.clientX - centerX;
     const distanceY = e.clientY - centerY;
 
-    // Use RAF to throttle updates
     requestAnimationFrame(() => {
       setPosition({
         x: distanceX * strength,
@@ -37,6 +43,7 @@ export const MagneticButton = memo(function MagneticButton({
   }, [strength]);
 
   const handleMouseLeave = useCallback(() => {
+    rectRef.current = null;
     setPosition({ x: 0, y: 0 });
   }, []);
 
@@ -45,6 +52,7 @@ export const MagneticButton = memo(function MagneticButton({
       ref={ref}
       className={className}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       animate={{

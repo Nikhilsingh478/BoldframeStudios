@@ -129,7 +129,7 @@ export function About() {
                   <div className="text-3xl md:text-4xl text-[#5B3CFF] mb-2" style={{ fontWeight: 700 }}>
                     {stat.value}
                   </div>
-                  <div className="text-[#98A3AA] text-xs md:text-sm">
+                  <div className="text-[#B0BBC2] text-xs md:text-sm">
                     {stat.label}
                   </div>
                 </motion.div>

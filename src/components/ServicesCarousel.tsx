@@ -65,6 +65,7 @@ export function ServicesCarousel() {
             scale: [1, 1.15, 1],
           }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ willChange: 'transform' }}
         />
       </div>
 
