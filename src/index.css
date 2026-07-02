@@ -2640,3 +2640,8 @@ textarea,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #67E8F9;
 }
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}

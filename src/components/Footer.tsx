@@ -68,6 +68,8 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           position: relative;
           overflow: hidden;
           z-index: 1;
+          width: 100%;
+          box-sizing: border-box;
         }
 
         .footer-wrapper {
@@ -80,6 +82,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           position: relative;
           z-index: 2;
           width: 100%;
+          box-sizing: border-box;
         }
 
         .footer-left {
@@ -94,6 +97,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           flex-direction: column;
           justify-content: space-between;
           width: 100%;
+          box-sizing: border-box;
         }
 
         .footer-left-video {
@@ -212,6 +216,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           justify-content: space-between;
           position: relative;
           width: 100%;
+          box-sizing: border-box;
         }
 
         .footer-lucky-graphic {

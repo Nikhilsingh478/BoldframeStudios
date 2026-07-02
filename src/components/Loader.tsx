@@ -19,22 +19,21 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          // Wait for the 0.8s panel slide up animation to complete before unmounting
-          setTimeout(onComplete, 800);
+          // Wait for the 0.9s circular iris animation to finish before unmounting
+          setTimeout(onComplete, 900);
           return 100;
         }
 
-        // Ticker logic
         let inc = 1;
         if (!isWindowLoaded && prev >= 85) {
-          // Clamp loader to 85% to wait for hero webm/webp media files and general assets to load
+          // Keep at 85% to ensure all video, images, fonts, and assets are fully downloaded
           return 85;
         }
 
         if (isWindowLoaded) {
-          inc = Math.floor(Math.random() * 8) + 4; // Sweep cleanly to 100% when assets are loaded
+          inc = Math.floor(Math.random() * 8) + 4; // Fast sweep to 100% once assets are cached
         } else {
-          inc = Math.floor(Math.random() * 3) + 1; // Consistent pacing
+          inc = Math.floor(Math.random() * 3) + 1;
         }
 
         return Math.min(prev + inc, 100);
@@ -52,15 +51,16 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0D0F] overflow-hidden"
-      initial={{ y: 0 }}
-      animate={progress === 100 ? { y: "-100%" } : { y: 0 }}
-      transition={{ duration: 0.8, ease: easeCurve }}
+      initial={{ clipPath: "circle(100% at 50% 50%)" }}
+      animate={progress === 100 ? { clipPath: "circle(0% at 50% 50%)" } : { clipPath: "circle(100% at 50% 50%)" }}
+      transition={{ duration: 0.9, ease: easeCurve }}
     >
-      <motion.div 
-        className="relative"
-        animate={progress === 100 ? { y: -80, opacity: 0, scale: 0.9 } : { y: 0, opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: easeCurve }}
-      >
+      <div className="relative flex items-center justify-center w-[120px] h-[120px]">
+        {/* Centered Monospace Percentage Progress Indicator */}
+        <div className="absolute inset-0 flex items-center justify-center font-mono text-[13px] text-[#67E8F9] font-bold tracking-tight select-none">
+          {String(progress).padStart(2, '0')}%
+        </div>
+
         {/* Logo SVG with stroke animation */}
         <motion.svg
           width="80"
@@ -68,6 +68,8 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
           viewBox="0 0 80 80"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          animate={progress === 100 ? { scale: 0.7, opacity: 0 } : { scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         >
           {/* Frame */}
           <motion.rect
@@ -98,28 +100,28 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
         </motion.svg>
 
         {/* Progress ring */}
-        <svg className="absolute inset-0 -rotate-90" width="80" height="80">
+        <svg className="absolute inset-0 -rotate-90" width="120" height="120" viewBox="0 0 120 120">
           <circle
-            cx="40"
-            cy="40"
-            r="38"
-            stroke="rgba(124, 138, 150, 0.2)"
-            strokeWidth="1"
+            cx="60"
+            cy="60"
+            r="56"
+            stroke="rgba(124, 138, 150, 0.15)"
+            strokeWidth="1.5"
             fill="none"
           />
           <motion.circle
-            cx="40"
-            cy="40"
-            r="38"
+            cx="60"
+            cy="60"
+            r="56"
             stroke="#67E8F9"
-            strokeWidth="1"
+            strokeWidth="2"
             fill="none"
-            strokeDasharray={238.76}
-            strokeDashoffset={238.76 - (238.76 * progress) / 100}
+            strokeDasharray={351.858}
+            strokeDashoffset={351.858 - (351.858 * progress) / 100}
             transition={{ duration: 0.1 }}
           />
         </svg>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
