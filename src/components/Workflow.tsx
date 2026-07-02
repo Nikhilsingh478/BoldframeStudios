@@ -59,7 +59,7 @@ export function Workflow() {
     const cardElements = cardRefs.current.filter((el): el is HTMLDivElement => el !== null);
     const totalCards = cardElements.length;
 
-    if (totalCards === 0) return;
+    if (totalCards === 0 || !container.current) return;
 
     // Reset initial card positioning
     gsap.set(cardElements[0], { y: "0%", scale: 1, rotation: 0 });
@@ -70,7 +70,7 @@ export function Workflow() {
 
     const scrollTimeline = gsap.timeline({
       scrollTrigger: {
-        trigger: ".sticky-cards",
+        trigger: container.current,
         start: "top top",
         end: `+=${window.innerHeight * (totalCards - 1)}`,
         pin: true,
@@ -110,9 +110,7 @@ export function Workflow() {
       ScrollTrigger.refresh();
     });
 
-    if (container.current) {
-      resizeObserver.observe(container.current);
-    }
+    resizeObserver.observe(container.current);
 
     return () => {
       resizeObserver.disconnect();
@@ -124,9 +122,9 @@ export function Workflow() {
   return (
     <section
       ref={container}
-      className="relative w-full bg-[#0B0D0F] text-[#E6EEF3] overflow-hidden"
+      className="relative w-full h-screen bg-[#0B0D0F] text-[#E6EEF3] overflow-hidden"
     >
-      <div className="sticky-cards relative flex flex-col h-screen w-full items-center justify-center overflow-hidden p-4 md:p-8">
+      <div className="relative flex flex-col h-full w-full items-center justify-center overflow-hidden p-4 md:p-8">
         
         {/* Header Block anchored at the top */}
         <div className="text-center mb-8 relative z-20 select-none">
