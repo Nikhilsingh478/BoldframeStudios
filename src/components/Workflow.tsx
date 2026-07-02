@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ReactLenis from "lenis/react";
+import { useRef } from "react";
 import { cn } from "./ui/utils";
 
 interface CardData {
@@ -53,141 +55,150 @@ export function Workflow() {
     },
   ];
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+  const totalCards = workflowCards.length;
 
-    const cardElements = cardRefs.current.filter((el): el is HTMLDivElement => el !== null);
-    const totalCards = cardElements.length;
+  useGSAP(
+    () => {
+      gsap.registerPlugin(ScrollTrigger);
 
-    if (totalCards === 0 || !container.current) return;
+      const cardElements = cardRefs.current.filter((el): el is HTMLDivElement => el !== null);
+      if (!cardElements[0]) return;
 
-    // Reset initial card positioning
-    gsap.set(cardElements[0], { y: "0%", scale: 1, rotation: 0 });
+      // Reset initial card positioning
+      gsap.set(cardElements[0], { y: "0%", scale: 1, rotation: 0 });
 
-    for (let i = 1; i < totalCards; i++) {
-      gsap.set(cardElements[i], { y: "100%", scale: 1, rotation: 0 });
-    }
+      for (let i = 1; i < totalCards; i++) {
+        if (!cardElements[i]) continue;
+        gsap.set(cardElements[i], { y: "100%", scale: 1, rotation: 0 });
+      }
 
-    const scrollTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: container.current,
-        start: "top top",
-        end: `+=${window.innerHeight * (totalCards - 1)}`,
-        pin: true,
-        scrub: 0.5,
-        pinSpacing: true,
-      },
-    });
-
-    for (let i = 0; i < totalCards - 1; i++) {
-      const currentCard = cardElements[i];
-      const nextCard = cardElements[i + 1];
-      const position = i;
-
-      scrollTimeline.to(
-        currentCard,
-        {
-          scale: 0.82,
-          rotation: 3,
-          duration: 1,
-          ease: "none",
+      const scrollTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".sticky-cards",
+          start: "top top",
+          end: `+=${window.innerHeight * (totalCards - 1)}`,
+          pin: true,
+          scrub: 0.5,
+          pinSpacing: true,
         },
-        position
-      );
+      });
 
-      scrollTimeline.to(
-        nextCard,
-        {
-          y: "0%",
-          duration: 1,
-          ease: "none",
-        },
-        position
-      );
-    }
+      for (let i = 0; i < totalCards - 1; i++) {
+        const currentCard = cardElements[i];
+        const nextCard = cardElements[i + 1];
+        const position = i;
+        if (!currentCard || !nextCard) continue;
 
-    const resizeObserver = new ResizeObserver(() => {
-      ScrollTrigger.refresh();
-    });
+        scrollTimeline.to(
+          currentCard,
+          {
+            scale: 0.82,
+            rotation: 3,
+            duration: 1,
+            ease: "none",
+          },
+          position
+        );
 
-    resizeObserver.observe(container.current);
+        scrollTimeline.to(
+          nextCard,
+          {
+            y: "0%",
+            duration: 1,
+            ease: "none",
+          },
+          position
+        );
+      }
 
-    return () => {
-      resizeObserver.disconnect();
-      scrollTimeline.kill();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+      const resizeObserver = new ResizeObserver(() => {
+        ScrollTrigger.refresh();
+      });
+
+      if (container.current) {
+        resizeObserver.observe(container.current);
+      }
+
+      return () => {
+        resizeObserver.disconnect();
+        scrollTimeline.kill();
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      };
+    },
+    { scope: container }
+  );
 
   return (
-    <section
-      ref={container}
-      className="relative w-full h-screen bg-[#0B0D0F] text-[#E6EEF3] overflow-hidden"
-    >
-      <div className="relative flex flex-col h-full w-full items-center justify-center overflow-hidden p-4 md:p-8">
-        
-        {/* Header Block anchored at the top */}
-        <div className="text-center mb-8 relative z-20 select-none">
-          <span className="text-xs uppercase tracking-[0.25em] text-[#67E8F9] font-mono font-semibold">
-            Execution Path
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#E6EEF3] mt-2">
-            Our Agency Workflow
-          </h2>
-        </div>
+    <ReactLenis root>
+      <section
+        ref={container}
+        className="relative w-full h-screen bg-[#0B0D0F] text-[#E6EEF3] overflow-hidden"
+      >
+        <div className="sticky-cards relative flex flex-col h-full w-full items-center justify-center overflow-hidden p-4 md:p-8">
+          
+          {/* Header Block anchored at the top */}
+          <div className="text-center mb-8 relative z-20 select-none">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#67E8F9] font-mono font-semibold">
+              Execution Path
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#E6EEF3] mt-2">
+              Our Agency Workflow
+            </h2>
+          </div>
 
-        {/* Stacked Cards Container */}
-        <div
-          className="relative h-[65vh] w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl overflow-hidden rounded-3xl z-10"
-        >
-          {workflowCards.map((card, i) => (
-            <div
-              key={card.id}
-              className="absolute inset-0 overflow-hidden flex flex-col justify-between p-8 md:p-14 bg-[#131619] border border-[#7C8A96]/15 rounded-3xl shadow-[0_30px_60px_-15px_rgba(91,60,255,0.15)]"
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-            >
-              {/* Top Row: Phase Indicator & Huge Background Number */}
-              <div className="flex justify-between items-start z-10">
-                <span className="font-mono text-xs md:text-sm text-[#67E8F9] font-bold tracking-[0.2em] uppercase">
-                  PHASE // {card.phase}
-                </span>
-                <span className="text-5xl md:text-7xl font-bold text-[#E6EEF3]/[0.02] font-mono select-none leading-none -mt-2">
-                  {card.phase}
-                </span>
-              </div>
-              
-              {/* Content Panel */}
-              <div className="relative z-10 flex-1 flex flex-col justify-center my-6">
-                <h3 className="text-2xl md:text-4xl font-bold text-[#E6EEF3] mb-4 tracking-tight leading-[1.15]">
-                  {card.title}
-                </h3>
-                <p className="text-sm md:text-base text-[#98A3AA] max-w-xl leading-relaxed font-light">
-                  {card.description}
-                </p>
-              </div>
+          {/* Stacked Cards Container */}
+          <div
+            className="relative h-[65vh] w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl overflow-hidden rounded-3xl z-10"
+          >
+            {workflowCards.map((card, i) => (
+              <div
+                key={card.id}
+                className="absolute inset-0 overflow-hidden flex flex-col justify-between p-8 md:p-14 bg-[#131619] border border-[#7C8A96]/15 rounded-3xl shadow-[0_30px_60px_-15px_rgba(91,60,255,0.15)]"
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+              >
+                {/* Top Row: Phase Indicator & Huge Background Number */}
+                <div className="flex justify-between items-start z-10">
+                  <span className="font-mono text-xs md:text-sm text-[#67E8F9] font-bold tracking-[0.2em] uppercase">
+                    PHASE // {card.phase}
+                  </span>
+                  <span className="text-5xl md:text-7xl font-bold text-[#E6EEF3]/[0.02] font-mono select-none leading-none -mt-2">
+                    {card.phase}
+                  </span>
+                </div>
+                
+                {/* Content Panel */}
+                <div className="relative z-10 flex-1 flex flex-col justify-center my-6">
+                  <h3 className="text-2xl md:text-4xl font-bold text-[#E6EEF3] mb-4 tracking-tight leading-[1.15]">
+                    {card.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-[#98A3AA] max-w-xl leading-relaxed font-light">
+                    {card.description}
+                  </p>
+                </div>
 
-              {/* Bottom Row: Key Deliverables Tags */}
-              <div className="border-t border-[#7C8A96]/10 pt-6 z-10">
-                <h4 className="text-xs uppercase tracking-wider text-[#67E8F9] font-semibold mb-3">
-                  Key Deliverables
-                </h4>
-                <div className="flex flex-wrap gap-2 md:gap-3">
-                  {card.deliverables.map((item) => (
-                    <span 
-                      key={item} 
-                      className="text-[10px] md:text-xs px-3 py-1.5 bg-[#0B0D0F] border border-[#7C8A96]/10 text-[#E6EEF3] rounded-lg font-mono font-medium"
-                    >
-                      {item}
-                    </span>
-                  ))}
+                {/* Bottom Row: Key Deliverables Tags */}
+                <div className="border-t border-[#7C8A96]/10 pt-6 z-10">
+                  <h4 className="text-xs uppercase tracking-wider text-[#67E8F9] font-semibold mb-3">
+                    Key Deliverables
+                  </h4>
+                  <div className="flex flex-wrap gap-2 md:gap-3">
+                    {card.deliverables.map((item) => (
+                      <span 
+                        key={item} 
+                        className="text-[10px] md:text-xs px-3 py-1.5 bg-[#0B0D0F] border border-[#7C8A96]/10 text-[#E6EEF3] rounded-lg font-mono font-medium"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </ReactLenis>
   );
 }

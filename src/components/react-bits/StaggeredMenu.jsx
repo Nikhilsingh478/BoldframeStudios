@@ -601,7 +601,7 @@ export const StaggeredMenu = ({
   height: 120px;
   z-index: 999999 !important;
   pointer-events: none;
-  overflow: visible;
+  overflow: hidden;
 }
 .sm-scope[data-open] {
   height: 100vh;
@@ -661,8 +661,8 @@ export const StaggeredMenu = ({
   .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; }
   .sm-scope .staggered-menu-wrapper[data-open] .sm-logo .logo-svg-path { stroke: #111111; }
   .sm-scope .staggered-menu-wrapper[data-open] .sm-logo .logo-text { color: #111111; }
-  .sm-scope .sm-panel-item { font-size: 2.5rem; letter-spacing: -1px; }
-  .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { font-size: 14px; right: 2.2em; top: 0.2em; }
+  .sm-scope .sm-panel-item { font-size: 3rem; letter-spacing: -1.5px; }
+  .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { font-size: 15px; right: 2.5em; top: 0.15em; }
 }
       `}</style>
     </div>
