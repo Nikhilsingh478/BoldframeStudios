@@ -473,7 +473,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
         {/* Clean Static Wordmark */}
         <div className="footer-wordmark-container">
-          <div className="footer-wordmark">BoldFrame</div>
+          <div className="footer-wordmark">BoldFrame Studios</div>
         </div>
       </div>
     </section>
