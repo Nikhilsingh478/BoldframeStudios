@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface FooterProps {
   onContactClick: () => void;
@@ -78,6 +79,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           align-items: stretch;
           position: relative;
           z-index: 2;
+          width: 100%;
         }
 
         .footer-left {
@@ -91,6 +93,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          width: 100%;
         }
 
         .footer-left-video {
@@ -116,15 +119,10 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           height: 32px;
           border-radius: 8px;
           background: rgba(255, 255, 255, 0.15);
-          border: 1.5px solid rgba(255, 255, 255, 0.85);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 16px;
-          font-weight: 700;
           color: white;
-          letter-spacing: -0.02em;
         }
 
         .footer-logo-name {
@@ -212,6 +210,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           flex-direction: column;
           justify-content: space-between;
           position: relative;
+          width: 100%;
         }
 
         .footer-lucky-graphic {
@@ -318,11 +317,12 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           color: #E6EEF3;
           margin-bottom: 14px;
           text-decoration: none;
-          transition: color 0.2s;
+          transition: color 0.2s, transform 0.2s;
         }
 
         .footer-col-links a:hover {
           color: #67E8F9;
+          transform: translateX(4px);
         }
 
         .footer-bottom {
@@ -469,6 +469,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           .footer-cta-mini {
             align-items: flex-start;
             width: 100%;
+            min-width: unset;
           }
           .footer-cta-mini h4 {
             text-align: left;
@@ -483,7 +484,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
             padding: 60px 16px 32px;
           }
           .footer-right {
-            padding: 28px 20px;
+            padding: 48px 20px 28px; /* Extra top padding to clear floating graphic */
           }
           .footer-right-top {
             gap: 32px;
@@ -513,7 +514,13 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
       <div className="footer-wrapper">
         {/* Left Card: Dynamic Video background */}
-        <div className="footer-left">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="footer-left"
+        >
           <video className="footer-left-video" autoPlay muted loop playsInline preload="auto">
             <source
               src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260503_104800_bc43ae09-f494-43e3-97d7-2f8c1692cfd7.mp4"
@@ -523,7 +530,18 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
           {/* Logo mark and brand name */}
           <div className="footer-logo">
-            <div className="footer-logo-mark">B</div>
+            <div className="footer-logo-mark">
+              <svg width="20" height="20" viewBox="0 0 32 32" fill="none" className="w-5 h-5">
+                <rect x="2" y="2" width="28" height="28" stroke="currentColor" strokeWidth="2" rx="6" />
+                <path
+                  d="M10 8 L10 24 M10 8 L17 8 C19 8 19 12 17 12 L10 12 M10 12 L18 12 C20 12 20 16 20 17.5 C20 20 18 24 16 24 L10 24"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
             <span className="footer-logo-name">BoldFrame</span>
           </div>
 
@@ -585,10 +603,16 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
               </a>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Card: Content, Nav links, bottom subscription */}
-        <div className="footer-right">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
+          className="footer-right"
+        >
           {/* Floating Lucky Badge */}
           <div className="footer-lucky-graphic" onClick={onContactClick}>
             <div className="lucky-cube">
@@ -675,11 +699,18 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
               </form>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Massive Watermark */}
-      <div className="footer-watermark" aria-hidden="true">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="footer-watermark" 
+        aria-hidden="true"
+      >
         <svg ref={watermarkSvgRef} id="watermarkSvg" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet">
           <text
             ref={watermarkTextRef}
@@ -692,7 +723,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
             BoldFrame
           </text>
         </svg>
-      </div>
+      </motion.div>
     </section>
   );
 }
