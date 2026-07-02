@@ -32,8 +32,6 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
     return () => clearInterval(timer);
   }, [onComplete]);
 
-  const cubicEasing = [0.76, 0, 0.24, 1];
-
   return (
     <AnimatePresence>
       {progress < 100 && (
@@ -41,7 +39,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
           className="fixed inset-0 z-50 bg-[#0A0C0E] flex flex-col justify-between p-8 md:p-16 overflow-hidden select-none"
           initial={{ y: 0 }}
           exit={{ y: "-100vh" }}
-          transition={{ duration: 1.0, ease: cubicEasing }}
+          transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1] }}
         >
           {/* Top Panel: Brand logo mark and header info */}
           <div className="flex justify-between items-start w-full">
