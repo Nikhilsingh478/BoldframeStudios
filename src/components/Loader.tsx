@@ -5,28 +5,62 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    let isWindowLoaded = document.readyState === 'complete';
+
+    const handleWindowLoad = () => {
+      isWindowLoaded = true;
+    };
+
+    if (!isWindowLoaded) {
+      window.addEventListener('load', handleWindowLoad);
+    }
+
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 400);
+          // Wait for the 0.8s panel slide up animation to complete before unmounting
+          setTimeout(onComplete, 800);
           return 100;
         }
-        return prev + 3;
-      });
-    }, 15);
 
-    return () => clearInterval(timer);
+        // Ticker logic
+        let inc = 1;
+        if (!isWindowLoaded && prev >= 85) {
+          // Clamp loader to 85% to wait for hero webm/webp media files and general assets to load
+          return 85;
+        }
+
+        if (isWindowLoaded) {
+          inc = Math.floor(Math.random() * 8) + 4; // Sweep cleanly to 100% when assets are loaded
+        } else {
+          inc = Math.floor(Math.random() * 3) + 1; // Consistent pacing
+        }
+
+        return Math.min(prev + inc, 100);
+      });
+    }, 25);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('load', handleWindowLoad);
+    };
   }, [onComplete]);
+
+  const easeCurve = [0.76, 0, 0.24, 1];
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0D0F]"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: progress === 100 ? 0 : 1 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0D0F] overflow-hidden"
+      initial={{ y: 0 }}
+      animate={progress === 100 ? { y: "-100%" } : { y: 0 }}
+      transition={{ duration: 0.8, ease: easeCurve }}
     >
-      <div className="relative">
+      <motion.div 
+        className="relative"
+        animate={progress === 100 ? { y: -80, opacity: 0, scale: 0.9 } : { y: 0, opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: easeCurve }}
+      >
         {/* Logo SVG with stroke animation */}
         <motion.svg
           width="80"
@@ -85,7 +119,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
             transition={{ duration: 0.1 }}
           />
         </svg>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
