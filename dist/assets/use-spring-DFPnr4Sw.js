@@ -1,1 +1,0 @@
-import{r as e}from"./radix-D4tmaoiR.js";import{M as a,b as i,u}from"./index-C9PEowz8.js";import{al as f,c as m}from"./motion-4O9EsY6r.js";function S(t,o={}){const{isStatic:s}=e.useContext(a),n=()=>m(t)?t.get():t;if(s)return i(n);const r=u(n());return e.useInsertionEffect(()=>f(r,t,o),[r,JSON.stringify(o)]),r}export{S as u};
