@@ -300,11 +300,12 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
         .footer-wordmark {
           font-family: 'DM Sans', sans-serif;
           font-weight: 900;
-          font-size: clamp(2.5rem, 12vw, 8.5rem);
+          font-size: clamp(2rem, 8vw, 6.5rem);
           color: rgba(255, 255, 255, 0.01);
           text-transform: uppercase;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.03em;
           line-height: 1;
+          white-space: nowrap;
         }
 
         @media (max-width: 991px) {
