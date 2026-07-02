@@ -422,7 +422,8 @@ export const StaggeredMenu = ({
 
   return (
     <div
-      className={`sm-scope z-[99999] ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'} ${open ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      className="sm-scope"
+      data-open={open || undefined}
     >
       <div
         className={
@@ -592,7 +593,21 @@ export const StaggeredMenu = ({
       </div>
 
       <style>{`
-.sm-scope { pointer-events: none; }
+.sm-scope {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 120px;
+  z-index: 999999 !important;
+  pointer-events: none;
+  overflow: visible;
+}
+.sm-scope[data-open] {
+  height: 100vh;
+  pointer-events: auto;
+  overflow: hidden;
+}
 .sm-scope .staggered-menu-wrapper { position: relative; width: 100%; height: 100%; z-index: 40; pointer-events: none; }
 .sm-scope .staggered-menu-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1.8rem 2.5rem; background: transparent; pointer-events: none; z-index: 20; transition: all 0.3s ease; }
 .sm-scope .staggered-menu-header.scrolled { padding: 1.1rem 2.5rem; background: rgba(11, 13, 15, 0.75) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border-bottom: 1px solid rgba(124, 138, 150, 0.08); }
@@ -612,7 +627,7 @@ export const StaggeredMenu = ({
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
 .sm-scope .sm-line { display: none !important; }
-.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2em 2em 2em; overflow-y: auto; z-index: 10; pointer-events: auto !important; }
+.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2.5em 2em 2.5em; overflow-y: auto; z-index: 10; pointer-events: auto !important; }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
 .sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
