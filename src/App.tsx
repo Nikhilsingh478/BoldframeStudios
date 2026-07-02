@@ -9,6 +9,7 @@ import { Hero } from './components/Hero';
 const ServicesCarousel = lazy(() => import('./components/ServicesCarousel').then(m => ({ default: m.ServicesCarousel })));
 const Work = lazy(() => import('./components/Work').then(m => ({ default: m.Work })));
 const Playroom = lazy(() => import('./components/Playroom').then(m => ({ default: m.Playroom })));
+const Workflow = lazy(() => import('./components/Workflow').then(m => ({ default: m.Workflow })));
 const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({ default: m.Testimonials })));
 const About = lazy(() => import('./components/About').then(m => ({ default: m.About })));
 const ContactModal = lazy(() => import('./components/ContactModal').then(m => ({ default: m.ContactModal })));
@@ -122,6 +123,7 @@ export default function App() {
               <ServicesCarousel />
               <Playroom />
               <Work />
+              <Workflow />
               <Testimonials />
               <About />
             </Suspense>

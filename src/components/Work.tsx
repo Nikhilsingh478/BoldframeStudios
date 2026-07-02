@@ -1,14 +1,7 @@
-import { motion } from 'motion/react';
-import { useState } from 'react';
-// Optional per-section SEO override (example):
-// import { Helmet } from 'react-helmet-async';
-// Inside the component return, you may add:
-// <Helmet>
-//   <title>Nikhil Webworks | Work</title>
-//   <meta name="description" content="Featured case studies and projects." />
-// </Helmet>
+import { motion, useSpring, useMotionValue } from 'motion/react';
+import { useState, useRef } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { ExternalLink } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { CaseStudyModal } from './CaseStudyModal';
 
 const projects = [
@@ -58,11 +51,6 @@ const projects = [
       { metric: 'LCP', value: '2.33 s' },
       { metric: 'CLS', value: '0' },
       { metric: 'INP', value: '40 ms' },
-      // {
-      //   metric: 'Notes',
-      //   value:
-      //     'Highly praised by peers — strong brand identity and meaningful animation',
-      // },
     ],
     gallery: ['/p4.webp', '/p5.webp', '/p6.webp'],
     highlights: [
@@ -194,95 +182,168 @@ const projects = [
     gallery: ['/p16.webp', '/p17.webp', '/p18.webp'],
     highlights: [
       'Polished parallax composition',
-      'Strong festive visuals and motion',
-      'Fast LCP and stable layout',
+      'Spooky creative motion' // Custom fallback just in case
     ],
     url: 'https://christmas-webpage.vercel.app/',
   },
 ];
 
-
 export function Work() {
   const [selectedCase, setSelectedCase] = useState<typeof projects[0] | null>(null);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 18, mass: 0.12 };
+  const x = useSpring(mouseX, springConfig);
+  const y = useSpring(mouseY, springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY);
+  };
 
   return (
     <>
-      <section id="work" className="py-20 md:py-32 bg-[#0F1316]">
-        <div className="container mx-auto px-6">
+      <section 
+        id="work" 
+        className="py-24 md:py-36 bg-[#0B0D0F] relative overflow-hidden"
+        onMouseMove={handleMouseMove}
+      >
+        <div className="container mx-auto px-6 relative z-10">
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, type: 'spring', damping: 18, stiffness: 120 }}
-            className="text-center mb-16"
+            className="text-center mb-20 md:mb-28"
           >
-            <h2 className="text-[clamp(2rem,4vw,3rem)] text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
+            <h2 className="text-[clamp(2rem,4vw,3.25rem)] text-[#E6EEF3] mb-4" style={{ fontWeight: 600 }}>
               Featured Work
             </h2>
-            <p className="text-[#98A3AA] max-w-2xl mx-auto">
-              Case studies showcasing our approach to design, development, and performance optimization.
+            <p className="text-[#98A3AA] max-w-2xl mx-auto text-sm md:text-base">
+              Explore high-performance websites and web applications built with a focus on speed, conversions, and clean design.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {/* Desktop Hover-Reveal List */}
+          <div ref={listRef} className="hidden md:block max-w-5xl mx-auto border-t border-[#7C8A96]/10">
+            {projects.map((project, index) => (
+              <div
+                key={project.title}
+                onMouseEnter={() => setHoveredIdx(index)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                onClick={() => setSelectedCase(project)}
+                className="py-10 border-b border-[#7C8A96]/10 flex items-center justify-between group cursor-pointer relative transition-all duration-300"
+              >
+                {/* Expand hover background slightly */}
+                <div className="absolute inset-0 bg-[#E6EEF3]/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                <div className="flex items-center gap-10 z-10">
+                  {/* Project Index */}
+                  <span className="font-mono text-sm text-[#5B3CFF] opacity-40 group-hover:opacity-100 transition-opacity duration-300">
+                    0{index + 1}
+                  </span>
+
+                  {/* Project Title */}
+                  <span className="text-4xl lg:text-5xl font-semibold text-[#98A3AA] group-hover:text-[#E6EEF3] transition-colors duration-300 tracking-tight">
+                    {project.title}
+                  </span>
+                </div>
+
+                {/* Category and Action Arrow */}
+                <div className="flex items-center gap-6 z-10">
+                  <span className="text-sm font-medium text-[#7C8A96] group-hover:text-[#67E8F9] transition-colors duration-300">
+                    {project.category.split(' · ')[0]}
+                  </span>
+                  <div className="w-10 h-10 rounded-full border border-[#7C8A96]/20 flex items-center justify-center text-[#98A3AA] group-hover:text-[#67E8F9] group-hover:border-[#67E8F9]/60 transition-all duration-300 group-hover:rotate-45">
+                    <ArrowUpRight className="w-5 h-5" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Floating Image Preview Container for Desktop */}
+          <motion.div
+            style={{
+              position: 'fixed',
+              left: x,
+              top: y,
+              x: '20px', // slightly offset to the right of cursor
+              y: '-50%',
+              pointerEvents: 'none',
+              zIndex: 100,
+            }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ 
+              scale: hoveredIdx !== null ? 1 : 0.8, 
+              opacity: hoveredIdx !== null ? 1 : 0 
+            }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden md:block w-[380px] h-[270px] rounded-xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(91,60,255,0.3)] border border-[#7C8A96]/20 bg-[#0B0D0F]"
+          >
+            {projects.map((project, idx) => (
+              <div
+                key={project.title}
+                style={{
+                  display: hoveredIdx === idx ? 'block' : 'none',
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Mobile Fallback: Elegant Card Stack */}
+          <div className="block md:hidden space-y-8">
             {projects.map((project, index) => (
               <motion.div
                 key={project.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  type: 'spring',
-                  damping: 18,
-                  stiffness: 120,
-                }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.6, delay: index * 0.05 }}
                 onClick={() => setSelectedCase(project)}
-                className="group relative overflow-hidden rounded-xl cursor-pointer"
+                className="group bg-[#131619] rounded-2xl overflow-hidden border border-[#7C8A96]/10 shadow-xl"
               >
                 {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-[#0B0D0F]">
+                <div className="relative aspect-[4/3] overflow-hidden">
                   <ImageWithFallback
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                   />
-
-                  {/* Blur overlay on hover — CSS transition avoids non-composited Framer Motion animation on backdrop-filter */}
-                  <div
-                    className="absolute inset-0 backdrop-blur-sm bg-[#0B0D0F]/60 flex flex-col items-center justify-center p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  >
-                    <div className="text-center">
-                      <div className="w-12 h-12 rounded-full bg-[#5B3CFF] flex items-center justify-center mx-auto mb-4">
-                        <ExternalLink className="w-6 h-6 text-[#E6EEF3]" />
-                      </div>
-                      <h3 className="text-xl text-[#E6EEF3] mb-2" style={{ fontWeight: 600 }}>
-                        {project.title}
-                      </h3>
-                      <p className="text-[#67E8F9] text-sm mb-4">
-                        {project.category}
-                      </p>
-                      <div className="space-y-2">
-                        {project.highlights.map((highlight) => (
-                          <p key={highlight} className="text-[#98A3AA] text-xs">
-                            • {highlight}
-                          </p>
-                        ))}
-                      </div>
-                      <p className="text-[#67E8F9] text-xs mt-4">
-                        Click to see full case study →
-                      </p>
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#131619] via-transparent to-transparent opacity-80" />
                 </div>
 
-                {/* Info bar */}
-                <div className="glass p-4">
-                  <h3 className="text-[#E6EEF3] mb-1" style={{ fontWeight: 600 }}>
-                    {project.title}
-                  </h3>
-                  <p className="text-[#A8B6BE] text-sm">{project.category}</p>
+                {/* Details */}
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold text-[#E6EEF3]">
+                      {project.title}
+                    </h3>
+                    <ArrowUpRight className="w-5 h-5 text-[#67E8F9]" />
+                  </div>
+                  <p className="text-sm text-[#98A3AA] mb-4">
+                    {project.category}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.slice(0, 3).map((t) => (
+                      <span key={t} className="text-xs px-2.5 py-1 bg-[#5B3CFF]/10 text-[#67E8F9] rounded-md font-mono">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             ))}
