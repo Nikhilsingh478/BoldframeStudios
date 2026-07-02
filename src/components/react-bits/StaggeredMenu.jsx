@@ -627,15 +627,15 @@ export const StaggeredMenu = ({
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
 .sm-scope .sm-line { display: none !important; }
-.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2.5em 2em 2.5em; overflow-y: auto; z-index: 10; pointer-events: auto !important; }
+.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: 100vw; height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2.5em 2em 2.5em; overflow-y: auto; z-index: 10; pointer-events: auto !important; }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
-.sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
+.sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: 100vw; pointer-events: none; z-index: 5; }
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
 .sm-scope .sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; transform: translateX(0); }
-.sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
+.sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 2rem; width: 100%; max-width: 1200px; margin: 0 auto; justify-content: center; padding: 2rem; }
 .sm-scope .sm-socials { margin-top: auto; padding-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .sm-scope .sm-socials-title { margin: 0; font-size: 1rem; font-weight: 500; color: var(--sm-accent, #ff0000); }
-.sm-scope .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.sm-scope .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
 .sm-scope .sm-socials-list .sm-socials-link { opacity: 1; transition: opacity 0.3s ease; }
 .sm-scope .sm-socials-list:hover .sm-socials-link:not(:hover) { opacity: 0.35; }
 .sm-scope .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) { opacity: 0.35; }
@@ -645,7 +645,7 @@ export const StaggeredMenu = ({
 .sm-scope .sm-socials-link { font-size: 1.2rem; font-weight: 500; color: #111; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
 .sm-scope .sm-socials-link:hover { color: var(--sm-accent, #ff0000); }
 .sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: #fff; text-transform: uppercase; }
-.sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .sm-scope .sm-panel-item { position: relative; color: #000; font-weight: 600; font-size: 4rem; cursor: pointer; line-height: 1; letter-spacing: -2px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; pointer-events: auto !important; }
 .sm-scope .sm-panel-itemLabel { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
 .sm-scope .sm-panel-item:hover { color: var(--sm-accent, #ff0000); }
@@ -661,6 +661,8 @@ export const StaggeredMenu = ({
   .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; }
   .sm-scope .staggered-menu-wrapper[data-open] .sm-logo .logo-svg-path { stroke: #111111; }
   .sm-scope .staggered-menu-wrapper[data-open] .sm-logo .logo-text { color: #111111; }
+  .sm-scope .sm-panel-item { font-size: 2.5rem; letter-spacing: -1px; }
+  .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { font-size: 14px; right: 2.2em; top: 0.2em; }
 }
       `}</style>
     </div>
