@@ -32,7 +32,6 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
     fitWatermark();
 
-    // Re-run after a small delay to make sure styles are fully calculated
     const timer = setTimeout(fitWatermark, 100);
 
     return () => {
@@ -61,7 +60,6 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
   return (
     <section className="footer-section">
-      {/* Styles defined here to make the component fully self-contained as requested */}
       <style>{`
         .footer-section {
           background: #0B0D0F;
@@ -290,8 +288,13 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
         .footer-right-top {
           display: flex;
-          gap: 72px;
+          gap: 48px;
+          flex-wrap: wrap;
           padding-top: 8px;
+        }
+
+        .footer-col {
+          min-width: 140px;
         }
 
         .footer-col-title {
@@ -326,6 +329,8 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 24px;
           margin-top: 48px;
         }
 
@@ -334,12 +339,16 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           font-size: 12.5px;
           font-weight: 500;
           color: #9ca3af;
+          min-width: 220px;
         }
 
         .footer-cta-mini {
           display: flex;
           flex-direction: column;
           gap: 14px;
+          flex: 1;
+          min-width: 280px;
+          align-items: flex-end;
         }
 
         .footer-cta-mini h4 {
@@ -348,6 +357,8 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           font-weight: 400;
           color: #9ca3af;
           line-height: 1.45;
+          text-align: right;
+          width: 100%;
         }
 
         .footer-cta-mini h4 strong {
@@ -360,7 +371,8 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
 
         .footer-subscribe-row {
           display: flex;
-          width: 310px;
+          width: 100%;
+          max-width: 320px;
           background: #0B0D0F;
           border: 1px solid rgba(124, 138, 150, 0.15);
           border-radius: 12px;
@@ -382,6 +394,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           font-size: 13.5px;
           color: #E6EEF3;
           outline: none;
+          min-width: 0;
         }
 
         .footer-subscribe-row input::placeholder {
@@ -400,6 +413,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           box-shadow: 0 6px 20px rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.15);
           cursor: pointer;
           transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+          white-space: nowrap;
         }
 
         .footer-subscribe-row button:hover {
@@ -431,7 +445,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           fill: rgba(255, 255, 255, 0.015);
         }
 
-        @media (max-width: 860px) {
+        @media (max-width: 991px) {
           .footer-wrapper {
             grid-template-columns: 1fr;
           }
@@ -441,24 +455,41 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           }
         }
 
-        @media (max-width: 560px) {
-          .footer-right {
-            padding: 24px;
-          }
-          .footer-right-top {
-            gap: 40px;
-            flex-wrap: wrap;
-          }
+        @media (max-width: 768px) {
           .footer-bottom {
-            flex-direction: column;
+            flex-direction: column-reverse;
             align-items: flex-start;
-            gap: 24px;
+            gap: 28px;
           }
-          .footer-subscribe-row {
+          .footer-copyright {
+            min-width: unset;
+            width: 100%;
+            text-align: left;
+          }
+          .footer-cta-mini {
+            align-items: flex-start;
             width: 100%;
           }
+          .footer-cta-mini h4 {
+            text-align: left;
+          }
+          .footer-subscribe-row {
+            max-width: 100%;
+          }
+        }
+
+        @media (max-width: 560px) {
+          .footer-section {
+            padding: 60px 16px 32px;
+          }
+          .footer-right {
+            padding: 28px 20px;
+          }
+          .footer-right-top {
+            gap: 32px;
+          }
           .footer-lucky-graphic {
-            right: 12px;
+            right: 20px;
             top: -28px;
           }
           .lucky-cube {
@@ -468,6 +499,14 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           }
           .lucky-cube-mark {
             font-size: 32px;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .footer-social-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
           }
         }
       `}</style>
