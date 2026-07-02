@@ -8,7 +8,7 @@ interface CardData {
   phase: string;
   title: string;
   description: string;
-  image: string;
+  deliverables: string[];
 }
 
 export function Workflow() {
@@ -21,35 +21,35 @@ export function Workflow() {
       phase: "01",
       title: "Requirements Discovery",
       description: "We deep-dive into your business goals, target audience, and project constraints. Every feature is scoped, documented, and aligned with your timeline before coding.",
-      image: "/p1.webp",
+      deliverables: ["Scope Document", "Feature Spec Sheet", "Timeline Roadmap"]
     },
     {
       id: 2,
       phase: "02",
       title: "Competitor Benchmarking",
-      description: "We reverse-engineer your competition—mapping what they do well and identifying their structural weaknesses to carve out a distinct visual and functional edge for your product.",
-      image: "/p2.webp",
+      description: "We reverse-engineer your competition—mapping what they do well and identifying their structural weaknesses to carve out a distinct visual and functional edge.",
+      deliverables: ["Competitive Audit", "UX Gap Analysis", "Feature Comparison Grid"]
     },
     {
       id: 3,
       phase: "03",
       title: "Brand & Niche Synthesis",
       description: "We craft the visual system tailored to your industry niche. Curating custom typography, color palettes, and motion parameters to establish premium quality.",
-      image: "/p3.webp",
+      deliverables: ["Color Palette System", "Typography Guide", "Visual Styleboard"]
     },
     {
       id: 4,
       phase: "04",
       title: "Rough Mockups & Layouts",
       description: "We structure the layout, mapping user flows and key structural wireframes. Visual designs are locked down early to ensure a flawless experience.",
-      image: "/p4.webp",
+      deliverables: ["Interactive Wireframes", "User Flow Diagrams", "Responsive Layout Sketches"]
     },
     {
       id: 5,
       phase: "05",
       title: "Core Development & Launch",
       description: "We code the vision using modern React and Vite frameworks. Focused on clean semantic HTML, fast loading times, pixel-perfect responsiveness, and smooth animations.",
-      image: "/p5.webp",
+      deliverables: ["Production Build", "Lighthouse Audit Report", "SEO Integration"]
     },
   ];
 
@@ -140,39 +140,51 @@ export function Workflow() {
 
         {/* Stacked Cards Container */}
         <div
-          className="relative h-[65vh] w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl overflow-hidden rounded-3xl z-10 border border-[#7C8A96]/10 shadow-[0_30px_60px_-15px_rgba(91,60,255,0.15)]"
+          className="relative h-[65vh] w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl overflow-hidden rounded-3xl z-10"
         >
           {workflowCards.map((card, i) => (
             <div
               key={card.id}
-              className="absolute inset-0 overflow-hidden flex flex-col justify-end p-8 md:p-16 bg-[#131619] rounded-3xl"
+              className="absolute inset-0 overflow-hidden flex flex-col justify-between p-8 md:p-14 bg-[#131619] border border-[#7C8A96]/15 rounded-3xl shadow-[0_30px_60px_-15px_rgba(91,60,255,0.15)]"
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
             >
-              {/* Background image & gradient overlay */}
-              {card.image && (
-                <div className="absolute inset-0 z-0">
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="w-full h-full object-cover opacity-20 select-none pointer-events-none"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#131619] via-[#131619]/45 to-transparent" />
-                </div>
-              )}
-              
-              {/* Content Panel */}
-              <div className="relative z-10 select-none">
-                <span className="font-mono text-xs md:text-sm text-[#67E8F9] font-bold tracking-[0.2em] uppercase mb-3 block">
+              {/* Top Row: Phase Indicator & Huge Background Number */}
+              <div className="flex justify-between items-start z-10">
+                <span className="font-mono text-xs md:text-sm text-[#67E8F9] font-bold tracking-[0.2em] uppercase">
                   PHASE // {card.phase}
                 </span>
-                <h3 className="text-3xl md:text-5xl font-bold text-[#E6EEF3] mb-4 tracking-tight leading-[1.1]">
+                <span className="text-5xl md:text-7xl font-bold text-[#E6EEF3]/[0.02] font-mono select-none leading-none -mt-2">
+                  {card.phase}
+                </span>
+              </div>
+              
+              {/* Content Panel */}
+              <div className="relative z-10 flex-1 flex flex-col justify-center my-6">
+                <h3 className="text-2xl md:text-4xl font-bold text-[#E6EEF3] mb-4 tracking-tight leading-[1.15]">
                   {card.title}
                 </h3>
                 <p className="text-sm md:text-base text-[#98A3AA] max-w-xl leading-relaxed font-light">
                   {card.description}
                 </p>
+              </div>
+
+              {/* Bottom Row: Key Deliverables Tags */}
+              <div className="border-t border-[#7C8A96]/10 pt-6 z-10">
+                <h4 className="text-xs uppercase tracking-wider text-[#67E8F9] font-semibold mb-3">
+                  Key Deliverables
+                </h4>
+                <div className="flex flex-wrap gap-2 md:gap-3">
+                  {card.deliverables.map((item) => (
+                    <span 
+                      key={item} 
+                      className="text-[10px] md:text-xs px-3 py-1.5 bg-[#0B0D0F] border border-[#7C8A96]/10 text-[#E6EEF3] rounded-lg font-mono font-medium"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
