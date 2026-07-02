@@ -71,10 +71,10 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
         }
 
         .footer-wrapper {
-          max-width: 1150px;
+          max-width: 1000px;
           margin: 0 auto;
           display: grid;
-          grid-template-columns: 350px 1fr;
+          grid-template-columns: 300px 1fr;
           gap: 24px;
           align-items: stretch;
           position: relative;
@@ -423,7 +423,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
         }
 
         .footer-watermark {
-          max-width: 1150px;
+          max-width: 1000px;
           margin: -60px auto 0;
           pointer-events: none;
           user-select: none;
