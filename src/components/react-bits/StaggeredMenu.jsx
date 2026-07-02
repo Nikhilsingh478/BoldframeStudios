@@ -253,6 +253,9 @@ export const StaggeredMenu = ({
         if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
         if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
 
+        // Delay setting open to false until animation finishes completely 
+        // to prevent premature height truncation (clipping panels).
+        setOpen(false);
         busyRef.current = false;
       }
     });
@@ -342,9 +345,9 @@ export const StaggeredMenu = ({
   const toggleMenu = useCallback(() => {
     const target = !openRef.current;
     openRef.current = target;
-    setOpen(target);
 
     if (target) {
+      setOpen(true);
       onMenuOpen?.();
       playOpen();
     } else {
@@ -360,7 +363,6 @@ export const StaggeredMenu = ({
   const closeMenu = useCallback(() => {
     if (openRef.current) {
       openRef.current = false;
-      setOpen(false);
       onMenuClose?.();
       playClose();
       animateIcon(false);
