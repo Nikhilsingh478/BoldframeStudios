@@ -55,72 +55,74 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
       animate={progress === 100 ? { clipPath: "circle(0% at 50% 50%)" } : { clipPath: "circle(100% at 50% 50%)" }}
       transition={{ duration: 0.9, ease: easeCurve }}
     >
-      <div className="relative flex items-center justify-center w-[120px] h-[120px]">
-        {/* Centered Monospace Percentage Progress Indicator */}
-        <div className="absolute inset-0 flex items-center justify-center font-mono text-[13px] text-[#67E8F9] font-bold tracking-tight select-none">
-          {String(progress).padStart(2, '0')}%
+      <div className="flex flex-col items-center justify-center gap-6">
+        <div className="relative w-[80px] h-[80px] flex items-center justify-center">
+          {/* Logo SVG with stroke animation and progress circle */}
+          <motion.svg
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            animate={progress === 100 ? { scale: 0.7, opacity: 0 } : { scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          >
+            {/* Background Circular Progress Track */}
+            <circle
+              cx="40"
+              cy="40"
+              r="38"
+              stroke="rgba(124, 138, 150, 0.15)"
+              strokeWidth="1.5"
+              fill="none"
+            />
+            {/* Active Circular Progress Indicator */}
+            <motion.circle
+              cx="40"
+              cy="40"
+              r="38"
+              stroke="#67E8F9"
+              strokeWidth="2"
+              fill="none"
+              strokeDasharray={238.76}
+              strokeDashoffset={238.76 - (238.76 * progress) / 100}
+              transition={{ duration: 0.1 }}
+              transform="rotate(-90 40 40)"
+            />
+
+            {/* Frame Box */}
+            <motion.rect
+              x="18"
+              y="18"
+              width="44"
+              height="44"
+              stroke="#5B3CFF"
+              strokeWidth="2"
+              fill="none"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+            />
+            
+            {/* B Letter */}
+            <motion.path
+              d="M32 28 L32 52 M32 28 L42 28 C45 28 45 34 42 34 L32 34 M32 34 L43 34 C46 34 46 41 46 43 C46 47 43 52 38 52 L32 52"
+              stroke="#E6EEF3"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2, ease: 'easeInOut' }}
+            />
+          </motion.svg>
         </div>
 
-        {/* Logo SVG with stroke animation */}
-        <motion.svg
-          width="80"
-          height="80"
-          viewBox="0 0 80 80"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          animate={progress === 100 ? { scale: 0.7, opacity: 0 } : { scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-        >
-          {/* Frame */}
-          <motion.rect
-            x="10"
-            y="10"
-            width="60"
-            height="60"
-            stroke="#5B3CFF"
-            strokeWidth="2"
-            fill="none"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
-          />
-          
-          {/* B Letter */}
-          <motion.path
-            d="M30 25 L30 55 M30 25 L45 25 C50 25 50 32 45 32 L30 32 M30 32 L47 32 C52 32 52 40 52 43 C52 48 48 55 42 55 L30 55"
-            stroke="#E6EEF3"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: 'easeInOut' }}
-          />
-        </motion.svg>
-
-        {/* Progress ring */}
-        <svg className="absolute inset-0 -rotate-90" width="120" height="120" viewBox="0 0 120 120">
-          <circle
-            cx="60"
-            cy="60"
-            r="56"
-            stroke="rgba(124, 138, 150, 0.15)"
-            strokeWidth="1.5"
-            fill="none"
-          />
-          <motion.circle
-            cx="60"
-            cy="60"
-            r="56"
-            stroke="#67E8F9"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray={351.858}
-            strokeDashoffset={351.858 - (351.858 * progress) / 100}
-            transition={{ duration: 0.1 }}
-          />
-        </svg>
+        {/* Separated Clean Monospace Progress text */}
+        <div className="font-mono text-xs text-[#67E8F9] tracking-[0.2em] font-bold select-none h-4">
+          {String(progress).padStart(3, '0')}%
+        </div>
       </div>
     </motion.div>
   );
