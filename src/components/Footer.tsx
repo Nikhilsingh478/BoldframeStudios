@@ -429,13 +429,14 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           position: relative;
           z-index: 0;
           line-height: 0;
+          width: 100%;
         }
 
         .footer-watermark svg {
           display: block;
           width: 100%;
           height: auto;
-          overflow: visible;
+          overflow: hidden; /* Changed from visible to prevent scroll container expansion */
         }
 
         .footer-watermark text {
@@ -483,31 +484,83 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           .footer-section {
             padding: 60px 16px 32px;
           }
-          .footer-right {
-            padding: 48px 20px 28px; /* Extra top padding to clear floating graphic */
+          .footer-left {
+            align-items: center;
+            text-align: center;
+            padding: 32px 20px;
           }
-          .footer-right-top {
-            gap: 32px;
+          .footer-logo {
+            justify-content: center;
           }
-          .footer-lucky-graphic {
-            right: 20px;
-            top: -28px;
+          .footer-tagline-container {
+            text-align: center;
+            width: 100%;
           }
-          .lucky-cube {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
-          }
-          .lucky-cube-mark {
-            font-size: 32px;
-          }
-        }
-
-        @media (max-width: 360px) {
           .footer-social-row {
             flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+          }
+          .footer-social-label {
+            text-align: center;
+          }
+          .footer-right {
+            padding: 56px 20px 28px;
+            align-items: center;
+            text-align: center;
+          }
+          .footer-right-top {
+            justify-content: center;
+            text-align: center;
+            gap: 32px;
+            width: 100%;
+          }
+          .footer-col {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .footer-col-links a:hover {
+            transform: scale(1.05);
+          }
+          .footer-bottom {
+            flex-direction: column-reverse;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+          }
+          .footer-copyright {
+            text-align: center;
+          }
+          .footer-cta-mini {
+            align-items: center;
+            width: 100%;
+            text-align: center;
+          }
+          .footer-cta-mini h4 {
+            text-align: center;
+          }
+          .footer-subscribe-row {
+            margin: 0 auto;
+            max-width: 100%;
+          }
+          .footer-lucky-graphic {
+            right: 50%;
+            transform: translateX(50%);
+            top: -32px;
+          }
+          .lucky-cube {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+          }
+          .lucky-cube-mark {
+            font-size: 28px;
+          }
+          .lucky-text-row {
+            display: none; /* Hide the extra arrow text row on mobile to keep layout clean */
           }
         }
       `}</style>
