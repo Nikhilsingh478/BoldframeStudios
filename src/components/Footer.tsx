@@ -159,6 +159,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           gap: 12px;
           position: relative;
           z-index: 1;
+          flex-wrap: wrap; /* Allows wrapping on narrow screens */
         }
 
         .footer-social-label {
@@ -430,13 +431,14 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           z-index: 0;
           line-height: 0;
           width: 100%;
+          overflow: hidden;
         }
 
         .footer-watermark svg {
           display: block;
           width: 100%;
           height: auto;
-          overflow: hidden; /* Changed from visible to prevent scroll container expansion */
+          overflow: hidden;
         }
 
         .footer-watermark text {
@@ -485,34 +487,35 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
             padding: 60px 16px 32px;
           }
           .footer-left {
-            align-items: center;
-            text-align: center;
-            padding: 32px 20px;
+            padding: 32px 24px;
+            align-items: flex-start;
+            text-align: left;
           }
           .footer-logo {
-            justify-content: center;
+            justify-content: flex-start;
           }
           .footer-tagline-container {
-            text-align: center;
+            text-align: left;
             width: 100%;
           }
           .footer-social-row {
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
             align-items: center;
             gap: 16px;
             width: 100%;
           }
           .footer-social-label {
-            text-align: center;
+            text-align: left;
           }
           .footer-right {
-            padding: 56px 20px 28px;
-            align-items: center;
-            text-align: center;
+            padding: 56px 24px 28px;
+            align-items: flex-start;
+            text-align: left;
           }
           .footer-right-top {
-            justify-content: center;
-            text-align: center;
+            justify-content: flex-start;
+            text-align: left;
             gap: 32px;
             width: 100%;
           }
@@ -520,47 +523,55 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
             width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
           }
           .footer-col-links a:hover {
-            transform: scale(1.05);
+            transform: translateX(4px);
           }
           .footer-bottom {
             flex-direction: column-reverse;
-            align-items: center;
-            text-align: center;
+            align-items: flex-start;
+            text-align: left;
             width: 100%;
           }
           .footer-copyright {
-            text-align: center;
+            text-align: left;
           }
           .footer-cta-mini {
-            align-items: center;
+            align-items: flex-start;
             width: 100%;
-            text-align: center;
+            text-align: left;
           }
           .footer-cta-mini h4 {
-            text-align: center;
+            text-align: left;
           }
           .footer-subscribe-row {
-            margin: 0 auto;
+            margin: 0;
             max-width: 100%;
           }
           .footer-lucky-graphic {
-            right: 50%;
-            transform: translateX(50%);
+            right: 24px;
+            transform: none;
             top: -32px;
           }
           .lucky-cube {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 16px;
           }
           .lucky-cube-mark {
-            font-size: 28px;
+            font-size: 32px;
           }
           .lucky-text-row {
-            display: none; /* Hide the extra arrow text row on mobile to keep layout clean */
+            display: none;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .footer-social-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
           }
         }
       `}</style>
