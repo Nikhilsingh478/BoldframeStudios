@@ -1,0 +1,464 @@
+/*
+ * BoldFrame Redesign — Post-Hero Design System
+ * Scoped entirely under .boldframe-redesign
+ * Hero is LOCKED — nothing in this file touches it.
+ *
+ * Fonts already loaded in index.html:
+ *   DISPLAY  → 'DM Sans'  (variable weight 100–1000)
+ *   BODY     → 'Inter'    (400, 500, 600, 700)
+ *   MICRO    → 'Inter'    uppercase + wide tracking
+ */
+
+/* ─── Design Tokens ──────────────────────────────────────────────── */
+
+.boldframe-redesign {
+  /* Backgrounds — near-black graphite range, never flat black */
+  --bf-bg-base:      #08090B; /* deepest */
+  --bf-bg-primary:   #0A0B0E; /* default section bg */
+  --bf-bg-secondary: #0C0D10; /* slightly elevated */
+  --bf-bg-surface:   #111318; /* cards, panels */
+  --bf-bg-inset:     #0E0F13; /* subtle inset / bento cells */
+
+  /* Text */
+  --bf-text-primary:   #F3F2EE; /* warm near-white */
+  --bf-text-secondary: #96989F; /* muted mid-tone */
+  --bf-text-tertiary:  #5A5C63; /* faintest labels */
+
+  /* Accents */
+  --bf-accent:         #7357FF; /* electric violet — primary */
+  --bf-accent-dim:     rgba(115, 87, 255, 0.12); /* ghost fills */
+  --bf-accent-glow:    rgba(115, 87, 255, 0.25); /* subtle halos */
+  --bf-cyan:           #55DDF5; /* use VERY sparingly */
+  --bf-cyan-dim:       rgba(85, 221, 245, 0.08);
+
+  /* Borders */
+  --bf-border-subtle:  rgba(243, 242, 238, 0.06);
+  --bf-border-mid:     rgba(243, 242, 238, 0.12);
+  --bf-border-strong:  rgba(243, 242, 238, 0.20);
+  --bf-border-accent:  rgba(115, 87, 255, 0.30);
+
+  /* Typography */
+  --bf-font-display: 'DM Sans', -apple-system, sans-serif;
+  --bf-font-body:    'Inter', -apple-system, sans-serif;
+
+  /* Type scale — display uses clamp() for fluid sizing */
+  --bf-text-micro:   0.6875rem;   /* 11px — uppercase metadata */
+  --bf-text-xs:      0.75rem;     /* 12px */
+  --bf-text-sm:      0.875rem;    /* 14px */
+  --bf-text-base:    1rem;        /* 16px */
+  --bf-text-md:      1.125rem;    /* 18px */
+  --bf-text-lg:      1.375rem;    /* 22px */
+  --bf-text-xl:      1.75rem;     /* 28px */
+  --bf-text-2xl:     clamp(2rem,   3.5vw, 2.75rem);
+  --bf-text-3xl:     clamp(2.5rem, 5vw,   4rem);
+  --bf-text-4xl:     clamp(3rem,   6.5vw, 5.5rem);
+  --bf-text-display: clamp(4rem,   9vw,   9rem);   /* hero-scale editorial moments */
+  --bf-text-giant:   clamp(5rem,   12vw,  12rem);  /* full-viewport spectacle */
+
+  /* Spacing rhythm */
+  --bf-space-xs:   0.5rem;
+  --bf-space-sm:   1rem;
+  --bf-space-md:   1.5rem;
+  --bf-space-lg:   2.5rem;
+  --bf-space-xl:   4rem;
+  --bf-space-2xl:  6rem;
+  --bf-space-3xl:  9rem;
+  --bf-space-4xl:  12rem;
+
+  /* Section padding — shrinks on mobile */
+  --bf-section-py: clamp(5rem, 10vw, 9rem);
+  --bf-section-px: clamp(1.25rem, 5vw, 5rem);
+
+  /* Radii */
+  --bf-radius-xs: 2px;
+  --bf-radius-sm: 4px;
+  --bf-radius-md: 8px;
+  --bf-radius-lg: 14px;
+  --bf-radius-xl: 20px;
+
+  /* Transitions */
+  --bf-ease-out:      cubic-bezier(0.16, 1, 0.3, 1);       /* snappy settle */
+  --bf-ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);      /* deliberate */
+  --bf-ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);   /* slight overshoot */
+  --bf-duration-fast: 200ms;
+  --bf-duration-mid:  400ms;
+  --bf-duration-slow: 700ms;
+
+  /* Base styles for the redesign zone */
+  background-color: var(--bf-bg-primary);
+  color: var(--bf-text-primary);
+  font-family: var(--bf-font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────── */
+
+/* DISPLAY — DM Sans, large architectural type */
+.bf-display {
+  font-family: var(--bf-font-display);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.bf-display-giant  { font-size: var(--bf-text-giant);   }
+.bf-display-xl     { font-size: var(--bf-text-display); }
+.bf-display-lg     { font-size: var(--bf-text-4xl);     }
+.bf-display-md     { font-size: var(--bf-text-3xl);     }
+.bf-display-sm     { font-size: var(--bf-text-2xl);     }
+
+/* BODY — Inter, highly readable */
+.bf-body {
+  font-family: var(--bf-font-body);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+}
+
+.bf-body-lg  { font-size: var(--bf-text-lg); }
+.bf-body-md  { font-size: var(--bf-text-base); }
+.bf-body-sm  { font-size: var(--bf-text-sm); }
+
+/* MICRO — uppercase metadata labels */
+.bf-micro {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+/* Accent text */
+.bf-text-accent { color: var(--bf-accent); }
+.bf-text-cyan   { color: var(--bf-cyan);   }
+.bf-text-muted  { color: var(--bf-text-secondary); }
+.bf-text-faint  { color: var(--bf-text-tertiary); }
+
+/* ─── Layout Helpers ─────────────────────────────────────────────── */
+
+/* Max-width container with asymmetric left-leaning padding */
+.bf-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--bf-section-px);
+}
+
+/* Standard section padding */
+.bf-section {
+  padding-block: var(--bf-section-py);
+}
+
+/* Asymmetric grid — 12 columns with left emphasis */
+.bf-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* Edge-to-edge bleeds */
+.bf-bleed-left  { margin-left:  calc(-1 * var(--bf-section-px)); }
+.bf-bleed-right { margin-right: calc(-1 * var(--bf-section-px)); }
+
+/* ─── Surface / Border Utilities ─────────────────────────────────── */
+
+.bf-surface {
+  background-color: var(--bf-bg-surface);
+  border: 1px solid var(--bf-border-subtle);
+}
+
+.bf-surface-inset {
+  background-color: var(--bf-bg-inset);
+  border: 1px solid var(--bf-border-subtle);
+}
+
+/* Thin horizontal rule */
+.bf-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--bf-border-subtle);
+}
+
+/* Accent rule — short, left-aligned */
+.bf-rule-accent {
+  width: 2.5rem;
+  height: 2px;
+  background: var(--bf-accent);
+  border-radius: 2px;
+}
+
+/* ─── Capabilities — Bento Grid ─────────────────────────────────── */
+
+.bf-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(0.6rem, 1vw, 1rem);
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  .bf-card-strategy    { grid-column: 1 / 5;  grid-row: 1; min-height: 400px; }
+  .bf-card-design      { grid-column: 5 / 13; grid-row: 1; min-height: 340px; }
+  .bf-card-development { grid-column: 1 / 8;  grid-row: 2; min-height: 260px; }
+  .bf-card-performance { grid-column: 7 / 13; grid-row: 2; min-height: 260px; }
+}
+
+/* Tablet (640px – 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bf-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bf-card-strategy    { grid-column: 1; grid-row: 1; min-height: 320px; }
+  .bf-card-design      { grid-column: 2; grid-row: 1; min-height: 320px; }
+  .bf-card-development { grid-column: 1 / 3; grid-row: 2; min-height: 240px; }
+  .bf-card-performance { grid-column: 1 / 3; grid-row: 3; min-height: 220px; }
+}
+
+/* Mobile (< 640px) — stacked with intentional varied heights */
+@media (max-width: 639px) {
+  .bf-bento-grid        { grid-template-columns: 1fr; }
+  .bf-card-design       { order: 1; min-height: 300px; }
+  .bf-card-strategy     { order: 2; min-height: 260px; }
+  .bf-card-development  { order: 3; min-height: 230px; }
+  .bf-card-performance  { order: 4; min-height: 200px; }
+}
+
+/* ─── Bento Card Base ────────────────────────────────────────────── */
+
+.bf-bento-card {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bf-bg-surface);
+  border: 1px solid var(--bf-border-subtle);
+  border-radius: 22px;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  /* Spotlight custom props — updated by JS */
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-opacity: 0;
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  /* GPU layer for transform */
+  will-change: transform;
+}
+
+/* Spotlight layer */
+.bf-bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 300px at var(--spot-x) var(--spot-y),
+    rgba(115, 87, 255, 0.08),
+    transparent 70%
+  );
+  opacity: var(--spot-opacity);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+/* Active hover state — border brightens */
+.bf-bento-card[data-active="true"] {
+  border-color: rgba(115, 87, 255, 0.32);
+  box-shadow:
+    0 0 0 1px rgba(115, 87, 255, 0.10) inset,
+    0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* All children above spotlight layer */
+.bf-bento-card > * { position: relative; z-index: 1; }
+
+/* ─── Bento Card Inner Layout ────────────────────────────────────── */
+
+.bf-card-index {
+  font-family: var(--bf-font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  margin-bottom: auto;
+}
+
+.bf-card-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.6rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--bf-text-primary);
+  margin-top: auto;
+}
+
+.bf-card-meta {
+  font-family: var(--bf-font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bf-accent);
+  margin-top: 0.5rem;
+}
+
+.bf-card-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.8rem, 1.1vw, 0.875rem);
+  line-height: 1.6;
+  color: var(--bf-text-secondary);
+  margin-top: 0.75rem;
+  max-width: 38ch;
+}
+
+.bf-card-visual-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-block: 1.25rem;
+  min-height: 100px;
+}
+
+.bf-card-visual {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* ─── Design Card Frames Visual ──────────────────────────────────── */
+
+.bf-design-frames {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.bf-frame {
+  position: absolute;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bf-frame-bar {
+  height: 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 6px;
+}
+
+.bf-frame-bar::before,
+.bf-frame-bar::after,
+.bf-frame-dot {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bf-frame-body {
+  flex: 1;
+  padding: 7px;
+}
+
+/* Frame 3 — back */
+.bf-frame-3 {
+  width: 130px; height: 82px;
+  top: 24px; left: 50px;
+  border-color: rgba(115, 87, 255, 0.18);
+}
+.bf-frame-3 .bf-frame-bar        { background: rgba(115, 87, 255, 0.05); border-color: rgba(115, 87, 255, 0.12); }
+.bf-frame-3 .bf-frame-bar::before { background: rgba(115, 87, 255, 0.25); }
+.bf-frame-3 .bf-frame-bar::after  { background: rgba(115, 87, 255, 0.15); }
+.bf-frame-3 .bf-frame-body        { background: rgba(115, 87, 255, 0.025); }
+
+/* Frame 2 — mid */
+.bf-frame-2 {
+  width: 145px; height: 90px;
+  top: 12px; left: 25px;
+  border-color: rgba(115, 87, 255, 0.32);
+}
+.bf-frame-2 .bf-frame-bar        { background: rgba(115, 87, 255, 0.08); border-color: rgba(115, 87, 255, 0.2); }
+.bf-frame-2 .bf-frame-bar::before { background: rgba(115, 87, 255, 0.45); }
+.bf-frame-2 .bf-frame-bar::after  { background: rgba(115, 87, 255, 0.25); }
+.bf-frame-2 .bf-frame-body {
+  background-image:
+    linear-gradient(transparent 55%, rgba(243,242,238,0.05) 55%, rgba(243,242,238,0.05) 58%, transparent 58%),
+    linear-gradient(transparent 70%, rgba(243,242,238,0.04) 70%, rgba(243,242,238,0.04) 73%, transparent 73%);
+}
+
+/* Frame 1 — front */
+.bf-frame-1 {
+  width: 155px; height: 97px;
+  top: 0; left: 0;
+  border-color: rgba(115, 87, 255, 0.58);
+}
+.bf-frame-1 .bf-frame-bar        { background: rgba(115, 87, 255, 0.12); border-color: rgba(115, 87, 255, 0.32); }
+.bf-frame-1 .bf-frame-bar::before { background: #7357FF; }
+.bf-frame-1 .bf-frame-bar::after  { background: rgba(115, 87, 255, 0.45); }
+.bf-frame-1 .bf-frame-body {
+  background-image:
+    linear-gradient(transparent 45%, rgba(243,242,238,0.07) 45%, rgba(243,242,238,0.07) 48%, transparent 48%),
+    linear-gradient(transparent 62%, rgba(243,242,238,0.05) 62%, rgba(243,242,238,0.05) 65%, transparent 65%),
+    linear-gradient(transparent 78%, rgba(243,242,238,0.04) 78%, rgba(243,242,238,0.04) 81%, transparent 81%);
+}
+
+/* Frame shift on active */
+.bf-bento-card[data-active="true"] .bf-frame-3 { transform: translate(6px, 5px); }
+.bf-bento-card[data-active="true"] .bf-frame-2 { transform: translate(3px, 2px); }
+.bf-bento-card[data-active="true"] .bf-frame-1 { transform: translate(-2px, -2px); }
+
+/* ─── Performance SVG Animation ──────────────────────────────────── */
+
+.bf-perf-line {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: bf-draw-line 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+@keyframes bf-draw-line {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ─── Click Particles ────────────────────────────────────────────── */
+
+@keyframes bf-particle {
+  0%   { opacity: 0.85; transform: translate(-50%, -50%) translate(0px, 0px); }
+  100% { opacity: 0;    transform: translate(-50%, -50%) translate(var(--dx), var(--dy)); }
+}
+
+/* ─── Motion Utilities ───────────────────────────────────────────── */
+
+/* Base for scroll-reveal — set via JS (GSAP/Framer) */
+.bf-reveal {
+  will-change: transform, opacity;
+}
+
+/* Reduced-motion override — all new animations must respect this */
+@media (prefers-reduced-motion: reduce) {
+  .boldframe-redesign *,
+  .boldframe-redesign *::before,
+  .boldframe-redesign *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

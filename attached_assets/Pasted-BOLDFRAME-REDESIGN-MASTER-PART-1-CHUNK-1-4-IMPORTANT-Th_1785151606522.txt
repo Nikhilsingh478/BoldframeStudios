@@ -1,0 +1,170 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 1/4
+
+IMPORTANT: This is CHUNK 1 of one larger implementation. I will send chunks 2/4, 3/4 and 4/4 after this. Do NOT invent later sections or treat each chunk as a separate redesign. Maintain every constraint from previous chunks as new chunks arrive.
+
+First inspect the EXISTING BoldFrame Studios project before changing code. Understand its framework, homepage structure, Tailwind/CSS, fonts, animations, dependencies, GSAP/Framer usage, routing, assets, responsive behavior, navbar and existing sections.
+
+Do not blindly rewrite working infrastructure.
+
+==================================================
+ABSOLUTE CONSTRAINT — EXISTING HERO IS LOCKED
+==================================================
+
+The CURRENT hero must remain visually and functionally IDENTICAL.
+
+Do NOT redesign, rewrite or refactor it. Do not change:
+- "Websites That Convert." or any hero copy
+- typography or line breaks
+- buttons
+- analytics/dashboard visual
+- animated background
+- colors
+- dimensions/spacing/alignment
+- hero animation timing
+- navbar appearance over the hero
+- responsive behavior
+- assets
+
+Do not let new global CSS/fonts affect it.
+
+Treat it as a locked component. The redesign starts AFTER its exact final pixel.
+
+Prefer architecture conceptually like:
+
+<ExistingHero />
+<div className="boldframe-redesign">
+  ...new experience...
+</div>
+
+Scope new design styles under the post-hero experience.
+
+At final QA the hero must be pixel-identical to its current state.
+
+==================================================
+CREATIVE OBJECTIVE
+==================================================
+
+The existing site becomes conventional after the hero. We are replacing that portion with an authored, award-caliber creative studio experience.
+
+BoldFrame should feel:
+PREMIUM / EDITORIAL / EXPERIMENTAL / PRECISE / DIGITAL / CONFIDENT / TECHNICALLY SOPHISTICATED
+
+But NEVER chaotic.
+
+It must NOT feel like:
+- Wix/Framer template
+- AI-generated landing page
+- SaaS dashboard
+- Web3/cyberpunk site
+- component-library demo
+- random animation playground
+
+Every animation needs meaning.
+
+Core identity concept:
+
+BOLD / FRAME
+
+"Frame" can mean viewport, browser window, crop, composition, interface, project preview, film frame, boundary or moment.
+
+Express this through composition and behavior:
+- typography can intentionally crop at boundaries
+- content can enter/escape frames
+- imagery can transform from contained to viewport-scale
+- borders can become interaction surfaces
+- scroll can reveal different frames/moments
+
+Do NOT literally cover the website in rectangles.
+
+==================================================
+POST-HERO VISUAL SYSTEM
+==================================================
+
+Preserve the hero's dark + violet + cyan DNA but mature it.
+
+Post-hero:
+near-black graphite around #08090B / #0A0B0E / #0C0D10.
+Never use flat black everywhere.
+
+Primary text: warm near-white around #F3F2EE.
+Secondary text: muted #96989F range.
+Primary accent: electric violet around #7357FF.
+Secondary accent: cyan around #55DDF5, used VERY sparingly.
+
+Inspect current colors and derive final tokens from them.
+
+Do NOT:
+- make everything purple
+- use giant blurry gradient blobs everywhere
+- overuse glassmorphism
+- glow every container
+
+Most visual richness should come from typography, spacing, composition, borders, imagery, negative space and motion.
+
+==================================================
+TYPOGRAPHY / COMPOSITION
+==================================================
+
+Inspect existing fonts first. Preserve a good existing font if appropriate. If another display font is necessary, use only a high-quality free/open-source face.
+
+Maximum roughly two font families.
+
+Need:
+DISPLAY — architectural/editorial headlines
+BODY — highly readable modern sans
+MICRO — uppercase metadata
+
+Use clamp() for large type. Desktop display moments can reach ~8-12vw where appropriate.
+
+The OLD site is too centered. Fix that.
+
+Use intentional asymmetry:
+left alignment, offset typography, right metadata, edge relationships, occasional centered spectacle.
+
+Do not make layouts randomly messy.
+
+==================================================
+MOTION RULE
+==================================================
+
+Motion must perform one of five jobs:
+
+1. REVEAL — hierarchy
+2. PROGRESS — journey position
+3. TRANSFORMATION — state change
+4. NAVIGATION — movement through content
+5. FEEDBACK — interaction response
+
+Avoid fade-up on every element.
+
+Use transform/opacity where possible. Avoid layout-thrashing animation.
+
+We will later use GSAP ScrollTrigger, Framer Motion, Lenis and Swiper. Do not install duplicate smooth-scroll systems.
+
+If Lenis already exists, reuse it. If not, only introduce ONE subtle global smooth-scroll solution if safe. Scrolling must never feel delayed or fight the user.
+
+All timelines, ScrollTriggers, RAF loops, observers and listeners must clean up correctly.
+
+Never kill every ScrollTrigger globally from one component.
+
+Support prefers-reduced-motion.
+
+==================================================
+PART 1 NARRATIVE
+==================================================
+
+This master implementation will eventually be:
+
+LOCKED HERO
+→ CAPABILITIES / customized MagicBento
+→ SCROLL-DRAWN BOLDFRAME JOURNEY
+→ HORIZONTAL MANIFESTO
+→ transition into SELECTED WORK
+
+Do NOT build Selected Work yet.
+
+For now, inspect the project, establish the scoped post-hero foundation/design tokens and prepare clean reusable architecture.
+
+Do not modify the hero.
+
+After understanding and establishing this foundation, continue with the next chunk I provide rather than inventing the remaining design yourself.

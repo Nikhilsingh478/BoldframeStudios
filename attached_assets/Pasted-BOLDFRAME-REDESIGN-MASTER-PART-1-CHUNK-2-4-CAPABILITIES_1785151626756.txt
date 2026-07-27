@@ -1,0 +1,322 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 2/4
+CAPABILITIES + CUSTOM MAGIC BENTO
+
+Continue directly from CHUNK 1/4.
+
+ALL previous constraints remain active, especially:
+- EXISTING HERO IS LOCKED AND MUST REMAIN IDENTICAL.
+- new styles must remain scoped to the post-hero redesign
+- do not build Selected Work yet
+- do not turn this into a component showcase
+- maintain the established BoldFrame visual system
+
+Now implement the first major post-hero experience.
+
+==================================================
+A — TRANSITION OUT OF THE EXISTING HERO
+==================================================
+
+Do NOT end the hero and immediately show another centered heading + cards.
+
+The transition itself should communicate that the conventional website has ended and the authored BoldFrame experience has begun.
+
+After the exact end of the LOCKED hero, create approximately 15-25vh of intentional breathing room on desktop, adjusted responsibly for mobile.
+
+No obvious divider line.
+
+Allow the hero's visual energy to settle naturally into the graphite post-hero environment.
+
+Introduce restrained left-aligned metadata:
+
+01 / CAPABILITIES
+
+Use small uppercase micro typography, subtle letter spacing and muted color.
+
+Then introduce a large editorial statement:
+
+WE DON'T JUST
+BUILD PAGES.
+
+WE BUILD
+MOMENTUM.
+
+Do NOT render this as a normal centered section title.
+
+Create editorial tension.
+
+Possible composition:
+- "WE DON'T JUST" left
+- "BUILD PAGES." slightly inset
+- meaningful negative space
+- "WE BUILD" shifted toward center/right
+- "MOMENTUM." large and approaching/cropping against a viewport boundary
+
+Keep it sophisticated rather than artificially messy.
+
+Typography should be responsive with clamp().
+
+Use a restrained masked/clipped reveal as the user enters:
+~20-40px vertical movement + reveal from clipping.
+
+No bouncing.
+No flashy character-by-character animation.
+No excessive blur.
+
+Use elegant easing such as power3.out/power4.out.
+
+Follow with concise copy:
+
+"Strategy, design and development working as one system — built to look distinctive, load fast and move with purpose."
+
+Keep the paragraph visually subordinate.
+
+==================================================
+B — CUSTOMIZED MAGIC BENTO
+==================================================
+
+Use the provided open-source MagicBento component as an INTERACTION FOUNDATION, not as the final design.
+
+DO NOT retain its original generic SaaS:
+Analytics / Dashboard / Collaboration / Automation / Integration / Security.
+
+DO NOT simply paste MagicBento below the heading.
+
+Transform it into a BoldFrame-specific capabilities system.
+
+Create FOUR capability frames:
+
+01 — STRATEGY
+Metadata:
+POSITIONING — UX — STRUCTURE
+
+Copy:
+"We find the sharpest way to frame the idea before a pixel gets polished."
+
+02 — DESIGN
+Metadata:
+ART DIRECTION — UI — MOTION
+
+Copy:
+"Distinct visual systems designed around the brand — not around a template."
+
+03 — DEVELOPMENT
+Metadata:
+REACT — FRONTEND — RESPONSIVE
+
+Copy:
+"Production-ready builds where motion, responsiveness and performance are part of the architecture."
+
+04 — PERFORMANCE
+Metadata:
+SPEED — SEO — OPTIMIZATION
+
+Copy:
+"Fast loads, deliberate interactions and the final 10% that separates functional from finished."
+
+Keep copy concise and readable.
+
+==================================================
+BENTO COMPOSITION
+==================================================
+
+DO NOT make four equal cards.
+
+Create an asymmetric editorial CSS Grid.
+
+Desktop concept:
+
+STRATEGY:
+medium vertical frame
+
+DESIGN:
+largest/dominant frame, approximately two-column presence
+
+DEVELOPMENT:
+wide horizontal frame
+
+PERFORMANCE:
+smaller, visually dense frame
+
+Exact proportions should respond elegantly to the current site's container.
+
+Cards:
+- slightly lighter graphite than page
+- subtle 1px borders
+- ~18-28px radius
+- generous padding
+- substantial negative space
+- small index
+- large capability title
+- metadata
+- concise description
+
+No generic icon-in-circle pattern.
+
+No four Lucide icons.
+
+Each capability gets an ORIGINAL abstract visual system made with CSS/SVG.
+
+STRATEGY:
+small coordinate/grid composition where scattered points subtly resolve toward one emphasized frame.
+
+DESIGN:
+2-3 outlined browser/composition frames layered together. They subtly shift relative to cursor proximity.
+
+DEVELOPMENT:
+minimal structural visualization inspired by DOM/layout architecture — nested blocks/lines connecting into a coherent interface. NOT fake terminal/code text.
+
+PERFORMANCE:
+restrained animated performance curve / pulse / small technical readout. Do not fabricate fake conversion numbers or client metrics.
+
+These visuals should feel like extensions of BoldFrame's identity, not illustrations downloaded from somewhere.
+
+==================================================
+MAGIC BENTO INTERACTION
+==================================================
+
+Desktop settings conceptually:
+
+enableSpotlight = true
+enableBorderGlow = true
+enableStars = true
+enableMagnetism = true
+clickEffect = true
+
+enableTilt = false OR extremely subtle.
+
+If tilt exists, perceived maximum should only be around 2-4 degrees.
+
+Use BoldFrame violet for interaction glow, derived from the established palette (~115,87,255 neighborhood).
+
+Spotlight radius roughly 260-340px desktop.
+
+Particles:
+ONLY around 5-8 small particles per interaction.
+They should appear briefly and disappear.
+Do not create constant fireworks.
+
+Hover choreography:
+
+1. cursor approaches
+2. nearby border illumination strengthens
+3. subtle violet light follows cursor
+4. tiny particles appear
+5. internal capability visual reacts slightly
+6. frame moves toward cursor only a few pixels
+7. copy remains stable and readable
+
+The card itself must NEVER become a giant purple glowing object.
+
+Magnetism should be subconscious.
+
+Do NOT:
+- hide text on hover
+- make text jump
+- add giant shadows
+- use heavy backdrop blur
+- make every element glow
+- create exaggerated 3D tilt
+
+==================================================
+IMPLEMENTATION QUALITY
+==================================================
+
+Refactor the MagicBento reference responsibly.
+
+Capability content should be data-driven.
+
+Prevent:
+- duplicate global spotlights after rerenders
+- accumulating event listeners
+- particle DOM leaks
+- unnecessary particle recreation
+- stale mouse handlers
+- GSAP timelines surviving unmount
+
+Use scoped GSAP/context where appropriate.
+
+Do not use global cleanup that kills unrelated animations.
+
+If pointer effects use document-level mousemove, ensure only ONE necessary listener exists and is cleaned up.
+
+Cards must remain visually excellent without JS effects.
+
+==================================================
+MOBILE / TOUCH
+==================================================
+
+Below roughly 768px:
+
+Do NOT emulate desktop cursor effects.
+
+Disable:
+- cursor spotlight
+- magnetism
+- tilt
+- expensive pointer particle tracking
+
+Retain the visual composition through static border/accent treatments and lightweight entrance behavior.
+
+Collapse the Bento intentionally, not as four identical full-width cards.
+
+Use varied heights/visual hierarchy where practical.
+
+Preserve capability readability.
+
+Do not make mobile excessively tall.
+
+==================================================
+DETAILS
+==================================================
+
+Introduce the BOLD / FRAME motif subtly.
+
+For example, one or two capability visuals may use tiny crop/corner marks:
+
+┌      ┐
+└      ┘
+
+Do NOT put them everywhere.
+
+Micro metadata such as:
+BFS / CAPABILITY 01
+FRAME 001
+
+may appear sparingly if it improves composition.
+
+Never fabricate:
+awards
+clients
+conversion percentages
+performance scores
+
+==================================================
+END OF THIS CHUNK
+==================================================
+
+Capabilities should finish with enough breathing room to transition into a dramatically different scroll-driven section.
+
+Do NOT build a generic divider.
+
+Do NOT build the Scroll Journey yet — that comes in CHUNK 3/4.
+
+At this point the page should read:
+
+[EXISTING LOCKED HERO]
+→ cinematic post-hero transition
+→ editorial capabilities statement
+→ interactive asymmetric BoldFrame capability system
+→ intentional breathing transition
+
+Before stopping:
+
+- verify hero remains identical
+- verify no horizontal overflow
+- verify Bento interactions clean up
+- verify touch/mobile does not run desktop cursor effects
+- check console for errors
+- make sure this feels like BoldFrame, NOT default MagicBento
+
+Do not invent the next section.
+
+Wait for CHUNK 3/4.

@@ -6,7 +6,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 
 // Lazy load non-critical components for better performance
-const ServicesCarousel = lazy(() => import('./components/ServicesCarousel').then(m => ({ default: m.ServicesCarousel })));
+const Capabilities = lazy(() => import('./components/redesign/Capabilities').then(m => ({ default: m.Capabilities })));
 const Work = lazy(() => import('./components/Work').then(m => ({ default: m.Work })));
 const Playroom = lazy(() => import('./components/Playroom').then(m => ({ default: m.Playroom })));
 const Workflow = lazy(() => import('./components/Workflow').then(m => ({ default: m.Workflow })));
@@ -118,15 +118,21 @@ export default function App() {
           </Suspense>
           <Header onContactClick={openContactModal} />
           <main>
+            {/* LOCKED — do not modify the hero */}
             <Hero onContactClick={openContactModal} />
-            <Suspense fallback={<div className="min-h-screen" />}>
-              <ServicesCarousel />
-              <Playroom />
-              <Work />
-              <Workflow />
-              <Testimonials />
-              <About />
-            </Suspense>
+
+            {/* Post-hero redesign — all new sections live inside this wrapper.
+                Design tokens, typography and motion utilities are scoped here. */}
+            <div className="boldframe-redesign">
+              <Suspense fallback={<div className="min-h-screen" />}>
+                <Capabilities />
+                <Playroom />
+                <Work />
+                <Workflow />
+                <Testimonials />
+                <About />
+              </Suspense>
+            </div>
           </main>
           <Suspense fallback={null}>
             <Footer 

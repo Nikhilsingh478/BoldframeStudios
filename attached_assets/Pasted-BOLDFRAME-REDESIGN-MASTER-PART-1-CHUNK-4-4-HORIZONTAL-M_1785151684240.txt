@@ -1,0 +1,553 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 4/4
+HORIZONTAL MANIFESTO + SELECTED WORK HANDOFF + FINAL INTEGRATION
+
+Continue directly from CHUNKS 1/4, 2/4 and 3/4.
+
+ALL previous constraints remain active.
+
+DO NOT:
+- modify the locked existing hero
+- redesign the completed Capabilities section
+- replace the Scroll Journey
+- build the actual Selected Work/project gallery yet
+- introduce unrelated components/effects
+
+This chunk completes MASTER PART 1.
+
+Current narrative:
+
+LOCKED HERO
+→ CAPABILITIES
+→ SCROLL-DRAWN JOURNEY
+→ [BUILD NOW] HORIZONTAL MANIFESTO
+→ [BUILD ONLY INTRO] SELECTED WORK
+
+==================================================
+01 — PURPOSE
+==================================================
+
+The Scroll Journey ends with:
+
+THE RESULT?
+
+A WEBSITE THAT
+DOESN'T FEEL
+INTERCHANGEABLE.
+
+Its SVG path gradually becomes more horizontal near the end.
+
+Use that directional energy to transition naturally into a radically different interaction:
+
+vertical scrolling temporarily becomes HORIZONTAL TYPOGRAPHIC MOMENTUM.
+
+This should feel like the journey has resolved into forward motion.
+
+Do not make it feel like:
+"here is another cool GSAP component."
+
+==================================================
+02 — HORIZONTAL MANIFESTO
+==================================================
+
+Create a pinned GSAP ScrollTrigger section containing ONE enormous continuous editorial sentence.
+
+This is NOT:
+- carousel
+- slider
+- multiple full-screen slides
+- marquee running automatically
+- separate cards
+
+It is ONE long typographic composition moving horizontally as the user scrolls vertically.
+
+Manifesto:
+
+"Strategy gives it direction — design gives it character — development gives it life — performance keeps it moving — and every frame should earn its place."
+
+Preserve this as one conceptual sentence.
+
+Desktop typography:
+approximately clamp(4.5rem, 8vw, 10rem), adjusted intelligently.
+
+Prefer one flowing line on large desktop.
+
+Use variable gaps intentionally so the sentence breathes.
+
+==================================================
+03 — TYPOGRAPHIC ART DIRECTION
+==================================================
+
+Do not style every phrase identically.
+
+Emphasize key words:
+
+DIRECTION
+CHARACTER
+LIFE
+MOVING
+FRAME
+
+But use only 2-3 emphasis techniques total.
+
+Possible treatments:
+- violet fill
+- outline typography
+- weight shift
+- subtle italic if current font supports a strong italic
+- a word temporarily enclosed/cropped by a frame
+- near-white → accent transition around viewport center
+
+Do NOT make every important word purple.
+
+Do NOT create rainbow typography.
+
+Do NOT add random gradient text.
+
+The sentence should feel editorial and expensive.
+
+==================================================
+04 — INLINE VISUAL PUNCTUATION
+==================================================
+
+Integrate visual elements DIRECTLY inside the sentence flow.
+
+They behave like punctuation/conjunctions, NOT standalone sections.
+
+Create approximately 4-5 inline visual moments.
+
+Examples:
+
+[small browser frame]
+[flowing SVG connector]
+[crosshair / coordinate marker]
+[tiny project-preview frame]
+[outlined rotating frame]
+
+Conceptual rhythm:
+
+Strategy gives it DIRECTION
+— [frame] —
+design gives it CHARACTER
+— [curve] —
+development gives it LIFE
+— [coordinate object] —
+performance keeps it MOVING
+— [project frame] —
+and every FRAME should earn its place.
+
+Do not literally use this exact spacing if a stronger composition emerges.
+
+Each visual should be vertically aligned with the typography.
+
+They must feel embedded in the language.
+
+Use CSS/SVG rather than generic icons wherever possible.
+
+==================================================
+05 — INLINE MOTION
+==================================================
+
+The horizontal movement is the primary animation.
+
+Inline visuals may respond subtly to scroll position.
+
+Examples:
+
+browser frame:
+rotation -3deg → 5deg
+
+SVG curve:
+draws as it approaches viewport center
+
+crosshair:
+small controlled positional shift
+
+project frame:
+image/content translates ~8-15px internally
+
+outlined FRAME:
+border resolves or closes around the word
+
+Do NOT:
+- continuously spin anything
+- bounce icons
+- create large parallax differences
+- use animation merely for spectacle
+
+The inline animation should reinforce movement through a constructed digital composition.
+
+==================================================
+06 — GSAP / SCROLLTRIGGER
+==================================================
+
+Use GSAP ScrollTrigger.
+
+Pin the manifesto viewport while its track moves horizontally.
+
+Calculate horizontal travel from REAL dimensions.
+
+Conceptually:
+
+horizontalDistance =
+track.scrollWidth - viewportWidth
+
+Do NOT hardcode arbitrary translateX values such as -500vw.
+
+Use function-based GSAP values where appropriate so ScrollTrigger can recalculate after resize.
+
+The movement must begin only when the section reaches the correct position.
+
+Suggested behavior:
+
+start: "top top"
+pin: true
+scrub: approximately 0.7-1.0
+invalidateOnRefresh: true
+
+Determine end distance from actual horizontal travel.
+
+Do not make the scroll excessively long.
+
+The user should feel momentum, not imprisonment.
+
+==================================================
+07 — ROBUST INITIALIZATION
+==================================================
+
+This is React.
+
+Widths MUST be accurate before ScrollTrigger calculates pinning.
+
+Use useLayoutEffect/useGSAP appropriately.
+
+Account for:
+- font loading
+- DOM rendering
+- responsive width changes
+- inline visual dimensions
+
+Where necessary use:
+document.fonts.ready
+
+followed by:
+requestAnimationFrame / ScrollTrigger.refresh()
+
+A tiny controlled initialization delay is acceptable if technically necessary.
+
+Do NOT use arbitrary multi-second timeouts.
+
+Use ResizeObserver only if useful.
+
+Clean it up.
+
+Scrolling backward must work perfectly.
+
+==================================================
+08 — PINNING QUALITY
+==================================================
+
+This section must feel exceptionally stable.
+
+No:
+- jump when pin activates
+- blank vertical gap
+- track clipping incorrectly
+- horizontal body scrollbar
+- sudden speed changes
+- stuck pin
+- content disappearing after resize
+- conflict with Lenis
+
+If Lenis exists, ensure ScrollTrigger synchronization is correct.
+
+Do not introduce a second smooth-scroll engine.
+
+==================================================
+09 — CONNECTION FROM SCROLL JOURNEY
+==================================================
+
+Do not create a harsh section boundary between Journey and Manifesto.
+
+The journey's final SVG trajectory should visually point toward the manifesto.
+
+Consider beginning the horizontal section with a small continuation mark/line so it feels like the previous route has entered this new composition.
+
+Do NOT physically share one SVG across components if that creates fragile architecture.
+
+Visual continuity is enough.
+
+The transition should feel:
+
+wandering route
+→ resolution
+→ horizontal acceleration.
+
+==================================================
+10 — MOBILE / TABLET
+==================================================
+
+DO NOT force the desktop pinned horizontal experience onto phones.
+
+Below approximately 768px:
+
+Transform the manifesto into a vertical editorial sequence.
+
+Maintain the SAME sentence and conceptual order.
+
+Break naturally into phrases:
+
+Strategy gives it
+DIRECTION
+
+design gives it
+CHARACTER
+
+development gives it
+LIFE
+
+performance keeps it
+MOVING
+
+and every
+FRAME
+should earn its place.
+
+Keep the inline visual punctuation between phrases.
+
+Use restrained scroll reveals.
+
+No enormous mobile pinning sequence.
+
+No 500vh mobile section.
+
+No horizontal body scrolling.
+
+Tablet can use a shortened horizontal version only if it remains smooth and readable; otherwise use the vertical treatment.
+
+==================================================
+11 — REDUCED MOTION
+==================================================
+
+For prefers-reduced-motion:
+
+Do not require pinned horizontal travel.
+
+Present the manifesto as a readable static/vertical composition.
+
+Disable unnecessary rotation/parallax.
+
+All text must remain accessible.
+
+==================================================
+12 — EXIT / BREATHING ROOM
+==================================================
+
+When the final words:
+
+"earn its place."
+
+reach their intended finishing position, allow the section to release naturally.
+
+Do not immediately slam into another giant animation.
+
+Return to normal vertical scrolling.
+
+Create approximately 20-35vh of controlled breathing space on desktop.
+
+Use this pause to reset visual rhythm.
+
+Then introduce:
+
+02 / SELECTED WORK
+
+using the established micro metadata system.
+
+==================================================
+13 — SELECTED WORK INTRO ONLY
+==================================================
+
+DO NOT build the actual portfolio yet.
+
+Create only the entrance/header environment for the future section.
+
+Preferred heading:
+
+SELECTED
+WORK.
+
+Use this unless another already-established BoldFrame phrase clearly works better.
+
+Make it enormous and editorial.
+
+Possible composition:
+
+02 / SELECTED WORK
+small upper-left
+
+SELECTED
+large
+
+WORK.
+larger / offset / near viewport boundary
+
+Add restrained supporting copy:
+
+"A selection of digital experiences shaped from strategy through final frame."
+
+Keep this subtle.
+
+Create a clear mounting point/container after this intro for MASTER PART 2.
+
+Do not invent project cards.
+
+Do not use placeholder Unsplash imagery.
+
+Do not add fake client work.
+
+==================================================
+14 — GLOBAL PART 1 POLISH
+==================================================
+
+Now review ALL newly built sections together:
+
+Hero
+Capabilities
+Journey
+Manifesto
+Selected Work intro
+
+The experience must feel like ONE website.
+
+Normalize:
+- spacing rhythm
+- section transitions
+- typography scale
+- border treatments
+- violet usage
+- metadata styling
+- animation intensity
+- responsive breakpoints
+
+Avoid repeating the same reveal animation everywhere.
+
+The energy should evolve:
+
+HERO = existing visual impact
+CAPABILITIES = interactive
+JOURNEY = exploratory/progressive
+MANIFESTO = kinetic/typographic
+WORK INTRO = quiet anticipation
+
+This variation is intentional.
+
+==================================================
+15 — PERFORMANCE AUDIT
+==================================================
+
+This page now contains multiple interactions.
+
+Audit them.
+
+Ensure:
+- no duplicate global pointer listeners
+- no leaked GSAP timelines
+- no leaked ScrollTriggers
+- no RAF loops running unnecessarily
+- no ResizeObservers left active after unmount
+- particles do not continuously run offscreen
+- animations prefer transform/opacity
+- SVG remains vector-efficient
+- ScrollTrigger.refresh() is not called every frame
+
+Do NOT globally kill unrelated ScrollTriggers.
+
+==================================================
+16 — RESPONSIVE QA
+==================================================
+
+Test at minimum:
+
+375px
+430px
+768px
+1024px
+1280px
+1440px
+1920px
+
+Check:
+
+- no horizontal body overflow
+- no clipped essential copy
+- typography uses clamp appropriately
+- Bento collapses intentionally
+- Journey remains meaningful
+- mobile path does not overflow
+- manifesto mobile fallback works
+- desktop horizontal pin releases correctly
+- resizing desktop → mobile → desktop does not break triggers
+
+==================================================
+17 — FINAL QA
+==================================================
+
+Run the application and inspect actual behavior.
+
+Check console.
+
+Fix:
+- React warnings
+- GSAP target warnings
+- hydration/render errors
+- invalid DOM nesting
+- layout shifts
+- ScrollTrigger pin issues
+- overflow bugs
+
+Test:
+slow scrolling
+rapid scrolling
+reverse scrolling
+refreshing mid-page
+window resizing
+
+MOST IMPORTANT:
+
+Compare the ORIGINAL EXISTING HERO with the current hero.
+
+It MUST remain visually/functionally identical.
+
+If any post-hero CSS, typography, smooth scrolling or global animation changed the hero, isolate/fix it.
+
+==================================================
+18 — QUALITY TEST
+==================================================
+
+Do not judge success by number of animations.
+
+Ask:
+
+Does each interaction have a narrative job?
+
+CAPABILITIES:
+shows what BoldFrame can do through responsive interaction.
+
+JOURNEY:
+shows how BoldFrame turns ideas into finished experiences.
+
+MANIFESTO:
+expresses what BoldFrame believes through momentum and typography.
+
+SELECTED WORK INTRO:
+creates anticipation for proof.
+
+The final result must NOT feel like:
+MagicBento + SVG demo + GSAP demo.
+
+It should feel like one art-directed studio experience.
+
+Do not build further sections.
+
+MASTER PART 1 ENDS HERE.
+
+Wait for MASTER PART 2 instructions.
