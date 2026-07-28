@@ -1,0 +1,128 @@
+==================================================
+BENTO COMPOSITION
+=================
+
+DO NOT make four equal cards.
+
+Create an asymmetric editorial CSS Grid.
+
+Desktop concept:
+
+STRATEGY:
+medium vertical frame
+
+DESIGN:
+largest/dominant frame, approximately two-column presence
+
+DEVELOPMENT:
+wide horizontal frame
+
+PERFORMANCE:
+smaller, visually dense frame
+
+Exact proportions should respond elegantly to the current site's container.
+
+Cards:
+
+* slightly lighter graphite than page
+* subtle 1px borders
+* ~18-28px radius
+* generous padding
+* substantial negative space
+* small index
+* large capability title
+* metadata
+* concise description
+
+No generic icon-in-circle pattern.
+
+No four Lucide icons.
+
+Each capability gets an ORIGINAL abstract visual system made with CSS/SVG.
+
+STRATEGY:
+small coordinate/grid composition where scattered points subtly resolve toward one emphasized frame.
+
+DESIGN:
+2-3 outlined browser/composition frames layered together. They subtly shift relative to cursor proximity.
+
+DEVELOPMENT:
+minimal structural visualization inspired by DOM/layout architecture — nested blocks/lines connecting into a coherent interface. NOT fake terminal/code text.
+
+PERFORMANCE:
+restrained animated performance curve / pulse / small technical readout. Do not fabricate fake conversion numbers or client metrics.
+
+These visuals should feel like extensions of BoldFrame's identity, not illustrations downloaded from somewhere.
+
+==================================================
+MAGIC BENTO INTERACTION
+=======================
+
+Desktop settings conceptually:
+
+enableSpotlight = true
+enableBorderGlow = true
+enableStars = true
+enableMagnetism = true
+clickEffect = true
+
+enableTilt = false OR extremely subtle.
+
+If tilt exists, perceived maximum should only be around 2-4 degrees.
+
+Use BoldFrame violet for interaction glow, derived from the established palette (~115,87,255 neighborhood).
+
+Spotlight radius roughly 260-340px desktop.
+
+Particles:
+ONLY around 5-8 small particles per interaction.
+They should appear briefly and disappear.
+Do not create constant fireworks.
+
+Hover choreography:
+
+1. cursor approaches
+2. nearby border illumination strengthens
+3. subtle violet light follows cursor
+4. tiny particles appear
+5. internal capability visual reacts slightly
+6. frame moves toward cursor only a few pixels
+7. copy remains stable and readable
+
+The card itself must NEVER become a giant purple glowing object.
+
+Magnetism should be subconscious.
+
+Do NOT:
+
+* hide text on hover
+* make text jump
+* add giant shadows
+* use heavy backdrop blur
+* make every element glow
+* create exaggerated 3D tilt
+
+==================================================
+IMPLEMENTATION QUALITY
+======================
+
+Refactor the MagicBento reference responsibly.
+
+Capability content should be data-driven.
+
+Prevent:
+
+* duplicate global spotlights after rerenders
+* accumulating event listeners
+* particle DOM leaks
+* unnecessary particle recreation
+* stale mouse handlers
+* GSAP timelines surviving unmount
+
+Use scoped GSAP/context where appropriate.
+
+Do not use global cleanup that kills unrelated animations.
+
+If pointer effects use document-level mousemove, ensure only ONE necessary listener exists and is cleaned up.
+
+Cards must remain visually excellent without JS effects.

@@ -1,0 +1,192 @@
+==================================================
+13 — SELECTED WORK INTRO ONLY
+=============================
+
+DO NOT build the actual portfolio yet.
+
+Create only the entrance/header environment for the future section.
+
+Preferred heading:
+
+SELECTED
+WORK.
+
+Use this unless another already-established BoldFrame phrase clearly works better.
+
+Make it enormous and editorial.
+
+Possible composition:
+
+02 / SELECTED WORK
+small upper-left
+
+SELECTED
+large
+
+WORK.
+larger / offset / near viewport boundary
+
+Add restrained supporting copy:
+
+"A selection of digital experiences shaped from strategy through final frame."
+
+Keep this subtle.
+
+Create a clear mounting point/container after this intro for MASTER PART 2.
+
+Do not invent project cards.
+
+Do not use placeholder Unsplash imagery.
+
+Do not add fake client work.
+
+==================================================
+14 — GLOBAL PART 1 POLISH
+=========================
+
+Now review ALL newly built sections together:
+
+Hero
+Capabilities
+Journey
+Manifesto
+Selected Work intro
+
+The experience must feel like ONE website.
+
+Normalize:
+
+* spacing rhythm
+* section transitions
+* typography scale
+* border treatments
+* violet usage
+* metadata styling
+* animation intensity
+* responsive breakpoints
+
+Avoid repeating the same reveal animation everywhere.
+
+The energy should evolve:
+
+HERO = existing visual impact
+CAPABILITIES = interactive
+JOURNEY = exploratory/progressive
+MANIFESTO = kinetic/typographic
+WORK INTRO = quiet anticipation
+
+This variation is intentional.
+
+==================================================
+15 — PERFORMANCE AUDIT
+======================
+
+This page now contains multiple interactions.
+
+Audit them.
+
+Ensure:
+
+* no duplicate global pointer listeners
+* no leaked GSAP timelines
+* no leaked ScrollTriggers
+* no RAF loops running unnecessarily
+* no ResizeObservers left active after unmount
+* particles do not continuously run offscreen
+* animations prefer transform/opacity
+* SVG remains vector-efficient
+* ScrollTrigger.refresh() is not called every frame
+
+Do NOT globally kill unrelated ScrollTriggers.
+
+==================================================
+16 — RESPONSIVE QA
+==================
+
+Test at minimum:
+
+375px
+430px
+768px
+1024px
+1280px
+1440px
+1920px
+
+Check:
+
+* no horizontal body overflow
+* no clipped essential copy
+* typography uses clamp appropriately
+* Bento collapses intentionally
+* Journey remains meaningful
+* mobile path does not overflow
+* manifesto mobile fallback works
+* desktop horizontal pin releases correctly
+* resizing desktop → mobile → desktop does not break triggers
+
+==================================================
+17 — FINAL QA
+=============
+
+Run the application and inspect actual behavior.
+
+Check console.
+
+Fix:
+
+* React warnings
+* GSAP target warnings
+* hydration/render errors
+* invalid DOM nesting
+* layout shifts
+* ScrollTrigger pin issues
+* overflow bugs
+
+Test:
+slow scrolling
+rapid scrolling
+reverse scrolling
+refreshing mid-page
+window resizing
+
+MOST IMPORTANT:
+
+Compare the ORIGINAL EXISTING HERO with the current hero.
+
+It MUST remain visually/functionally identical.
+
+If any post-hero CSS, typography, smooth scrolling or global animation changed the hero, isolate/fix it.
+
+==================================================
+18 — QUALITY TEST
+=================
+
+Do not judge success by number of animations.
+
+Ask:
+
+Does each interaction have a narrative job?
+
+CAPABILITIES:
+shows what BoldFrame can do through responsive interaction.
+
+JOURNEY:
+shows how BoldFrame turns ideas into finished experiences.
+
+MANIFESTO:
+expresses what BoldFrame believes through momentum and typography.
+
+SELECTED WORK INTRO:
+creates anticipation for proof.
+
+The final result must NOT feel like:
+MagicBento + SVG demo + GSAP demo.
+
+It should feel like one art-directed studio experience.
+
+Do not build further sections.
+
+MASTER PART 1 ENDS HERE.
+
+Wait for MASTER PART 2 instructions.

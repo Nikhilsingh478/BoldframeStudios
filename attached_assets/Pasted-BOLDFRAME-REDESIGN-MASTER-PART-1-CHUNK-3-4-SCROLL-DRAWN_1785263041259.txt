@@ -1,0 +1,179 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 3/4
+SCROLL-DRAWN BOLDFRAME JOURNEY
+
+Continue directly from CHUNKS 1/4 and 2/4.
+
+ALL previous constraints remain active.
+
+Especially:
+
+* EXISTING HERO remains completely LOCKED
+* preserve the post-hero design system already established
+* preserve the completed capabilities section
+* do not redesign previous sections unless fixing an actual integration issue
+* do not build Selected Work yet
+* do not build the horizontal manifesto yet; that comes in CHUNK 4/4
+
+This chunk creates the major scroll-driven narrative experience AFTER Capabilities.
+
+==================================================
+01 — PURPOSE OF THIS SECTION
+============================
+
+Create an original BoldFrame scroll journey inspired by the supplied scroll-following SVG path concept.
+
+DO NOT copy the reference SVG path.
+
+DO NOT copy its green color.
+
+DO NOT copy its composition or wording.
+
+The reference is only inspiration for the interaction principle:
+
+USER SCROLL PROGRESS → SVG LINE DRAWS FORWARD.
+
+For BoldFrame, this line must have meaning.
+
+It represents the studio journey:
+
+IDEA
+→ FRAME
+→ DESIGN
+→ BUILD
+→ REFINE
+→ final experience
+
+The user should feel as though scrolling physically constructs the creative process.
+
+This should become a signature visual moment of the website.
+
+It must NOT look like a decorative squiggle placed behind text.
+
+==================================================
+02 — SECTION SCALE / ENVIRONMENT
+================================
+
+Place this directly after the completed Capabilities experience.
+
+Desktop section height should be approximately 280-340vh, but choose the exact height based on choreography rather than blindly hardcoding 300vh.
+
+Keep the established graphite/near-black environment.
+
+Do not place this inside a rounded card.
+
+The VIEWPORT is the frame.
+
+Let the section use nearly the full browser width.
+
+Use substantial negative space.
+
+The experience should initially feel spacious and almost quiet after the interactive Bento section.
+
+Introduce small metadata:
+
+BFS / PROCESS
+01—05
+
+or another similarly restrained notation consistent with the established detail system.
+
+Then introduce huge editorial typography:
+
+FROM
+ROUGH IDEA
+
+TO
+SHARP EXPERIENCE.
+
+Composition should be asymmetric.
+
+"ROUGH IDEA" can dominate one side of the viewport.
+
+"SHARP EXPERIENCE." should appear later in the scroll rather than sitting directly underneath it like a conventional heading.
+
+Typography can approach or intentionally crop against viewport boundaries.
+
+Do not center everything.
+
+==================================================
+03 — ORIGINAL SVG PATH
+======================
+
+Create a NEW custom responsive SVG path specifically for this layout.
+
+The path should begin close to the opening typography and travel through the entire section.
+
+Its visual personality:
+
+CONFIDENT
+FLUID
+CONTROLLED
+SLIGHTLY HUMAN
+PRECISE ENOUGH TO FEEL DESIGNED
+
+NOT:
+
+* childish doodle
+* random spaghetti
+* corporate flowchart
+* perfect symmetrical wave
+* giant looping scribble copied from Skiper19
+
+The path should move naturally around typography and checkpoints.
+
+Use a large SVG viewBox so curves remain smooth.
+
+Use cubic Bezier curves intentionally.
+
+Desktop stroke width approximately 6-10px depending on viewport.
+
+Mobile approximately 3-5px.
+
+Use round linecap and linejoin.
+
+Primary color should be BoldFrame violet.
+
+A VERY subtle violet→cyan evolution may be used toward the end if elegant and consistent with the hero DNA.
+
+Do not create rainbow gradients.
+
+If gradient reduces visual clarity, use solid violet.
+
+==================================================
+04 — SCROLL-DRAW BEHAVIOR
+=========================
+
+Connect path drawing directly to this section's scroll progress.
+
+Use either:
+
+* Framer Motion useScroll/useTransform
+  OR
+* GSAP ScrollTrigger
+
+Choose whichever is most robust with the architecture already established.
+
+Do not add another animation library solely for this.
+
+CRITICAL:
+
+The path must begin essentially undrawn.
+
+At section progress 0:
+pathLength ≈ 0
+
+At roughly 90%:
+pathLength ≈ 1
+
+Final ~10% provides visual breathing room.
+
+Unlike the original reference, DO NOT start around pathLength 0.5.
+
+The visitor must visibly CREATE the route.
+
+The path drawing should map almost linearly to scroll.
+
+Do not apply dramatic easing to scroll-linked progress.
+
+Scrolling backward must naturally erase/reverse the journey.
+
+No animation should continue independently after the user stops scrolling.

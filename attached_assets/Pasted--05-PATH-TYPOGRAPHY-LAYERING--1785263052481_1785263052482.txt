@@ -1,0 +1,176 @@
+==================================================
+05 — PATH / TYPOGRAPHY LAYERING
+===============================
+
+Make the line interact spatially with the composition.
+
+Some segments should:
+
+* pass BEHIND huge typography
+* emerge back into foreground
+* travel through negative space
+* curve around metadata
+* pass behind a small "frame" object
+* arrive at checkpoints
+
+Use z-index, masks and/or SVG clipping deliberately.
+
+Example:
+
+The path approaches "ROUGH IDEA", disappears behind several letters, then emerges from the opposite edge.
+
+Later it may wrap around an outlined browser/frame shape before continuing.
+
+This creates depth WITHOUT generic floating 3D objects.
+
+Do not compromise text readability.
+
+==================================================
+06 — JOURNEY CHECKPOINTS
+========================
+
+Integrate FIVE primary checkpoints.
+
+Do NOT make five cards.
+
+They are typographic annotations anchored around the path.
+
+01
+DISCOVER
+
+"Understand what deserves attention."
+
+02
+FRAME
+
+"Give the idea structure and direction."
+
+03
+DESIGN
+
+"Turn strategy into something unmistakable."
+
+04
+BUILD
+
+"Engineer the experience for the real browser."
+
+05
+REFINE
+
+"Remove friction until everything feels inevitable."
+
+Each checkpoint contains:
+
+small index
+uppercase title
+one concise sentence
+small anchor point associated with the path
+
+Arrange them asymmetrically across the long section.
+
+Some left.
+Some right.
+Some closer to center.
+
+Do not alternate mechanically left/right/left/right.
+
+Composition should follow the actual SVG route.
+
+==================================================
+07 — CHECKPOINT ACTIVATION
+==========================
+
+Checkpoint animation must be tied to PATH PROGRESS.
+
+The line should visually reach a checkpoint BEFORE or AS that checkpoint activates.
+
+Do not have all labels independently fade in just because they entered viewport.
+
+Activation sequence:
+
+1. path approaches point
+2. small anchor point activates
+3. label changes muted → near-white
+4. title resolves into full contrast
+5. supporting sentence reveals subtly
+
+Possible motion:
+
+opacity 0.3 → 1
+translateY 10-16px → 0
+scale 0.97 → 1
+
+Keep it restrained.
+
+No bouncing.
+No particle explosions.
+No giant glows.
+
+The active anchor can have a tiny violet pulse ONCE.
+
+Inactive checkpoints remain readable but subdued.
+
+==================================================
+08 — FRAME MOTIF
+================
+
+Somewhere around FRAME or DESIGN, introduce ONE small outlined composition/browser frame.
+
+The SVG route should interact with it.
+
+Example:
+
+line enters the frame
+→ passes through/behind it
+→ exits toward DESIGN.
+
+The frame can subtly transform with scroll:
+slight scale
+crop adjustment
+border emphasis
+
+This is a conceptual expression of:
+
+IDEA → FRAME → EXPERIENCE.
+
+Do not add multiple floating browser mockups here.
+
+One strong visual metaphor is enough.
+
+==================================================
+09 — LARGE TYPOGRAPHIC EVOLUTION
+================================
+
+As the user progresses through the journey, transition from:
+
+ROUGH IDEA
+
+toward:
+
+SHARP EXPERIENCE.
+
+Do not simply reveal the second heading with opacity.
+
+Make the transformation spatial.
+
+For example:
+
+ROUGH IDEA exists large near the beginning.
+
+As the journey continues, typography becomes more structured/aligned.
+
+Near the final third, introduce:
+
+SHARP
+EXPERIENCE.
+
+in a much cleaner, more resolved composition.
+
+This should subconsciously reinforce:
+
+messy idea → deliberate outcome.
+
+Do NOT literally make the first typography ugly.
+
+Both states must remain premium.

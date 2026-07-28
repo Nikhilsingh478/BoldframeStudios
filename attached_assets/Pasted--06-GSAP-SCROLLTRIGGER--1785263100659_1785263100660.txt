@@ -1,0 +1,187 @@
+==================================================
+06 — GSAP / SCROLLTRIGGER
+=========================
+
+Use GSAP ScrollTrigger.
+
+Pin the manifesto viewport while its track moves horizontally.
+
+Calculate horizontal travel from REAL dimensions.
+
+Conceptually:
+
+horizontalDistance =
+track.scrollWidth - viewportWidth
+
+Do NOT hardcode arbitrary translateX values such as -500vw.
+
+Use function-based GSAP values where appropriate so ScrollTrigger can recalculate after resize.
+
+The movement must begin only when the section reaches the correct position.
+
+Suggested behavior:
+
+start: "top top"
+pin: true
+scrub: approximately 0.7-1.0
+invalidateOnRefresh: true
+
+Determine end distance from actual horizontal travel.
+
+Do not make the scroll excessively long.
+
+The user should feel momentum, not imprisonment.
+
+==================================================
+07 — ROBUST INITIALIZATION
+==========================
+
+This is React.
+
+Widths MUST be accurate before ScrollTrigger calculates pinning.
+
+Use useLayoutEffect/useGSAP appropriately.
+
+Account for:
+
+* font loading
+* DOM rendering
+* responsive width changes
+* inline visual dimensions
+
+Where necessary use:
+document.fonts.ready
+
+followed by:
+requestAnimationFrame / ScrollTrigger.refresh()
+
+A tiny controlled initialization delay is acceptable if technically necessary.
+
+Do NOT use arbitrary multi-second timeouts.
+
+Use ResizeObserver only if useful.
+
+Clean it up.
+
+Scrolling backward must work perfectly.
+
+==================================================
+08 — PINNING QUALITY
+====================
+
+This section must feel exceptionally stable.
+
+No:
+
+* jump when pin activates
+* blank vertical gap
+* track clipping incorrectly
+* horizontal body scrollbar
+* sudden speed changes
+* stuck pin
+* content disappearing after resize
+* conflict with Lenis
+
+If Lenis exists, ensure ScrollTrigger synchronization is correct.
+
+Do not introduce a second smooth-scroll engine.
+
+==================================================
+09 — CONNECTION FROM SCROLL JOURNEY
+===================================
+
+Do not create a harsh section boundary between Journey and Manifesto.
+
+The journey's final SVG trajectory should visually point toward the manifesto.
+
+Consider beginning the horizontal section with a small continuation mark/line so it feels like the previous route has entered this new composition.
+
+Do NOT physically share one SVG across components if that creates fragile architecture.
+
+Visual continuity is enough.
+
+The transition should feel:
+
+wandering route
+→ resolution
+→ horizontal acceleration.
+
+==================================================
+10 — MOBILE / TABLET
+====================
+
+DO NOT force the desktop pinned horizontal experience onto phones.
+
+Below approximately 768px:
+
+Transform the manifesto into a vertical editorial sequence.
+
+Maintain the SAME sentence and conceptual order.
+
+Break naturally into phrases:
+
+Strategy gives it
+DIRECTION
+
+design gives it
+CHARACTER
+
+development gives it
+LIFE
+
+performance keeps it
+MOVING
+
+and every
+FRAME
+should earn its place.
+
+Keep the inline visual punctuation between phrases.
+
+Use restrained scroll reveals.
+
+No enormous mobile pinning sequence.
+
+No 500vh mobile section.
+
+No horizontal body scrolling.
+
+Tablet can use a shortened horizontal version only if it remains smooth and readable; otherwise use the vertical treatment.
+
+==================================================
+11 — REDUCED MOTION
+===================
+
+For prefers-reduced-motion:
+
+Do not require pinned horizontal travel.
+
+Present the manifesto as a readable static/vertical composition.
+
+Disable unnecessary rotation/parallax.
+
+All text must remain accessible.
+
+==================================================
+12 — EXIT / BREATHING ROOM
+==========================
+
+When the final words:
+
+"earn its place."
+
+reach their intended finishing position, allow the section to release naturally.
+
+Do not immediately slam into another giant animation.
+
+Return to normal vertical scrolling.
+
+Create approximately 20-35vh of controlled breathing space on desktop.
+
+Use this pause to reset visual rhythm.
+
+Then introduce:
+
+02 / SELECTED WORK
+
+using the established micro metadata system.

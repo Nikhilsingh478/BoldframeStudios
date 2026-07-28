@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 
 // ─── Capability Data ──────────────────────────────────────────────
@@ -353,13 +353,13 @@ function EditorialHeader() {
         {line(0.50,
           <span style={{
             fontFamily: 'var(--bf-font-display)',
-            fontSize: 'var(--bf-text-display)',
+            fontSize: 'clamp(3.2rem, 10vw, var(--bf-text-display))',
             fontWeight: 800,
             letterSpacing: '-0.04em',
             lineHeight: 0.9,
             color: 'var(--bf-text-primary)',
             display: 'block',
-            whiteSpace: 'nowrap',
+            wordBreak: 'break-word',
           }}>
             MOMENTUM.
           </span>
@@ -390,19 +390,44 @@ function EditorialHeader() {
 
 // ─── Main Capabilities Section ────────────────────────────────────
 
+// Mobile/touch media query — used by both the interaction effect and the particle handler
+const MOBILE_MQ = typeof window !== 'undefined'
+  ? window.matchMedia('(pointer: coarse), (max-width: 767px)')
+  : null;
+
 export function Capabilities() {
-  const bentoRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const isMobile = useRef(
-    typeof window !== 'undefined'
-      ? window.matchMedia('(pointer: coarse), (max-width: 767px)').matches
-      : false
-  );
+  const bentoRef   = useRef<HTMLDivElement>(null);
+  const cardRefs   = useRef<(HTMLDivElement | null)[]>([]);
+  // Reactive mobile flag — updates when the MQ result changes (e.g. resize or devtools toggle)
+  const [isMobile, setIsMobile] = useState(() => MOBILE_MQ?.matches ?? false);
+  // Particle timer refs for cleanup on unmount
+  const particleTimers = useRef<number[]>([]);
+
+  // ── Reactive mobile detection ────────────────────────────────────
+  useEffect(() => {
+    if (!MOBILE_MQ) return;
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    MOBILE_MQ.addEventListener('change', handler);
+    return () => MOBILE_MQ.removeEventListener('change', handler);
+  }, []);
+
+  // ── Reset card styles when switching to mobile ───────────────────
+  useEffect(() => {
+    if (isMobile) {
+      cardRefs.current.forEach((card) => {
+        if (!card) return;
+        card.style.setProperty('--spot-opacity', '0');
+        card.style.removeProperty('transform');
+        card.removeAttribute('data-active');
+      });
+    }
+  }, [isMobile]);
 
   // ── Interaction: spotlight + magnetism + border glow ─────────────
+  // Re-registers whenever isMobile changes so desktop → mobile → desktop
+  // never leaves stale listeners attached.
   useEffect(() => {
-    if (isMobile.current) return;
-
+    if (isMobile) return;
     const container = bentoRef.current;
     if (!container) return;
 
@@ -417,11 +442,10 @@ export function Capabilities() {
           relY >= 0 && relY <= rect.height;
 
         if (inBounds) {
-          // Spotlight
           card.style.setProperty('--spot-x', `${relX}px`);
           card.style.setProperty('--spot-y', `${relY}px`);
           card.style.setProperty('--spot-opacity', '1');
-          // Magnetism — max 3px
+          // Magnetism — max 3px shift
           const cx = rect.width  / 2;
           const cy = rect.height / 2;
           const mx = ((relX - cx) / cx) * 3;
@@ -452,15 +476,28 @@ export function Capabilities() {
       container.removeEventListener('mousemove', onMove);
       container.removeEventListener('mouseleave', onLeave);
     };
+  }, [isMobile]);
+
+  // ── Particle cleanup on unmount ──────────────────────────────────
+  useEffect(() => {
+    return () => {
+      // Clear any in-flight particle timers and purge DOM nodes
+      particleTimers.current.forEach(clearTimeout);
+      particleTimers.current = [];
+      cardRefs.current.forEach((card) => {
+        if (!card) return;
+        card.querySelectorAll<HTMLDivElement>('[data-particle]').forEach(p => p.remove());
+      });
+    };
   }, []);
 
   // ── Particles on click ───────────────────────────────────────────
   const spawnParticles = useCallback(
     (e: React.MouseEvent<HTMLDivElement>, card: HTMLDivElement) => {
-      if (isMobile.current) return;
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      if (isMobile) return;
+      const rect  = card.getBoundingClientRect();
+      const x     = e.clientX - rect.left;
+      const y     = e.clientY - rect.top;
       const count = 6;
 
       for (let i = 0; i < count; i++) {
@@ -468,6 +505,7 @@ export function Capabilities() {
         const dist  = 28 + Math.random() * 36;
         const size  = 2 + Math.random() * 2;
         const p = document.createElement('div');
+        p.dataset.particle = '1';
         p.style.cssText = `
           position: absolute;
           left: ${x}px;
@@ -484,13 +522,14 @@ export function Capabilities() {
           --dy: ${(Math.sin(angle) * dist).toFixed(1)}px;
         `;
         card.appendChild(p);
-        // Clean up after animation
-        const timer = window.setTimeout(() => p.remove(), 700);
-        // Store timer on element for potential early cleanup
-        (p as any)._timer = timer;
+        const timer = window.setTimeout(() => {
+          p.remove();
+          particleTimers.current = particleTimers.current.filter(t => t !== timer);
+        }, 700);
+        particleTimers.current.push(timer);
       }
     },
-    []
+    [isMobile]
   );
 
   // ── Card ref collector ───────────────────────────────────────────
@@ -511,8 +550,8 @@ export function Capabilities() {
       className="bf-section"
       aria-label="Capabilities"
       style={{
-        paddingTop: 'clamp(12vh, 20vw, 20vh)', /* breathing room after hero */
-        overflowX: 'hidden', /* contain MOMENTUM. giant type */
+        paddingTop: 'clamp(12vh, 20vw, 20vh)',
+        overflowX: 'hidden',
       }}
     >
       <div className="bf-container">
@@ -546,7 +585,7 @@ export function Capabilities() {
                   cap={cap}
                   cardRef={makeCardRef(i)}
                   onCardClick={spawnParticles}
-                  isMobile={isMobile.current}
+                  isMobile={isMobile}
                 />
               </motion.div>
             ))}

@@ -14,4 +14,6 @@
  */
 
 export { Capabilities } from './Capabilities';
-// Chunks 3–4 will add: Journey, Manifesto
+export { Journey }     from './Journey';
+export { Manifesto }   from './Manifesto';
+export { WorkIntro }   from './WorkIntro';

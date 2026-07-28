@@ -7,6 +7,9 @@ import { Hero } from './components/Hero';
 
 // Lazy load non-critical components for better performance
 const Capabilities = lazy(() => import('./components/redesign/Capabilities').then(m => ({ default: m.Capabilities })));
+const Journey = lazy(() => import('./components/redesign/Journey').then(m => ({ default: m.Journey })));
+const Manifesto = lazy(() => import('./components/redesign/Manifesto').then(m => ({ default: m.Manifesto })));
+const WorkIntro = lazy(() => import('./components/redesign/WorkIntro').then(m => ({ default: m.WorkIntro })));
 const Work = lazy(() => import('./components/Work').then(m => ({ default: m.Work })));
 const Playroom = lazy(() => import('./components/Playroom').then(m => ({ default: m.Playroom })));
 const Workflow = lazy(() => import('./components/Workflow').then(m => ({ default: m.Workflow })));
@@ -126,6 +129,9 @@ export default function App() {
             <div className="boldframe-redesign">
               <Suspense fallback={<div className="min-h-screen" />}>
                 <Capabilities />
+                <Journey />
+                <Manifesto />
+                <WorkIntro />
                 <Playroom />
                 <Work />
                 <Workflow />

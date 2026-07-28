@@ -1,0 +1,181 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 4/4
+HORIZONTAL MANIFESTO + SELECTED WORK HANDOFF + FINAL INTEGRATION
+
+Continue directly from CHUNKS 1/4, 2/4 and 3/4.
+
+ALL previous constraints remain active.
+
+DO NOT:
+
+* modify the locked existing hero
+* redesign the completed Capabilities section
+* replace the Scroll Journey
+* build the actual Selected Work/project gallery yet
+* introduce unrelated components/effects
+
+This chunk completes MASTER PART 1.
+
+Current narrative:
+
+LOCKED HERO
+→ CAPABILITIES
+→ SCROLL-DRAWN JOURNEY
+→ [BUILD NOW] HORIZONTAL MANIFESTO
+→ [BUILD ONLY INTRO] SELECTED WORK
+
+==================================================
+01 — PURPOSE
+============
+
+The Scroll Journey ends with:
+
+THE RESULT?
+
+A WEBSITE THAT
+DOESN'T FEEL
+INTERCHANGEABLE.
+
+Its SVG path gradually becomes more horizontal near the end.
+
+Use that directional energy to transition naturally into a radically different interaction:
+
+vertical scrolling temporarily becomes HORIZONTAL TYPOGRAPHIC MOMENTUM.
+
+This should feel like the journey has resolved into forward motion.
+
+Do not make it feel like:
+"here is another cool GSAP component."
+
+==================================================
+02 — HORIZONTAL MANIFESTO
+=========================
+
+Create a pinned GSAP ScrollTrigger section containing ONE enormous continuous editorial sentence.
+
+This is NOT:
+
+* carousel
+* slider
+* multiple full-screen slides
+* marquee running automatically
+* separate cards
+
+It is ONE long typographic composition moving horizontally as the user scrolls vertically.
+
+Manifesto:
+
+"Strategy gives it direction — design gives it character — development gives it life — performance keeps it moving — and every frame should earn its place."
+
+Preserve this as one conceptual sentence.
+
+Desktop typography:
+approximately clamp(4.5rem, 8vw, 10rem), adjusted intelligently.
+
+Prefer one flowing line on large desktop.
+
+Use variable gaps intentionally so the sentence breathes.
+
+==================================================
+03 — TYPOGRAPHIC ART DIRECTION
+==============================
+
+Do not style every phrase identically.
+
+Emphasize key words:
+
+DIRECTION
+CHARACTER
+LIFE
+MOVING
+FRAME
+
+But use only 2-3 emphasis techniques total.
+
+Possible treatments:
+
+* violet fill
+* outline typography
+* weight shift
+* subtle italic if current font supports a strong italic
+* a word temporarily enclosed/cropped by a frame
+* near-white → accent transition around viewport center
+
+Do NOT make every important word purple.
+
+Do NOT create rainbow typography.
+
+Do NOT add random gradient text.
+
+The sentence should feel editorial and expensive.
+
+==================================================
+04 — INLINE VISUAL PUNCTUATION
+==============================
+
+Integrate visual elements DIRECTLY inside the sentence flow.
+
+They behave like punctuation/conjunctions, NOT standalone sections.
+
+Create approximately 4-5 inline visual moments.
+
+Examples:
+
+[small browser frame]
+[flowing SVG connector]
+[crosshair / coordinate marker]
+[tiny project-preview frame]
+[outlined rotating frame]
+
+Conceptual rhythm:
+
+Strategy gives it DIRECTION
+— [frame] —
+design gives it CHARACTER
+— [curve] —
+development gives it LIFE
+— [coordinate object] —
+performance keeps it MOVING
+— [project frame] —
+and every FRAME should earn its place.
+
+Do not literally use this exact spacing if a stronger composition emerges.
+
+Each visual should be vertically aligned with the typography.
+
+They must feel embedded in the language.
+
+Use CSS/SVG rather than generic icons wherever possible.
+
+==================================================
+05 — INLINE MOTION
+==================
+
+The horizontal movement is the primary animation.
+
+Inline visuals may respond subtly to scroll position.
+
+Examples:
+
+browser frame:
+rotation -3deg → 5deg
+
+SVG curve:
+draws as it approaches viewport center
+
+crosshair:
+small controlled positional shift
+
+project frame:
+image/content translates ~8-15px internally
+
+outlined FRAME:
+border resolves or closes around the word
+
+Do NOT:
+
+* continuously spin anything
+* bounce icons
+* create large parallax differences
+* use animation merely for spectacle
+
+The inline animation should reinforce movement through a constructed digital composition.
