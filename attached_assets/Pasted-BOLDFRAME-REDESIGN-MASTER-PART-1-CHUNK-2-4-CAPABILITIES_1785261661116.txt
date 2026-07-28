@@ -1,0 +1,118 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 2/4
+CAPABILITIES + CUSTOM MAGIC BENTO
+
+Continue directly from CHUNK 1/4.
+
+ALL previous constraints remain active, especially:
+
+* EXISTING HERO IS LOCKED AND MUST REMAIN IDENTICAL.
+* new styles must remain scoped to the post-hero redesign
+* do not build Selected Work yet
+* do not turn this into a component showcase
+* maintain the established BoldFrame visual system
+
+Now implement the first major post-hero experience.
+
+==================================================
+A — TRANSITION OUT OF THE EXISTING HERO
+=======================================
+
+Do NOT end the hero and immediately show another centered heading + cards.
+
+The transition itself should communicate that the conventional website has ended and the authored BoldFrame experience has begun.
+
+After the exact end of the LOCKED hero, create approximately 15-25vh of intentional breathing room on desktop, adjusted responsibly for mobile.
+
+No obvious divider line.
+
+Allow the hero's visual energy to settle naturally into the graphite post-hero environment.
+
+Introduce restrained left-aligned metadata:
+
+01 / CAPABILITIES
+
+Use small uppercase micro typography, subtle letter spacing and muted color.
+
+Then introduce a large editorial statement:
+
+WE DON'T JUST
+BUILD PAGES.
+
+WE BUILD
+MOMENTUM.
+
+Do NOT render this as a normal centered section title.
+
+Create editorial tension.
+
+Possible composition:
+
+* "WE DON'T JUST" left
+* "BUILD PAGES." slightly inset
+* meaningful negative space
+* "WE BUILD" shifted toward center/right
+* "MOMENTUM." large and approaching/cropping against a viewport boundary
+
+Keep it sophisticated rather than artificially messy.
+
+Typography should be responsive with clamp().
+
+Use a restrained masked/clipped reveal as the user enters:
+~20-40px vertical movement + reveal from clipping.
+
+No bouncing.
+No flashy character-by-character animation.
+No excessive blur.
+
+Use elegant easing such as power3.out/power4.out.
+
+Follow with concise copy:
+
+"Strategy, design and development working as one system — built to look distinctive, load fast and move with purpose."
+
+Keep the paragraph visually subordinate.
+
+==================================================
+B — CUSTOMIZED MAGIC BENTO
+==========================
+
+Use the provided open-source MagicBento component as an INTERACTION FOUNDATION, not as the final design.
+
+DO NOT retain its original generic SaaS:
+Analytics / Dashboard / Collaboration / Automation / Integration / Security.
+
+DO NOT simply paste MagicBento below the heading.
+
+Transform it into a BoldFrame-specific capabilities system.
+
+Create FOUR capability frames:
+
+01 — STRATEGY
+Metadata:
+POSITIONING — UX — STRUCTURE
+
+Copy:
+"We find the sharpest way to frame the idea before a pixel gets polished."
+
+02 — DESIGN
+Metadata:
+ART DIRECTION — UI — MOTION
+
+Copy:
+"Distinct visual systems designed around the brand — not around a template."
+
+03 — DEVELOPMENT
+Metadata:
+REACT — FRONTEND — RESPONSIVE
+
+Copy:
+"Production-ready builds where motion, responsiveness and performance are part of the architecture."
+
+04 — PERFORMANCE
+Metadata:
+SPEED — SEO — OPTIMIZATION
+
+Copy:
+"Fast loads, deliberate interactions and the final 10% that separates functional from finished."
+
+Keep copy concise and readable.

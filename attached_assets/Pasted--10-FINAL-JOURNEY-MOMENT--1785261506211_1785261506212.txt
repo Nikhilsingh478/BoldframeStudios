@@ -1,0 +1,125 @@
+==================================================
+10 — FINAL JOURNEY MOMENT
+=========================
+
+Near the final 15-20% of the section, the SVG path should become less exploratory.
+
+Its curves gradually resolve into a more confident horizontal trajectory.
+
+This is intentional because CHUNK 4 will transform the page into horizontal movement.
+
+Use small copy:
+
+THE RESULT?
+
+Then large statement:
+
+A WEBSITE THAT
+DOESN'T FEEL
+INTERCHANGEABLE.
+
+Give this statement serious visual weight.
+
+Possible composition:
+"A WEBSITE THAT" restrained
+"DOESN'T FEEL" large
+"INTERCHANGEABLE." enormous / near viewport edge
+
+Do not over-animate it.
+
+The line should visually arrive at this statement.
+
+After arrival, leave enough breathing space before the next section.
+
+==================================================
+11 — RESPONSIVE BEHAVIOR
+========================
+
+Desktop receives the full choreography.
+
+Tablet:
+
+* simplify path geometry where needed
+* maintain meaningful checkpoint relationships
+* prevent typography/path collisions
+
+Mobile MUST NOT simply shrink the desktop SVG.
+
+Create a mobile-specific path/layout if necessary.
+
+On mobile:
+
+* section can be shorter
+* path should primarily travel vertically with controlled horizontal curves
+* checkpoints should remain readable
+* giant typography should use clamp()
+* avoid huge blank 300vh stretches
+* path should never force horizontal body overflow
+
+The experience must still communicate the journey.
+
+Reduced-motion:
+show completed or minimally revealed path and all content accessibly.
+Do not require 300vh of animation to understand the section.
+
+==================================================
+12 — PERFORMANCE / TECHNICAL QUALITY
+====================================
+
+Avoid rerendering React continuously on every scroll tick if motion values/GSAP can update DOM efficiently.
+
+Decorative SVG should use:
+aria-hidden="true".
+
+Clean up all observers/listeners/triggers created here.
+
+Do not kill ScrollTriggers belonging to Capabilities or future sections.
+
+Refresh ScrollTrigger after relevant layout/font changes if GSAP is used.
+
+No:
+
+* body horizontal overflow
+* scroll jumps
+* flickering masks
+* giant SVG rasterization issues
+* layout shifts
+* console warnings
+
+Test scrolling forward AND backward.
+
+Test rapid scrolling.
+
+Test resizing after the page has loaded.
+
+==================================================
+END OF CHUNK 3/4
+================
+
+The resulting narrative should now be:
+
+LOCKED HERO
+→ CAPABILITIES
+→ quiet transition
+→ FROM ROUGH IDEA
+→ scroll physically draws BoldFrame's journey
+→ DISCOVER
+→ FRAME
+→ DESIGN
+→ BUILD
+→ REFINE
+→ SHARP EXPERIENCE
+→ THE RESULT?
+→ A WEBSITE THAT DOESN'T FEEL INTERCHANGEABLE.
+
+Do NOT build the horizontal manifesto yet.
+
+Do NOT build portfolio/project cards.
+
+Do NOT alter the locked hero.
+
+Before stopping, verify the journey feels intentionally ART-DIRECTED rather than like "an SVG path animation demo."
+
+The line must have a reason to exist.
+
+Wait for CHUNK 4/4.

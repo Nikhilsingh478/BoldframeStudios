@@ -1,0 +1,476 @@
+BOLDFRAME REDESIGN — MASTER PART 1, CHUNK 3/4
+SCROLL-DRAWN BOLDFRAME JOURNEY
+
+Continue directly from CHUNKS 1/4 and 2/4.
+
+ALL previous constraints remain active.
+
+Especially:
+- EXISTING HERO remains completely LOCKED
+- preserve the post-hero design system already established
+- preserve the completed capabilities section
+- do not redesign previous sections unless fixing an actual integration issue
+- do not build Selected Work yet
+- do not build the horizontal manifesto yet; that comes in CHUNK 4/4
+
+This chunk creates the major scroll-driven narrative experience AFTER Capabilities.
+
+==================================================
+01 — PURPOSE OF THIS SECTION
+==================================================
+
+Create an original BoldFrame scroll journey inspired by the supplied scroll-following SVG path concept.
+
+DO NOT copy the reference SVG path.
+
+DO NOT copy its green color.
+
+DO NOT copy its composition or wording.
+
+The reference is only inspiration for the interaction principle:
+
+USER SCROLL PROGRESS → SVG LINE DRAWS FORWARD.
+
+For BoldFrame, this line must have meaning.
+
+It represents the studio journey:
+
+IDEA
+→ FRAME
+→ DESIGN
+→ BUILD
+→ REFINE
+→ final experience
+
+The user should feel as though scrolling physically constructs the creative process.
+
+This should become a signature visual moment of the website.
+
+It must NOT look like a decorative squiggle placed behind text.
+
+==================================================
+02 — SECTION SCALE / ENVIRONMENT
+==================================================
+
+Place this directly after the completed Capabilities experience.
+
+Desktop section height should be approximately 280-340vh, but choose the exact height based on choreography rather than blindly hardcoding 300vh.
+
+Keep the established graphite/near-black environment.
+
+Do not place this inside a rounded card.
+
+The VIEWPORT is the frame.
+
+Let the section use nearly the full browser width.
+
+Use substantial negative space.
+
+The experience should initially feel spacious and almost quiet after the interactive Bento section.
+
+Introduce small metadata:
+
+BFS / PROCESS
+01—05
+
+or another similarly restrained notation consistent with the established detail system.
+
+Then introduce huge editorial typography:
+
+FROM
+ROUGH IDEA
+
+TO
+SHARP EXPERIENCE.
+
+Composition should be asymmetric.
+
+"ROUGH IDEA" can dominate one side of the viewport.
+
+"SHARP EXPERIENCE." should appear later in the scroll rather than sitting directly underneath it like a conventional heading.
+
+Typography can approach or intentionally crop against viewport boundaries.
+
+Do not center everything.
+
+==================================================
+03 — ORIGINAL SVG PATH
+==================================================
+
+Create a NEW custom responsive SVG path specifically for this layout.
+
+The path should begin close to the opening typography and travel through the entire section.
+
+Its visual personality:
+
+CONFIDENT
+FLUID
+CONTROLLED
+SLIGHTLY HUMAN
+PRECISE ENOUGH TO FEEL DESIGNED
+
+NOT:
+- childish doodle
+- random spaghetti
+- corporate flowchart
+- perfect symmetrical wave
+- giant looping scribble copied from Skiper19
+
+The path should move naturally around typography and checkpoints.
+
+Use a large SVG viewBox so curves remain smooth.
+
+Use cubic Bezier curves intentionally.
+
+Desktop stroke width approximately 6-10px depending on viewport.
+
+Mobile approximately 3-5px.
+
+Use round linecap and linejoin.
+
+Primary color should be BoldFrame violet.
+
+A VERY subtle violet→cyan evolution may be used toward the end if elegant and consistent with the hero DNA.
+
+Do not create rainbow gradients.
+
+If gradient reduces visual clarity, use solid violet.
+
+==================================================
+04 — SCROLL-DRAW BEHAVIOR
+==================================================
+
+Connect path drawing directly to this section's scroll progress.
+
+Use either:
+- Framer Motion useScroll/useTransform
+OR
+- GSAP ScrollTrigger
+
+Choose whichever is most robust with the architecture already established.
+
+Do not add another animation library solely for this.
+
+CRITICAL:
+
+The path must begin essentially undrawn.
+
+At section progress 0:
+pathLength ≈ 0
+
+At roughly 90%:
+pathLength ≈ 1
+
+Final ~10% provides visual breathing room.
+
+Unlike the original reference, DO NOT start around pathLength 0.5.
+
+The visitor must visibly CREATE the route.
+
+The path drawing should map almost linearly to scroll.
+
+Do not apply dramatic easing to scroll-linked progress.
+
+Scrolling backward must naturally erase/reverse the journey.
+
+No animation should continue independently after the user stops scrolling.
+
+==================================================
+05 — PATH / TYPOGRAPHY LAYERING
+==================================================
+
+Make the line interact spatially with the composition.
+
+Some segments should:
+
+- pass BEHIND huge typography
+- emerge back into foreground
+- travel through negative space
+- curve around metadata
+- pass behind a small "frame" object
+- arrive at checkpoints
+
+Use z-index, masks and/or SVG clipping deliberately.
+
+Example:
+
+The path approaches "ROUGH IDEA", disappears behind several letters, then emerges from the opposite edge.
+
+Later it may wrap around an outlined browser/frame shape before continuing.
+
+This creates depth WITHOUT generic floating 3D objects.
+
+Do not compromise text readability.
+
+==================================================
+06 — JOURNEY CHECKPOINTS
+==================================================
+
+Integrate FIVE primary checkpoints.
+
+Do NOT make five cards.
+
+They are typographic annotations anchored around the path.
+
+01
+DISCOVER
+
+"Understand what deserves attention."
+
+02
+FRAME
+
+"Give the idea structure and direction."
+
+03
+DESIGN
+
+"Turn strategy into something unmistakable."
+
+04
+BUILD
+
+"Engineer the experience for the real browser."
+
+05
+REFINE
+
+"Remove friction until everything feels inevitable."
+
+Each checkpoint contains:
+
+small index
+uppercase title
+one concise sentence
+small anchor point associated with the path
+
+Arrange them asymmetrically across the long section.
+
+Some left.
+Some right.
+Some closer to center.
+
+Do not alternate mechanically left/right/left/right.
+
+Composition should follow the actual SVG route.
+
+==================================================
+07 — CHECKPOINT ACTIVATION
+==================================================
+
+Checkpoint animation must be tied to PATH PROGRESS.
+
+The line should visually reach a checkpoint BEFORE or AS that checkpoint activates.
+
+Do not have all labels independently fade in just because they entered viewport.
+
+Activation sequence:
+
+1. path approaches point
+2. small anchor point activates
+3. label changes muted → near-white
+4. title resolves into full contrast
+5. supporting sentence reveals subtly
+
+Possible motion:
+
+opacity 0.3 → 1
+translateY 10-16px → 0
+scale 0.97 → 1
+
+Keep it restrained.
+
+No bouncing.
+No particle explosions.
+No giant glows.
+
+The active anchor can have a tiny violet pulse ONCE.
+
+Inactive checkpoints remain readable but subdued.
+
+==================================================
+08 — FRAME MOTIF
+==================================================
+
+Somewhere around FRAME or DESIGN, introduce ONE small outlined composition/browser frame.
+
+The SVG route should interact with it.
+
+Example:
+
+line enters the frame
+→ passes through/behind it
+→ exits toward DESIGN.
+
+The frame can subtly transform with scroll:
+slight scale
+crop adjustment
+border emphasis
+
+This is a conceptual expression of:
+
+IDEA → FRAME → EXPERIENCE.
+
+Do not add multiple floating browser mockups here.
+
+One strong visual metaphor is enough.
+
+==================================================
+09 — LARGE TYPOGRAPHIC EVOLUTION
+==================================================
+
+As the user progresses through the journey, transition from:
+
+ROUGH IDEA
+
+toward:
+
+SHARP EXPERIENCE.
+
+Do not simply reveal the second heading with opacity.
+
+Make the transformation spatial.
+
+For example:
+
+ROUGH IDEA exists large near the beginning.
+
+As the journey continues, typography becomes more structured/aligned.
+
+Near the final third, introduce:
+
+SHARP
+EXPERIENCE.
+
+in a much cleaner, more resolved composition.
+
+This should subconsciously reinforce:
+
+messy idea → deliberate outcome.
+
+Do NOT literally make the first typography ugly.
+
+Both states must remain premium.
+
+==================================================
+10 — FINAL JOURNEY MOMENT
+==================================================
+
+Near the final 15-20% of the section, the SVG path should become less exploratory.
+
+Its curves gradually resolve into a more confident horizontal trajectory.
+
+This is intentional because CHUNK 4 will transform the page into horizontal movement.
+
+Use small copy:
+
+THE RESULT?
+
+Then large statement:
+
+A WEBSITE THAT
+DOESN'T FEEL
+INTERCHANGEABLE.
+
+Give this statement serious visual weight.
+
+Possible composition:
+"A WEBSITE THAT" restrained
+"DOESN'T FEEL" large
+"INTERCHANGEABLE." enormous / near viewport edge
+
+Do not over-animate it.
+
+The line should visually arrive at this statement.
+
+After arrival, leave enough breathing space before the next section.
+
+==================================================
+11 — RESPONSIVE BEHAVIOR
+==================================================
+
+Desktop receives the full choreography.
+
+Tablet:
+- simplify path geometry where needed
+- maintain meaningful checkpoint relationships
+- prevent typography/path collisions
+
+Mobile MUST NOT simply shrink the desktop SVG.
+
+Create a mobile-specific path/layout if necessary.
+
+On mobile:
+- section can be shorter
+- path should primarily travel vertically with controlled horizontal curves
+- checkpoints should remain readable
+- giant typography should use clamp()
+- avoid huge blank 300vh stretches
+- path should never force horizontal body overflow
+
+The experience must still communicate the journey.
+
+Reduced-motion:
+show completed or minimally revealed path and all content accessibly.
+Do not require 300vh of animation to understand the section.
+
+==================================================
+12 — PERFORMANCE / TECHNICAL QUALITY
+==================================================
+
+Avoid rerendering React continuously on every scroll tick if motion values/GSAP can update DOM efficiently.
+
+Decorative SVG should use:
+aria-hidden="true".
+
+Clean up all observers/listeners/triggers created here.
+
+Do not kill ScrollTriggers belonging to Capabilities or future sections.
+
+Refresh ScrollTrigger after relevant layout/font changes if GSAP is used.
+
+No:
+- body horizontal overflow
+- scroll jumps
+- flickering masks
+- giant SVG rasterization issues
+- layout shifts
+- console warnings
+
+Test scrolling forward AND backward.
+
+Test rapid scrolling.
+
+Test resizing after the page has loaded.
+
+==================================================
+END OF CHUNK 3/4
+==================================================
+
+The resulting narrative should now be:
+
+LOCKED HERO
+→ CAPABILITIES
+→ quiet transition
+→ FROM ROUGH IDEA
+→ scroll physically draws BoldFrame's journey
+→ DISCOVER
+→ FRAME
+→ DESIGN
+→ BUILD
+→ REFINE
+→ SHARP EXPERIENCE
+→ THE RESULT?
+→ A WEBSITE THAT DOESN'T FEEL INTERCHANGEABLE.
+
+Do NOT build the horizontal manifesto yet.
+
+Do NOT build portfolio/project cards.
+
+Do NOT alter the locked hero.
+
+Before stopping, verify the journey feels intentionally ART-DIRECTED rather than like "an SVG path animation demo."
+
+The line must have a reason to exist.
+
+Wait for CHUNK 4/4.

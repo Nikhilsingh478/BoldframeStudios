@@ -462,3 +462,741 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   JOURNEY — Scroll-drawn process narrative
+   300vh section (200vh mobile). Sticky 100vh inner.
+   SVG z-index 1 | Typography z-index 2 | Checkpoints z-index 3
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-journey-section {
+  position: relative;
+  height: 300vh;
+  overflow-x: hidden;
+  background-color: var(--bf-bg-primary);
+}
+
+.bf-journey-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* SVG overlay — always fills the sticky container */
+.bf-journey-svgwrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bf-journey-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bf-journey-desktop { display: block; }
+.bf-journey-mobile  { display: none; }
+
+/* Section metadata — top-left, always visible */
+.bf-journey-meta {
+  position: absolute;
+  top: 5.5%;
+  left: 7%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  pointer-events: none;
+}
+
+.bf-journey-meta-label {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-journey-meta-range {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--bf-accent);
+}
+
+/* Typography blocks — each is an absolute inset-0 container.
+   Children are positioned absolutely within it.
+   The Framer Motion y-transform slides the whole block together. */
+.bf-journey-rough-block,
+.bf-journey-sharp-block,
+.bf-journey-final-block {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* FROM ROUGH IDEA */
+.bf-journey-from {
+  position: absolute;
+  left: 7%;
+  top: 12%;
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-journey-rough-idea {
+  position: absolute;
+  left: 5%;
+  top: 19%;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.8rem, 7vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+  white-space: nowrap;
+}
+
+/* SHARP EXPERIENCE */
+.bf-journey-sharp-label {
+  position: absolute;
+  right: 8%;
+  top: 47%;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 4vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--bf-text-secondary);
+}
+
+.bf-journey-experience {
+  position: absolute;
+  left: 5%;
+  top: 58%;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.4rem, 5.5vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+  white-space: nowrap;
+}
+
+/* THE RESULT / Final statement */
+.bf-journey-result-label {
+  position: absolute;
+  right: 8%;
+  top: 64%;
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-sm);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-journey-final-text {
+  position: absolute;
+  left: 7%;
+  top: 71%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bf-jf-line-a {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1rem, 2.2vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+  display: block;
+  line-height: 1.15;
+}
+
+.bf-jf-line-b {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 4vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--bf-text-primary);
+  display: block;
+  line-height: 1;
+  margin-top: 0.08em;
+}
+
+.bf-jf-line-c {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.2rem, 5.5vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--bf-text-primary);
+  display: block;
+  line-height: 0.92;
+  white-space: nowrap;
+  margin-top: 0.04em;
+}
+
+/* Browser frame motif — sits at z-index 2 above the SVG path.
+   Path appears to "enter" the frame interior. */
+.bf-frame-motif {
+  position: absolute;
+  left: 57%;
+  top: 15%;
+  width: 150px;
+  height: 108px;
+  border: 1px solid var(--bf-border-mid);
+  border-radius: var(--bf-radius-md);
+  background: var(--bf-bg-surface);
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bf-fm-chrome {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  height: 22px;
+  border-bottom: 1px solid var(--bf-border-subtle);
+  background: var(--bf-bg-secondary);
+}
+
+.bf-fm-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.bf-fm-url-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--bf-border-subtle);
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.bf-fm-body {
+  padding: 10px 10px 8px;
+}
+
+.bf-fm-line {
+  background: var(--bf-border-mid);
+  border-radius: 3px;
+  display: block;
+}
+
+.bf-fm-block {
+  margin-top: 8px;
+  height: 30px;
+  background: var(--bf-border-subtle);
+  border-radius: 4px;
+  width: 100%;
+}
+
+/* ─── Checkpoint annotations ─────────────────────────────────── */
+
+.bf-cp {
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.bf-cp-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.bf-cp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bf-accent);
+  opacity: 0.35;
+  flex-shrink: 0;
+  transition: opacity 0.25s ease;
+}
+
+.bf-cp-dot.bf-cp-activated {
+  opacity: 1;
+  animation: bf-cp-pulse 0.65s ease-out forwards;
+}
+
+@keyframes bf-cp-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(115, 87, 255, 0.65); }
+  55%  { box-shadow: 0 0 0 8px rgba(115, 87, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(115, 87, 255, 0); }
+}
+
+.bf-cp-index {
+  font-family: var(--bf-font-body);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-cp-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(0.65rem, 1vw, 0.875rem);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--bf-text-primary);
+  margin-bottom: 4px;
+}
+
+.bf-cp-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.65rem, 0.9vw, 0.75rem);
+  line-height: 1.55;
+  color: var(--bf-text-secondary);
+}
+
+/* ─── Journey mobile overrides ───────────────────────────────── */
+
+@media (max-width: 767px) {
+  .bf-journey-section  { height: 200vh; }
+  .bf-journey-desktop  { display: none; }
+  .bf-journey-mobile   { display: block; }
+
+  .bf-journey-rough-idea {
+    font-size: clamp(2rem, 9vw, 3.2rem);
+    white-space: normal;
+    max-width: 82%;
+  }
+
+  .bf-journey-sharp-label {
+    right: auto;
+    left: 7%;
+    top: 40%;
+    font-size: clamp(1.3rem, 6vw, 2rem);
+  }
+
+  .bf-journey-experience {
+    left: 5%;
+    top: 50%;
+    font-size: clamp(1.6rem, 7.5vw, 2.8rem);
+    white-space: normal;
+    max-width: 88%;
+  }
+
+  .bf-journey-result-label {
+    right: auto;
+    left: 7%;
+    top: 60%;
+  }
+
+  .bf-journey-final-text {
+    left: 5%;
+    top: 66%;
+  }
+
+  .bf-jf-line-a { font-size: clamp(0.8rem, 3.5vw, 1.2rem); }
+  .bf-jf-line-b { font-size: clamp(1.3rem, 5.5vw, 2rem); }
+  .bf-jf-line-c { font-size: clamp(1.6rem, 6.5vw, 2.5rem); white-space: normal; }
+
+  .bf-frame-motif {
+    left: auto;
+    right: 7%;
+    top: 20%;
+    width: 94px;
+    height: 68px;
+  }
+
+  .bf-cp { max-width: 145px !important; }
+  .bf-cp-copy { display: none; }
+}
+
+/* Reduced motion: collapse sticky, show all content statically */
+@media (prefers-reduced-motion: reduce) {
+  .bf-journey-section {
+    height: auto;
+    overflow: visible;
+  }
+
+  .bf-journey-sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: clamp(4rem, 8vw, 7rem) var(--bf-section-px);
+  }
+
+  .bf-journey-svgwrap { display: none; }
+  .bf-frame-motif     { display: none; }
+
+  .bf-journey-rough-block,
+  .bf-journey-sharp-block,
+  .bf-journey-final-block {
+    position: static;
+    display: block;
+    margin-bottom: 3rem;
+  }
+
+  .bf-journey-from,
+  .bf-journey-rough-idea,
+  .bf-journey-sharp-label,
+  .bf-journey-experience,
+  .bf-journey-result-label,
+  .bf-journey-final-text {
+    position: static;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .bf-journey-rough-idea,
+  .bf-journey-experience,
+  .bf-jf-line-c { white-space: normal; }
+
+  .bf-cp {
+    position: static !important;
+    display: inline-block;
+    margin: 0.5rem 1.5rem 0.5rem 0;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MANIFESTO — Horizontal typographic sentence
+   Desktop: GSAP-pinned horizontal track
+   Mobile: Vertical editorial stack
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-manifesto-section {
+  position: relative;
+  background-color: var(--bf-bg-primary);
+}
+
+/* Divider line entering the Manifesto — echoes Journey path */
+.bf-manifesto-transition {
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(3rem, 6vw, 7rem);
+  height: clamp(3rem, 5vw, 5rem);
+  overflow: hidden;
+}
+
+.bf-manifesto-transition-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--bf-accent) 0%, rgba(115,87,255,0.08) 60%, transparent 100%);
+}
+
+/* The pinned viewport — 100vh, content centered vertically */
+.bf-manifesto-pin {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  will-change: transform;
+}
+
+/* The moving horizontal track */
+.bf-manifesto-track {
+  display: flex;
+  align-items: center;
+  padding-inline: clamp(4rem, 7vw, 8rem);
+  white-space: nowrap;
+  will-change: transform;
+  user-select: none;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+/* ── Manifesto Typography ──────────────────────────────────────── */
+
+/* Connecting words — lighter weight, slightly smaller */
+.bf-mani-text {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.8rem, 5vw, 6.5rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--bf-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Keyword emphasis words */
+.bf-mani-word {
+  font-family: var(--bf-font-display);
+  font-size: clamp(3.5rem, 6.5vw, 8.5rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--bf-text-primary);
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Spacer between elements */
+.bf-mani-space {
+  display: inline-block;
+  width: clamp(0.75rem, 1.5vw, 2rem);
+  flex-shrink: 0;
+}
+
+/* ── Emphasis treatments (max 3 techniques) ─────────────────── */
+
+/* 1. Violet fill — DIRECTION + LIFE */
+.bf-mani-violet { color: var(--bf-accent); }
+
+/* 2. Outline type — CHARACTER */
+.bf-mani-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(243, 242, 238, 0.7);
+}
+
+/* 3. Italic — MOVING */
+.bf-mani-italic {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* FRAME — italic with a box drawn around it */
+.bf-mani-frame-word {
+  font-style: italic;
+  font-weight: 700;
+  color: var(--bf-text-primary);
+  position: relative;
+  padding: 0.04em 0.18em;
+}
+
+.bf-mani-frame-word::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(115, 87, 255, 0.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* Tail phrase — lighter */
+.bf-mani-tail { color: var(--bf-text-secondary); font-weight: 300; }
+
+/* ── Inline visual elements ──────────────────────────────────── */
+
+/* Entry continuation line — echoes the Journey path's final horizontal move */
+.bf-mani-entry {
+  display: inline-flex;
+  align-items: center;
+  margin-right: clamp(2.5rem, 5vw, 6rem);
+  flex-shrink: 0;
+  opacity: 0.65;
+}
+
+/* SVG-based separators between phrases */
+.bf-mani-sep {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-inline: clamp(1.5rem, 3vw, 4.5rem);
+}
+
+/* Small screen/browser frame inline */
+.bf-mani-screen {
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: clamp(70px, 7vw, 110px);
+  height: clamp(48px, 5vw, 76px);
+  border: 1px solid var(--bf-border-mid);
+  border-radius: var(--bf-radius-sm);
+  background: var(--bf-bg-surface);
+  overflow: hidden;
+  margin-inline: clamp(1.5rem, 3vw, 4.5rem);
+  vertical-align: middle;
+  align-self: center;
+}
+
+.bf-mani-screen-chrome {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 5px;
+  height: 14px;
+  background: var(--bf-bg-secondary);
+  border-bottom: 1px solid var(--bf-border-subtle);
+  flex-shrink: 0;
+}
+
+.bf-mani-screen-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bf-mani-screen-body {
+  flex: 1;
+  padding: 5px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  justify-content: center;
+}
+
+.bf-mani-screen-line {
+  height: 4px;
+  background: var(--bf-border-mid);
+  border-radius: 2px;
+}
+
+/* End padding ensures breathing room before release */
+.bf-mani-end-pad {
+  display: inline-block;
+  width: 22vw;
+  flex-shrink: 0;
+}
+
+/* ── Mobile manifesto — vertical editorial stack ─────────────── */
+
+.bf-manifesto-mobile {
+  display: none;
+  padding: clamp(4rem, 8vw, 7rem) var(--bf-section-px);
+}
+
+.bf-mani-phrase {
+  margin-bottom: clamp(2rem, 5.5vw, 3.5rem);
+}
+
+.bf-mani-phrase-small {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+  display: block;
+  margin-bottom: 0.1em;
+}
+
+.bf-mani-phrase-big {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.2rem, 9.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--bf-text-primary);
+  display: block;
+}
+
+/* Apply same emphasis on mobile */
+.bf-mani-phrase-big.bf-mani-violet { color: var(--bf-accent); }
+.bf-mani-phrase-big.bf-mani-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(243, 242, 238, 0.7);
+}
+.bf-mani-phrase-big.bf-mani-italic { font-style: italic; }
+.bf-mani-phrase-big.bf-mani-frame-word {
+  display: inline-block;
+  font-style: italic;
+  padding: 0.04em 0.15em;
+}
+
+.bf-mani-meta {
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* ── Responsive: mobile shows vertical, hides horizontal ─────── */
+@media (max-width: 767px) {
+  .bf-manifesto-pin     { display: none; }
+  .bf-manifesto-mobile  { display: block; }
+  .bf-manifesto-transition { display: none; }
+}
+
+/* Reduced motion: always show vertical */
+@media (prefers-reduced-motion: reduce) {
+  .bf-manifesto-pin     { display: none !important; }
+  .bf-manifesto-mobile  { display: block !important; }
+  .bf-manifesto-transition { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SELECTED WORK INTRO — Quiet anticipation header
+   Mounting point for MASTER PART 2 work grid
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-work-intro-section {
+  background-color: var(--bf-bg-primary);
+  padding-top: clamp(7rem, 14vw, 12rem);
+  padding-bottom: clamp(5rem, 10vw, 8rem);
+  padding-inline: var(--bf-section-px);
+  overflow: hidden;
+}
+
+.bf-work-intro-meta {
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.bf-work-selected {
+  font-family: var(--bf-font-display);
+  font-size: clamp(3.5rem, 7.5vw, 8.5rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  color: var(--bf-text-primary);
+  display: block;
+}
+
+.bf-work-work {
+  font-family: var(--bf-font-display);
+  font-size: clamp(4rem, 9.5vw, 11rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.88;
+  color: var(--bf-text-primary);
+  display: block;
+  margin-left: clamp(2rem, 7vw, 7rem);
+  margin-top: 0.04em;
+  white-space: nowrap;
+}
+
+.bf-work-intro-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.875rem, 1.4vw, 1.0625rem);
+  line-height: 1.7;
+  color: var(--bf-text-secondary);
+  max-width: 50ch;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  margin-left: clamp(2rem, 7vw, 7rem);
+}
+
+/* Mounting point — no visual, just structure */
+.bf-work-grid-mount {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  min-height: 1px;
+}
+
+@media (max-width: 767px) {
+  .bf-work-work {
+    margin-left: 0;
+    white-space: normal;
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+  .bf-work-intro-copy {
+    margin-left: 0;
+  }
+}
