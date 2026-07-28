@@ -1,0 +1,159 @@
+==================================================
+05 — IMAGE EXPANSION INTERACTION
+================================
+
+Now adapt the reference interaction:
+
+"Start with a featured image centered in a small frame. As the user scrolls, have the image expand smoothly until it fills the browser."
+
+But customize it completely for BoldFrame.
+
+This is NOT simply:
+scale: 0.5 → 1.
+
+The transformation should feel architectural.
+
+As the visitor scrolls:
+
+PHASE 1 — INTRODUCTION
+The project exists as a framed object inside the page.
+
+PHASE 2 — COMMITMENT
+The frame begins expanding.
+Surrounding metadata gradually reduces in visual dominance.
+
+PHASE 3 — BREAKING THE FRAME
+The image approaches viewport boundaries.
+Border radius gradually decreases.
+The conceptual "frame" disappears.
+
+PHASE 4 — IMMERSION
+The project becomes approximately viewport-scale.
+The website itself temporarily becomes the project canvas.
+
+The metaphor is:
+
+WE FRAME THE IDEA
+→ THEN LET THE EXPERIENCE BREAK OUT OF THE FRAME.
+
+==================================================
+06 — SCROLL CHOREOGRAPHY
+========================
+
+Use GSAP ScrollTrigger unless the existing architecture strongly favors another already-installed solution.
+
+The expansion must be SCRUBBED to scroll.
+
+No autoplay.
+
+No timeline that continues after scrolling stops.
+
+Use a dedicated section with enough vertical distance for smooth transformation.
+
+Approximately 160-220vh may be appropriate on desktop, but derive the final amount from actual choreography.
+
+Avoid making the visitor scroll forever.
+
+Suggested conceptual timeline:
+
+0-15%
+initial composition settles
+
+15-60%
+frame expands
+
+60-80%
+radius/border resolves toward fullscreen
+
+80-100%
+immersive project state + project details begin appearing
+
+Scrolling backward must perfectly reconstruct the small framed state.
+
+==================================================
+07 — DO NOT SCALE BLINDLY
+=========================
+
+Avoid a naive CSS transform that distorts layout or creates blurry content.
+
+Calculate the transformation based on actual frame and viewport geometry.
+
+The final visual should reach approximately:
+
+100vw
+and
+90-100vh
+
+depending on navbar/layout constraints.
+
+If a true 100vh treatment would collide badly with persistent navigation, account for it intentionally.
+
+Use transform-based animation where possible.
+
+Possible implementation:
+
+initial measured bounds
+→ target viewport bounds
+→ animate scale/translation/radius
+
+OR use a pinned wrapper whose child width/height interpolate cleanly.
+
+Choose the solution that creates the least layout instability.
+
+==================================================
+08 — IMAGE BEHAVIOR INSIDE FRAME
+================================
+
+The OUTER frame expands more aggressively than the internal image.
+
+Create subtle differential movement.
+
+Example:
+
+outer frame:
+scale / width / height → viewport
+
+image:
+scale approximately 1.04 → 1.0
+
+or
+
+image position:
+yPercent 3 → 0
+
+This gives the sensation that the project settles into its final composition.
+
+Keep this subtle.
+
+No dramatic Ken Burns effect.
+
+No excessive zoom.
+
+If the asset is a website screenshot, preserve legibility.
+
+Do not crop away its important visual identity merely for cinematic effect.
+
+==================================================
+09 — TYPOGRAPHIC COUNTER-MOTION
+===============================
+
+While the frame expands, allow nearby project metadata to respond.
+
+Do NOT simply fade everything out simultaneously.
+
+For example:
+
+FEATURED / 001
+moves slightly upward and becomes muted
+
+PROJECT TITLE
+moves ~20-40px opposite the frame direction
+
+service metadata
+gradually compresses or fades
+
+This creates tension between editorial information and visual immersion.
+
+Movement must remain restrained.
+
+The IMAGE is the protagonist.

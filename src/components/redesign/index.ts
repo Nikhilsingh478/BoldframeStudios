@@ -13,7 +13,8 @@
  * and should use --bf-* CSS custom properties for styling.
  */
 
-export { Capabilities } from './Capabilities';
-export { Journey }     from './Journey';
-export { Manifesto }   from './Manifesto';
-export { WorkIntro }   from './WorkIntro';
+export { Capabilities }  from './Capabilities';
+export { Journey }       from './Journey';
+export { Manifesto }     from './Manifesto';
+export { WorkIntro }     from './WorkIntro';
+export { FeaturedWork }  from './FeaturedWork';

@@ -1,0 +1,151 @@
+==================================================
+10 — FULLSCREEN PROJECT STATE
+=============================
+
+Once the frame becomes viewport-scale, introduce a restrained overlay layer.
+
+Do not cover the work with a huge dark panel.
+
+Use edge-positioned information.
+
+Possible lower-left:
+
+PROJECT NAME
+CATEGORY / YEAR
+
+Possible lower-right:
+
+VIEW PROJECT ↗
+
+Only show VIEW PROJECT if a real URL exists.
+
+Make the CTA feel editorial.
+
+No giant pill button.
+
+A simple text/link + arrow with a subtle underline/frame interaction is preferred.
+
+Overlay may use a very soft edge gradient ONLY where necessary for readability.
+
+Do not darken the entire screenshot.
+
+==================================================
+11 — BOLD / FRAME SIGNATURE DETAIL
+==================================
+
+At the exact moment the project frame nearly reaches the viewport edges, briefly emphasize four crop/frame marks near the viewport corners.
+
+Very subtle.
+
+Conceptually:
+
+┌                         ┐
+
+└                         ┘
+
+They can appear as the original card frame disappears.
+
+Then they should soften/recede.
+
+This communicates:
+
+the browser viewport itself is now the FRAME.
+
+Do NOT keep giant corner graphics permanently visible.
+
+This should be a small art-direction detail people notice subconsciously.
+
+==================================================
+12 — PROJECT MICRO-INTERACTIONS
+===============================
+
+If the featured project has a live URL:
+
+Desktop pointer interaction on the immersive image can reveal a minimal custom label:
+
+VIEW
+PROJECT ↗
+
+But DO NOT replace the system cursor globally.
+
+Prefer a small follower only within the project media area.
+
+Movement should be damped and subtle.
+
+Disable entirely on touch/mobile.
+
+If this creates performance complexity, use an elegant hover CTA instead.
+
+Quality > novelty.
+
+==================================================
+13 — EXIT FROM IMMERSION
+========================
+
+Do NOT finish fullscreen and immediately snap back to a normal section.
+
+After the project reaches immersive scale, use the remaining scroll progress to introduce the idea that this is ONE project among several.
+
+Introduce micro copy such as:
+
+ONE FRAME.
+MORE TO EXPLORE.
+
+or, if it fits the established voice better:
+
+001 / FEATURED
+MORE WORK AHEAD →
+
+Keep this understated.
+
+The next chunk will transform the experience into a horizontal project gallery.
+
+Therefore the final composition of this section should subtly create lateral expectation.
+
+Possible cue:
+
+project index:
+01 — 04
+
+with the remaining indices extending toward the right.
+
+OR a thin line extending horizontally beyond the viewport.
+
+Do NOT build the actual gallery yet.
+
+==================================================
+14 — MOBILE EXPERIENCE
+======================
+
+Do not force a huge desktop pin/scale sequence onto mobile.
+
+Mobile should retain the SAME conceptual story:
+
+small framed project
+→ image grows
+→ image becomes dominant
+→ project information appears
+
+But simplify.
+
+Use approximately 110-150vh maximum if pinning is needed.
+
+Initial frame:
+~88-92vw
+
+Final:
+~100vw with a strong large-image state.
+
+Do not necessarily force 100vh if it creates excessive cropping.
+
+Prioritize seeing the actual project.
+
+Reduce or eliminate:
+
+* pointer follower
+* complex corner choreography
+* expensive parallax
+
+Typography must remain readable.
+
+No horizontal overflow.

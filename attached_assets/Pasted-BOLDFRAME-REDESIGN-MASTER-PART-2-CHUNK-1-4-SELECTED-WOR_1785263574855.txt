@@ -1,0 +1,202 @@
+BOLDFRAME REDESIGN — MASTER PART 2, CHUNK 1/4
+SELECTED WORK — FEATURED PROJECT / THE FRAME BECOMES THE EXPERIENCE
+
+Continue directly from MASTER PART 1.
+
+IMPORTANT:
+This is CHUNK 1 of 4 for MASTER PART 2.
+
+I will provide:
+2A = Featured Work / cinematic image expansion
+2B = horizontal project gallery
+2C = sticky rotating project stack + secondary work
+2D = interactive detail layer + integration/performance/final transition
+
+Do NOT invent 2B–2D yet.
+
+==================================================
+ABSOLUTE CONTINUITY RULE
+========================
+
+Everything completed in MASTER PART 1 is now considered LOCKED unless an actual integration bug requires a surgical fix.
+
+Preserve:
+
+* ORIGINAL HERO exactly
+* Capabilities / MagicBento
+* Scroll Journey
+* Horizontal Manifesto
+* Selected Work intro
+* established typography
+* graphite/violet/cyan design system
+* spacing language
+* animation philosophy
+* responsive behavior
+
+Do NOT redesign earlier sections.
+
+Do NOT restart the website aesthetically.
+
+Part 2 must feel like the same art director continued working.
+
+==================================================
+01 — ROLE OF SELECTED WORK
+==========================
+
+Part 1 made claims.
+
+Part 2 provides proof.
+
+The portfolio must therefore feel MORE VISUAL and LESS EXPLANATORY.
+
+Do not create:
+
+PROJECTS
+[card] [card] [card]
+
+Do not create a normal agency portfolio grid.
+
+Do not create six identical case-study cards.
+
+Do not immediately throw multiple projects at the visitor.
+
+We begin with ONE featured project.
+
+The experience should communicate:
+
+"Here is what happens when BoldFrame's thinking becomes something real."
+
+The key interaction concept:
+
+FRAME → EXPANSION → IMMERSION.
+
+A project initially exists as an object inside the composition.
+
+As the visitor scrolls, that frame grows until the work temporarily becomes the environment itself.
+
+This directly reinforces the BOLD / FRAME identity.
+
+==================================================
+02 — USE REAL EXISTING PROJECT DATA FIRST
+=========================================
+
+Inspect the current BoldFrame website/project files for:
+
+* existing portfolio projects
+* project names
+* screenshots
+* thumbnails
+* client names
+* URLs
+* project descriptions
+* technology labels
+* existing assets
+
+REUSE real content wherever available.
+
+Do NOT fabricate:
+
+* fake clients
+* fake testimonials
+* fake awards
+* fake conversion numbers
+* fake performance improvements
+* fake project results
+
+If existing project imagery is available, use it.
+
+If there is no suitable large project image, create the architecture with an obvious local placeholder/data slot rather than silently inventing a fake client.
+
+The component should be DATA-DRIVEN so real project information can be replaced easily.
+
+Conceptually:
+
+featuredProject = {
+title,
+category,
+year,
+services,
+description,
+image,
+url
+}
+
+Adapt this to the existing data architecture rather than creating duplicate sources unnecessarily.
+
+==================================================
+03 — ENTRY FROM PART 1
+======================
+
+Part 1 already ends with:
+
+02 / SELECTED WORK
+
+SELECTED
+WORK.
+
+"A selection of digital experiences shaped from strategy through final frame."
+
+Continue FROM that exact composition.
+
+Do not repeat "Selected Work" again.
+
+After the heading, create substantial negative space.
+
+Then introduce tiny project metadata before the image becomes dominant.
+
+Example structure:
+
+FEATURED / 001
+
+PROJECT NAME
+
+Digital Experience
+Strategy / Design / Development
+2026
+
+Use REAL project information where available.
+
+Composition should be asymmetric.
+
+Project name can be large but should NOT compete with the giant SELECTED WORK heading immediately above.
+
+Think editorial case-study opening, not product card.
+
+==================================================
+04 — INITIAL FEATURED FRAME
+===========================
+
+Start the project image inside a deliberately restrained frame.
+
+Desktop initial size approximately:
+
+width: 42-55vw
+aspect ratio around 16:10 / 16:9 depending on actual screenshot
+
+Do not blindly force 16:9 if the project asset has another meaningful composition.
+
+Position it slightly OFF CENTER.
+
+Possible composition:
+
+metadata on left
+featured frame shifted right
+
+OR
+
+large project title left
+smaller frame occupying lower center/right.
+
+The frame should feel deliberately placed in negative space.
+
+Style:
+
+* subtle graphite border
+* restrained radius around 14-24px
+* overflow hidden
+* no giant drop shadow
+* no fake browser chrome unless appropriate to the actual project
+
+Add tiny crop/frame marks around 1-2 corners if visually useful.
+
+Do not decorate every corner.
