@@ -1,0 +1,111 @@
+==================================================
+19 — PERFORMANCE
+================
+
+This gallery may contain multiple large screenshots.
+
+Be disciplined.
+
+Use:
+
+* lazy loading where appropriate
+* reserved aspect ratios
+* responsive image sizes if architecture supports them
+* transform-based motion
+* scoped ScrollTriggers
+
+Avoid:
+
+* decoding enormous source images unnecessarily
+* animating expensive filters
+* constant React rerenders
+* ScrollTrigger.refresh every scroll frame
+* multiple ResizeObservers per project
+
+One gallery-level observer is preferable where possible.
+
+Do NOT globally kill ScrollTriggers.
+
+==================================================
+20 — EXIT COMPOSITION
+=====================
+
+The final project should NOT simply move offscreen and end the pin.
+
+After the final project, include intentional horizontal negative space.
+
+Within it, introduce:
+
+NOT EVERYTHING
+NEEDS THE
+SAME FRAME.
+
+Keep this relatively restrained because another portfolio interaction follows in CHUNK 2C.
+
+A tiny directional marker can imply a return to vertical movement.
+
+As the horizontal track completes:
+
+* final project moves past focus
+* statement resolves
+* pin releases
+* normal vertical scroll resumes smoothly
+
+No abrupt snap.
+
+==================================================
+21 — QA
+=======
+
+Before stopping:
+
+1. confirm all previous sections remain intact
+2. verify original hero remains unchanged
+3. verify featured-project expansion still reverses correctly
+4. verify gallery width is measured from real DOM geometry
+5. verify pin starts/ends correctly
+6. verify horizontal track never creates body overflow
+7. test forward/backward scroll
+8. test rapid scroll
+9. test refresh while inside/near gallery
+10. test resize desktop→mobile→desktop
+11. verify project links
+12. verify keyboard focus
+13. verify mobile fallback
+14. verify reduced motion
+15. check console
+16. verify no unrelated ScrollTriggers are killed
+
+==================================================
+22 — QUALITY BAR
+================
+
+This must NOT feel like:
+
+"another horizontal scroll section."
+
+Part 1 manifesto was LANGUAGE moving through the viewport.
+
+This is WORK moving through a spatial exhibition.
+
+The difference must be immediately obvious.
+
+The visitor should experience:
+
+FEATURED PROJECT:
+one frame becomes the entire viewport.
+
+THEN:
+
+PROJECT EXHIBITION:
+the viewport becomes a window through which many frames pass.
+
+That is the conceptual continuity.
+
+Do not build Sticky Card Stack yet.
+Do not build Swiper Coverflow yet.
+Do not build PixelCard yet.
+
+MASTER PART 2 — CHUNK 2/4 ENDS HERE.
+
+Wait for CHUNK 3/4.

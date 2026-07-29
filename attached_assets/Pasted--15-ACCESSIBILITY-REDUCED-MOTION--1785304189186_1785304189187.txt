@@ -1,0 +1,122 @@
+==================================================
+15 — ACCESSIBILITY / REDUCED MOTION
+===================================
+
+For prefers-reduced-motion:
+
+Do not require a long pinned expansion.
+
+Show:
+
+project metadata
+→ large featured image
+→ project CTA
+
+as a strong static editorial composition.
+
+All content must remain accessible without animation.
+
+Images require meaningful alt text derived from the project.
+
+Interactive project media must have keyboard-accessible equivalent navigation.
+
+==================================================
+16 — PERFORMANCE / IMPLEMENTATION
+=================================
+
+This section contains a large image.
+
+Optimize it.
+
+Use existing image optimization strategy if available.
+
+Prevent layout shift by establishing dimensions/aspect ratio.
+
+Do not unnecessarily animate width/height every frame if a transform solution is cleaner.
+
+Use will-change only where useful and remove/avoid excessive permanent layers.
+
+If using ScrollTrigger:
+
+* scope it to this component
+* use invalidateOnRefresh where required
+* recalculate geometry on meaningful resize
+* wait for image/font readiness before final measurements
+* clean up only this section's triggers
+
+DO NOT:
+
+ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+
+That would destroy Part 1.
+
+==================================================
+17 — VISUAL QUALITY CHECK
+=========================
+
+The featured project must NOT look like:
+
+a screenshot inside a rounded SaaS card.
+
+It should feel like:
+
+AN OBJECT
+→ BECOMING A WINDOW
+→ BECOMING THE EXPERIENCE.
+
+Keep the established graphite background visible during the initial framed state.
+
+As the project expands, allow the surrounding website chrome to visually disappear.
+
+This contrast is important.
+
+The animation should be smooth enough that the user can stop at ANY scroll position and the composition still looks intentionally designed.
+
+==================================================
+18 — END STATE FOR CHUNK 2A
+===========================
+
+At completion, the page narrative should now be:
+
+PART 1
+→ SELECTED WORK intro
+→ FEATURED / 001
+→ project introduced as a restrained frame
+→ frame expands with scroll
+→ frame breaks toward viewport boundaries
+→ project becomes immersive
+→ real project metadata/CTA appears
+→ subtle lateral cue suggests more work exists
+
+DO NOT build:
+
+* horizontal project gallery
+* Swiper coverflow
+* rotating sticky card stack
+* PixelCard project interactions
+
+Those come later.
+
+Before stopping:
+
+1. verify ALL Part 1 sections still work
+2. verify ORIGINAL HERO remains identical
+3. verify no horizontal body overflow
+4. test expansion forward and backward
+5. test resizing
+6. test image loading
+7. test mobile fallback
+8. check console
+9. confirm no global ScrollTriggers were destroyed
+10. confirm real project data/assets were reused wherever available
+
+Most importantly:
+
+Do not judge this by whether the image becomes fullscreen.
+
+Judge it by whether the transformation communicates the BoldFrame idea:
+
+THE WORK STARTS INSIDE A FRAME.
+THEN THE EXPERIENCE BECOMES THE FRAME.
+
+Wait for MASTER PART 2 — CHUNK 2/4.

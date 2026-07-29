@@ -1606,3 +1606,457 @@
 
   .bf-fw-corner { width: 16px; height: 16px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   WORK GALLERY TRANSITION — Bridge between FeaturedWork and gallery
+   72vh breathing room prevents back-to-back pin collisions.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-gt-section {
+  position: relative;
+  height: 72vh;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(1.25rem, 5vw, 5rem);
+  background: var(--bf-bg-primary);
+  overflow: hidden;
+}
+
+.bf-gt-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vh, 2rem);
+}
+
+.bf-gt-head {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.bf-gt-label {
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gt-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.bf-gt-range {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--bf-text-primary);
+}
+
+.bf-gt-total {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gt-rule-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.bf-gt-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(115, 87, 255, 0.6),
+    rgba(115, 87, 255, 0.1) 70%,
+    transparent 100%
+  );
+  transform-origin: left;
+}
+
+.bf-gt-arrow {
+  font-family: var(--bf-font-body);
+  font-size: 1rem;
+  color: rgba(115, 87, 255, 0.6);
+  flex-shrink: 0;
+}
+
+.bf-gt-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: var(--bf-text-tertiary);
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .bf-gt-section { height: auto; padding: clamp(3rem, 8vw, 5rem) clamp(1.25rem, 5vw, 2rem); }
+  .bf-gt-range { font-size: clamp(1.4rem, 7vw, 2rem); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WORK GALLERY — Sticky horizontal project exhibition
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Section wrapper — height set dynamically by GSAP ────────────── */
+
+.bf-gallery-section {
+  position: relative;
+  background: var(--bf-bg-primary);
+  /* overflow-x: clip keeps vertical scroll but hides horizontal spill */
+  overflow-x: clip;
+}
+
+.bf-gallery-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Section micro-label ─────────────────────────────────────────── */
+
+.bf-gallery-header {
+  position: absolute;
+  top: clamp(1.75rem, 4vh, 3rem);
+  left: clamp(1.25rem, 5vw, 5rem);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.bf-gallery-header .bf-micro {
+  color: var(--bf-text-tertiary);
+}
+
+/* ── Horizontal track ────────────────────────────────────────────── */
+
+.bf-gallery-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  will-change: transform;
+  /* Padding: intro on left, exit on right (also via .bf-gallery-exit-space) */
+  padding: 0;
+}
+
+.bf-gallery-intro-space {
+  width: 12vw;
+  flex-shrink: 0;
+}
+
+.bf-gallery-exit-space {
+  width: 16vw;
+  flex-shrink: 0;
+}
+
+/* ── Gallery item — base ─────────────────────────────────────────── */
+
+.bf-gi {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* TYPE B is a flex row: meta-left, frame-right */
+.bf-gi--B {
+  flex-direction: row;
+  align-items: center;
+  gap: 3vw;
+}
+
+/* TYPE C is slightly elevated */
+.bf-gi--C {
+  transform: translateY(-5vh);
+}
+
+/* ── Frame ───────────────────────────────────────────────────────── */
+
+.bf-gi-frame {
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid var(--bf-border-mid);
+  overflow: hidden;
+  background: var(--bf-bg-surface);
+  flex-shrink: 0;
+}
+
+/* Composition variants — widths and aspect ratios */
+.bf-gi-frame--A  { width: 60vw;  aspect-ratio: 16 / 9; }
+.bf-gi-frame--A2 { width: 58vw;  aspect-ratio: 16 / 9; }
+.bf-gi-frame--B  { width: 36vw;  aspect-ratio: 3 / 4;  }
+.bf-gi-frame--C  { width: 48vw;  aspect-ratio: 16 / 9; }
+.bf-gi-frame--D  { width: 44vw;  aspect-ratio: 1 / 1;  }
+
+/* ── Image inside frame ──────────────────────────────────────────── */
+
+.bf-gi-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Crop marks — two-corner editorial detail ────────────────────── */
+
+.bf-gi-crop-tl,
+.bf-gi-crop-br {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bf-gi-crop-tl {
+  top: 0;
+  left: 0;
+  border-top:  1.5px solid rgba(243, 242, 238, 0.4);
+  border-left: 1.5px solid rgba(243, 242, 238, 0.4);
+}
+
+.bf-gi-crop-br {
+  bottom: 0;
+  right:  0;
+  border-bottom: 1.5px solid rgba(243, 242, 238, 0.4);
+  border-right:  1.5px solid rgba(243, 242, 238, 0.4);
+}
+
+/* ── Metadata — outside / beside the frame ───────────────────────── */
+
+/* Metadata below the frame (A, A2, C, D) */
+.bf-gi-below {
+  margin-top: clamp(0.75rem, 1.5vh, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.bf-gi--D .bf-gi-below {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Metadata beside frame (B) */
+.bf-gi-aside {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.5vh, 1.25rem);
+  width: 16vw;
+  flex-shrink: 0;
+}
+
+.bf-gi-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.bf-gi-index {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(115, 87, 255, 0.7);
+}
+
+.bf-gi-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.bf-gi-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.1rem, 2vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--bf-text-primary);
+  margin: 0;
+}
+
+.bf-gi-subtitle {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.65rem, 0.85vw, 0.75rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--bf-text-secondary);
+}
+
+.bf-gi-category {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.8vw, 0.7rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  margin-top: 0.25em;
+}
+
+.bf-gi-services {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.75vw, 0.68rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+/* ── Editorial CTA ───────────────────────────────────────────────── */
+
+.bf-gi-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.75vw, 0.7rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bf-text-secondary);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.2);
+  transition: color 0.25s ease, border-color 0.25s ease;
+  margin-top: 0.4rem;
+}
+
+.bf-gi-cta:hover {
+  color: var(--bf-accent);
+  border-color: var(--bf-accent);
+}
+
+.bf-gi-cta-arrow { font-size: 0.9em; }
+
+/* ── Progress indicator ──────────────────────────────────────────── */
+
+.bf-gp {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vh, 2.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bf-gp-indices {
+  display: flex;
+  align-items: center;
+}
+
+.bf-gp-item {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  transition: color 0.35s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bf-gp-item.bf-gp-active {
+  color: var(--bf-text-primary);
+}
+
+.bf-gp-dash {
+  display: inline-block;
+  width: clamp(1.5rem, 3vw, 3.5rem);
+  height: 1px;
+  background: var(--bf-border-mid);
+  margin: 0 0.6rem;
+  vertical-align: middle;
+}
+
+/* Overall progress line */
+.bf-gp-bar {
+  width: clamp(6rem, 14vw, 12rem);
+  height: 1px;
+  background: var(--bf-border-subtle);
+}
+
+.bf-gp-fill {
+  height: 100%;
+  background: var(--bf-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ── Mobile: vertical stacked layout ────────────────────────────── */
+
+@media (max-width: 767px) {
+  .bf-gallery-section { height: auto !important; overflow-x: hidden; }
+
+  .bf-gallery-sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .bf-gallery-track {
+    position: relative;
+    top: auto;
+    transform: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 2rem);
+    gap: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .bf-gallery-intro-space,
+  .bf-gallery-exit-space { display: none; }
+
+  .bf-gi { margin-right: 0 !important; transform: none !important; }
+
+  /* All frames go full-width on mobile */
+  .bf-gi-frame--A,
+  .bf-gi-frame--A2,
+  .bf-gi-frame--C  { width: 100%; }
+  .bf-gi-frame--B  { width: 80vw; aspect-ratio: 16 / 9; }
+  .bf-gi-frame--D  { width: 85vw; aspect-ratio: 16 / 9; }
+
+  /* TYPE B: stack vertically on mobile */
+  .bf-gi--B {
+    flex-direction: column !important;
+    gap: 1rem;
+  }
+  .bf-gi-aside { width: 100%; }
+
+  /* TYPE D: left-align on mobile */
+  .bf-gi--D .bf-gi-below { align-items: flex-start; text-align: left; }
+
+  /* Reset TYPE C elevation */
+  .bf-gi--C { transform: none; }
+
+  /* Scale titles up slightly for readability */
+  .bf-gi-title { font-size: clamp(1.25rem, 5vw, 2rem); }
+
+  .bf-gp { display: none; }
+  .bf-gallery-header { position: relative; top: auto; left: auto;
+    padding: 1.5rem clamp(1.25rem, 5vw, 2rem) 0; }
+}

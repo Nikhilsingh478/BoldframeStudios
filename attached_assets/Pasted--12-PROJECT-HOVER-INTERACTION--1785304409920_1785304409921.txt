@@ -1,0 +1,141 @@
+==================================================
+12 — PROJECT HOVER INTERACTION
+==============================
+
+If a project has a real URL, make its media interactive.
+
+Desktop hover can reveal:
+
+VIEW PROJECT ↗
+
+Prefer a restrained contextual label.
+
+Possible interaction:
+
+cursor enters project frame
+→ image scales 1 → ~1.015
+→ border/corner treatment sharpens
+→ VIEW PROJECT appears
+
+No dramatic zoom.
+
+No giant purple overlay.
+
+Do not globally replace the cursor.
+
+Keyboard users must receive an equivalent visible focus state.
+
+==================================================
+13 — ONE SIGNATURE FRAME-BREAK MOMENT
+=====================================
+
+Give ONE gallery project a special composition.
+
+Not every project.
+
+For one strong image:
+
+allow a visual element/image edge to appear to break slightly outside its conventional frame OR use an oversized crop that intersects surrounding typography.
+
+This should reinforce BOLD / FRAME.
+
+Keep DOM overflow and accessibility sane.
+
+It must look intentionally art-directed, not broken CSS.
+
+==================================================
+14 — BACKGROUND / ENVIRONMENTAL CHANGE
+======================================
+
+The gallery remains primarily graphite.
+
+However, as the user moves through projects, allow extremely subtle environmental response.
+
+For example, derive a restrained ambient tint from a project's existing artwork.
+
+This can affect a very low-opacity background layer.
+
+Keep it around ~3-8% visual influence.
+
+Do NOT:
+
+* recolor the entire page per project
+* create giant gradient blobs
+* sample colors dynamically if it creates unnecessary complexity
+
+A manually configured optional accent per REAL project is sufficient.
+
+If project data does not support this cleanly, keep the background consistent.
+
+==================================================
+15 — DO NOT USE SWIPER HERE
+===========================
+
+Important architectural distinction:
+
+THIS section uses GSAP horizontal scroll.
+
+Do NOT implement it with Swiper.
+
+The supplied Skiper49 / Swiper coverflow reference is reserved for a later, smaller interaction where manual exploration makes sense.
+
+Here, scrolling itself drives the exhibition.
+
+No pagination bullets.
+
+No carousel arrows.
+
+No autoplay.
+
+==================================================
+16 — MOBILE EXPERIENCE
+======================
+
+Do NOT pin a gigantic horizontal track on small phones.
+
+Below approximately 768px, transform this into an intentional vertical project exhibition.
+
+Not generic cards.
+
+Use alternating compositions:
+
+project number
+large image
+title
+metadata
+
+then next project with different image proportion/alignment.
+
+Allow selected images to extend close to viewport edges.
+
+Use vertical spacing to preserve exhibition rhythm.
+
+Optional lightweight image reveal/parallax is fine.
+
+No horizontal body overflow.
+
+No fake swipe carousel unless later specifically requested.
+
+==================================================
+17 — TABLET
+===========
+
+Tablet should be evaluated separately.
+
+If horizontal pinning remains smooth and projects have sufficient visible width, retain a shortened horizontal version.
+
+Otherwise use the vertical layout.
+
+Do not assume 768-1024 automatically behaves like desktop.
+
+==================================================
+18 — REDUCED MOTION
+===================
+
+For prefers-reduced-motion:
+
+Do not require a pinned horizontal journey.
+
+Render projects in an accessible static/vertical layout.
+
+No essential metadata may depend on animation.

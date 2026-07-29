@@ -1,22 +1,37 @@
 /**
  * BoldFrame Journey — Scroll-drawn process narrative
- * Scroll progress → SVG path draws → checkpoints activate → typography evolves
  *
- * Section is 300vh. Sticky inner is 100vh.
- * Framer Motion useScroll + useTransform drives all animation.
- * No global side effects. Cleanup handled by Framer Motion internally.
+ * Scroll tracking: GSAP ScrollTrigger drives a useMotionValue(progress).
+ * This is intentional — Framer Motion useScroll({ target }) measures
+ * element offsets at React render time, before GSAP pin-spacers from
+ * other sections (Manifesto, FeaturedWork) are inserted into the DOM.
+ * That causes the trigger to fire at the wrong scroll position.
+ * GSAP ScrollTrigger always reads live layout, so it is the correct
+ * tool for scroll tracking in this project.
+ *
+ * Framer Motion is still used for all actual animation (useTransform,
+ * useMotionValue, motion components) — the progress value is simply
+ * fed in from GSAP rather than from useScroll.
+ *
+ * Desktop section height: 300vh  → trigger end: '+=300vh' (bottom top)
+ * Mobile  section height: 200vh  → trigger end: '+=200vh' (bottom top)
+ * Both use start: 'top top' — animation begins the moment the section
+ * enters the viewport, not some indeterminate time later.
  */
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   motion,
-  useScroll,
   useTransform,
   useMotionValue,
   useReducedMotion,
   useMotionValueEvent,
   type MotionValue,
 } from 'motion/react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Journey checkpoints ──────────────────────────────────────────
 
@@ -64,59 +79,49 @@ const CHECKPOINTS = [
 ] as const;
 
 // ─── SVG Paths ────────────────────────────────────────────────────
-//
-// Desktop: viewBox 0 0 1440 900
-// Route: start(120,165) → DISCOVER(100,330) → FRAME(1155,252) →
-//        → around frame motif → DESIGN(101,486) → BUILD(1181,576) →
-//        → REFINE(374,702) → end(355,842)
-// Resolves to a confident horizontal trajectory in the final segment.
 
 const DESKTOP_PATH = [
   'M 120 165',
-  'C 110 220 100 275 100 330',      // ↓ to DISCOVER
-  'C 100 385 168 376 338 358',      // → sweep right begins
+  'C 110 220 100 275 100 330',
+  'C 100 385 168 376 338 358',
   'C 508 340 710 302 920 270',
-  'C 1040 254 1098 248 1155 252',   // → arrive FRAME
-  'C 1200 256 1248 272 1258 300',   // ↓ past frame motif
+  'C 1040 254 1098 248 1155 252',
+  'C 1200 256 1248 272 1258 300',
   'C 1268 328 1248 362 1198 386',
-  'C 1128 416 1012 437 868 455',    // ← sweep left begins
+  'C 1128 416 1012 437 868 455',
   'C 700 474 498 476 318 474',
-  'C 208 473 138 476 101 486',      // → arrive DESIGN
-  'C 64 496 100 530 192 552',       // ↗ curve right
+  'C 208 473 138 476 101 486',
+  'C 64 496 100 530 192 552',
   'C 312 574 502 578 702 576',
   'C 882 574 1040 567 1150 572',
-  'C 1165 573 1174 574 1181 576',   // → arrive BUILD
-  'C 1220 578 1268 595 1276 620',   // ↓ curve down
+  'C 1165 573 1174 574 1181 576',
+  'C 1220 578 1268 595 1276 620',
   'C 1284 650 1262 690 1218 718',
-  'C 1154 752 1042 764 900 758',    // ← sweep left begins
+  'C 1154 752 1042 764 900 758',
   'C 756 752 606 734 496 720',
-  'C 452 712 412 706 374 702',      // → arrive REFINE
-  'C 344 696 324 712 308 740',      // ↓ final descent, resolving horizontal
+  'C 452 712 412 706 374 702',
+  'C 344 696 324 712 308 740',
   'C 296 762 290 784 296 808',
-  'C 304 830 330 842 355 842',      // → final arrival
+  'C 304 830 330 842 355 842',
 ].join(' ');
-
-// Mobile: viewBox 0 0 390 760
-// Primarily vertical with controlled horizontal curves.
-// Shorter than desktop — section is 200vh on mobile.
 
 const MOBILE_PATH = [
   'M 55 58',
-  'C 52 95 50 135 52 175',          // ↓ to DISCOVER
-  'C 54 215 95 225 160 232',        // → bend right
+  'C 52 95 50 135 52 175',
+  'C 54 215 95 225 160 232',
   'C 225 239 280 246 310 258',
-  'C 325 264 332 272 318 290',      // → peak right / near FRAME
-  'C 304 308 262 320 208 332',      // ← bend back left
+  'C 325 264 332 272 318 290',
+  'C 304 308 262 320 208 332',
   'C 154 344 90 350 55 368',
-  'C 32 378 42 385 50 395',         // ↓ to DESIGN
-  'C 58 405 90 418 148 428',        // → bend right
+  'C 32 378 42 385 50 395',
+  'C 58 405 90 418 148 428',
   'C 210 438 268 444 302 458',
-  'C 318 464 330 472 312 488',      // → peak right / near BUILD
-  'C 294 504 248 514 196 522',      // ← bend left
+  'C 318 464 330 472 312 488',
+  'C 294 504 248 514 196 522',
   'C 148 530 100 534 74 552',
-  'C 56 564 60 580 76 596',         // ↓ near REFINE
+  'C 56 564 60 580 76 596',
   'C 92 612 128 622 166 628',
-  'C 188 632 198 640 194 660',      // resolves horizontal
+  'C 188 632 198 640 194 660',
   'C 190 678 182 692 175 704',
 ].join(' ');
 
@@ -175,12 +180,10 @@ function CheckpointAnnotation({ cp, progress, rm }: CPProps) {
         maxWidth: '210px',
       }}
     >
-      {/* Row: dot + index */}
       <div className="bf-cp-header">
         <div ref={dotRef} className="bf-cp-dot" />
         <span className="bf-cp-index">{cp.id}</span>
       </div>
-
       <div className="bf-cp-title">{cp.title}</div>
       <div className="bf-cp-copy">{cp.copy}</div>
     </motion.div>
@@ -188,9 +191,6 @@ function CheckpointAnnotation({ cp, progress, rm }: CPProps) {
 }
 
 // ─── Frame motif ──────────────────────────────────────────────────
-// A small outlined browser frame — path enters from left, passes through,
-// exits toward DESIGN. Positioned at FRAME checkpoint area.
-// z-index: 2 → sits above SVG (z-1) → path appears "inside" the frame.
 
 interface FrameMotifProps {
   pathProgress: MotionValue<number>;
@@ -212,14 +212,12 @@ function FrameMotif({ pathProgress, rm }: FrameMotifProps) {
       aria-hidden="true"
       style={{ opacity: rm ? 1 : opacity, scale: rm ? 1 : scale }}
     >
-      {/* Browser chrome */}
       <div className="bf-fm-chrome">
         <span className="bf-fm-dot" style={{ background: '#FF5F57' }} />
         <span className="bf-fm-dot" style={{ background: '#FEBC2E' }} />
         <span className="bf-fm-dot" style={{ background: '#28C840' }} />
         <div className="bf-fm-url-bar" />
       </div>
-      {/* Content skeleton */}
       <div className="bf-fm-body">
         <div className="bf-fm-line" style={{ width: '54%', height: '9px' }} />
         <div className="bf-fm-line" style={{ width: '78%', height: '6px', marginTop: '10px' }} />
@@ -236,35 +234,111 @@ export function Journey() {
   const sectionRef = useRef<HTMLElement>(null);
   const rm = useReducedMotion() ?? false;
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
+  // ── GSAP drives the scroll progress value ────────────────────────
+  // useMotionValue is the bridge: GSAP writes to it via onUpdate,
+  // Framer Motion reads from it via useTransform.
+  const progress = useMotionValue(0);
 
-  // Path draws 0→1 as scroll goes 0→0.9 (final 10% is breathing room)
-  const pathLengthAnim = useTransform(scrollYProgress, [0, 0.9], [0, 1], { clamp: true });
-  const pathLengthStatic = useMotionValue(1);
-  const pathLength = rm ? pathLengthStatic : pathLengthAnim;
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || rm) return;
 
-  // ── Typography opacity + Y transforms ─────────────────────────
+    let ctx: gsap.Context | null = null;
 
-  // FROM / ROUGH IDEA — appears at start, fades as SHARP EXPERIENCE enters
+    function buildTrigger() {
+      if (ctx) ctx.revert();
+
+      ctx = gsap.context(() => {
+        const mm = gsap.matchMedia();
+
+        // ── Desktop: section is 300vh ──────────────────────────────
+        // start: 'top top'    → triggers when section top = viewport top
+        // end:   '+=300vh'    → triggers when 300vh of scroll have passed
+        //                       (i.e. section has fully traversed the viewport)
+        // This is equivalent to GSAP's 'bottom top' for a 300vh section,
+        // but explicit px/vh avoids any ambiguity with pinned neighbour spacers.
+        mm.add('(min-width: 768px)', () => {
+          ScrollTrigger.create({
+            id: 'bf-journey-desktop',
+            trigger: section,
+            start: 'top top',
+            end: '+=300vh',
+            scrub: true,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              progress.set(self.progress);
+            },
+          });
+        });
+
+        // ── Mobile: section is 200vh ───────────────────────────────
+        // Same logic, shorter scroll range matching reduced section height.
+        mm.add('(max-width: 767px)', () => {
+          ScrollTrigger.create({
+            id: 'bf-journey-mobile',
+            trigger: section,
+            start: 'top top',
+            end: '+=200vh',
+            scrub: true,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              progress.set(self.progress);
+            },
+          });
+        });
+      }, section);
+    }
+
+    // Wait for fonts so layout is stable before measuring the section offset.
+    document.fonts.ready.then(() => {
+      requestAnimationFrame(() => {
+        buildTrigger();
+        // Let GSAP recalculate after any pin-spacers from other sections settle.
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      });
+    });
+
+    // Rebuild on resize (section height can change, position can shift).
+    const ro = new ResizeObserver(() => {
+      requestAnimationFrame(buildTrigger);
+    });
+    ro.observe(section);
+
+    return () => {
+      ro.disconnect();
+      ctx?.revert();
+      ScrollTrigger.getAll()
+        .filter(t => ['bf-journey-desktop', 'bf-journey-mobile'].includes(t.vars?.id ?? ''))
+        .forEach(t => t.kill());
+      progress.set(0);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rm]);
+
+  // ── Derived animation values from progress ────────────────────────
+  // Always call hooks unconditionally; select between animated and
+  // static variants afterwards (Rules of Hooks compliance).
+  const staticOne      = useMotionValue(1);
+  const pathLengthAnim = useTransform(progress, [0, 0.88], [0, 1], { clamp: true });
+  const pathLength     = rm ? staticOne : pathLengthAnim;
+
+  // FROM ROUGH IDEA — enters early, fades mid-journey
   const roughOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.08, 0.50, 0.62],
+    progress,
+    [0, 0.07, 0.48, 0.60],
     [0, 1, 1, 0],
     { clamp: true },
   );
-  const roughY = useTransform(scrollYProgress, [0, 0.08], [24, 0], { clamp: true });
+  const roughY = useTransform(progress, [0, 0.07], [24, 0], { clamp: true });
 
-  // SHARP / EXPERIENCE. — appears in the final third
-  const sharpOpacity = useTransform(scrollYProgress, [0.52, 0.66], [0, 1], { clamp: true });
-  const sharpY = useTransform(scrollYProgress, [0.52, 0.66], [20, 0], { clamp: true });
-  const sharpScale = useTransform(scrollYProgress, [0.52, 0.66], [0.97, 1], { clamp: true });
+  // SHARP EXPERIENCE — resolves in final third
+  const sharpOpacity = useTransform(progress, [0.50, 0.63], [0, 1], { clamp: true });
+  const sharpY      = useTransform(progress, [0.50, 0.63], [20, 0], { clamp: true });
+  const sharpScale  = useTransform(progress, [0.50, 0.63], [0.97, 1], { clamp: true });
 
-  // THE RESULT? / final statement — arrives near end
-  const finalOpacity = useTransform(scrollYProgress, [0.72, 0.84], [0, 1], { clamp: true });
-  const finalY = useTransform(scrollYProgress, [0.72, 0.84], [16, 0], { clamp: true });
+  // THE RESULT? — arrives near the end
+  const finalOpacity = useTransform(progress, [0.70, 0.82], [0, 1], { clamp: true });
+  const finalY       = useTransform(progress, [0.70, 0.82], [16, 0], { clamp: true });
 
   return (
     <section
@@ -275,17 +349,15 @@ export function Journey() {
     >
       <div className="bf-journey-sticky">
 
-        {/* ── SVG Path — z-index 1 ─────────────────────────── */}
+        {/* ── SVG Path ─────────────────────────────────────────── */}
         <div className="bf-journey-svgwrap" aria-hidden="true">
 
-          {/* Desktop path */}
           <svg
             className="bf-journey-svg bf-journey-desktop"
             viewBox="0 0 1440 900"
             preserveAspectRatio="xMidYMid slice"
           >
             <defs>
-              {/* Subtle violet → slightly blue evolution at the very end */}
               <linearGradient
                 id="bfJourneyGrad"
                 gradientUnits="userSpaceOnUse"
@@ -304,11 +376,10 @@ export function Journey() {
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ pathLength }}
+              style={{ pathLength: rm ? staticOne : pathLength }}
             />
           </svg>
 
-          {/* Mobile path */}
           <svg
             className="bf-journey-svg bf-journey-mobile"
             viewBox="0 0 390 760"
@@ -321,55 +392,51 @@ export function Journey() {
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ pathLength }}
+              style={{ pathLength: rm ? staticOne : pathLength }}
             />
           </svg>
         </div>
 
-        {/* ── Frame motif — z-index 2 ──────────────────────── */}
-        {/* Positioned near FRAME checkpoint: path enters, passes behind frame border, exits */}
-        <FrameMotif pathProgress={scrollYProgress} rm={rm} />
+        {/* ── Frame motif ─────────────────────────────────────── */}
+        <FrameMotif pathProgress={progress} rm={rm} />
 
-        {/* ── Section metadata — always visible ────────────── */}
+        {/* ── Section metadata ────────────────────────────────── */}
         <div className="bf-journey-meta" aria-hidden="true">
           <span className="bf-journey-meta-label">BFS / PROCESS</span>
           <span className="bf-journey-meta-range">01—05</span>
         </div>
 
-        {/* ── FROM ROUGH IDEA — initial large typography ───── */}
-        {/* z-index 2: path appears to go behind "ROUGH IDEA" letters */}
+        {/* ── FROM ROUGH IDEA ─────────────────────────────────── */}
         <motion.div
           className="bf-journey-rough-block"
           style={{
             opacity: rm ? 1 : roughOpacity,
-            y: rm ? 0 : roughY,
+            y:       rm ? 0 : roughY,
           }}
         >
           <div className="bf-journey-from">FROM</div>
           <div className="bf-journey-rough-idea">ROUGH IDEA</div>
         </motion.div>
 
-        {/* ── SHARP EXPERIENCE — resolves as journey progresses */}
-        {/* Spatial: SHARP appears right-heavy, EXPERIENCE. left-heavy → 
-            "messy → resolved" composition */}
+        {/* ── SHARP EXPERIENCE ────────────────────────────────── */}
         <motion.div
           className="bf-journey-sharp-block"
           style={{
             opacity: rm ? 1 : sharpOpacity,
-            y: rm ? 0 : sharpY,
-            scale: rm ? 1 : sharpScale,
+            y:       rm ? 0 : sharpY,
+            scale:   rm ? 1 : sharpScale,
           }}
         >
           <div className="bf-journey-sharp-label">SHARP</div>
           <div className="bf-journey-experience">EXPERIENCE.</div>
         </motion.div>
 
-        {/* ── THE RESULT? / Final statement ────────────────── */}
+        {/* ── THE RESULT? ─────────────────────────────────────── */}
         <motion.div
           className="bf-journey-final-block"
           style={{
             opacity: rm ? 1 : finalOpacity,
-            y: rm ? 0 : finalY,
+            y:       rm ? 0 : finalY,
           }}
         >
           <div className="bf-journey-result-label">THE RESULT?</div>
@@ -380,12 +447,12 @@ export function Journey() {
           </div>
         </motion.div>
 
-        {/* ── Five checkpoint annotations ───────────────────── */}
+        {/* ── Five checkpoint annotations ─────────────────────── */}
         {CHECKPOINTS.map((cp) => (
           <CheckpointAnnotation
             key={cp.id}
             cp={cp}
-            progress={scrollYProgress}
+            progress={progress}
             rm={rm}
           />
         ))}

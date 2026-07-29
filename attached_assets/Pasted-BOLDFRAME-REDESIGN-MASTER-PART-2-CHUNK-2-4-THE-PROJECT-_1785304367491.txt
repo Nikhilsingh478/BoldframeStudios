@@ -1,0 +1,208 @@
+BOLDFRAME REDESIGN — MASTER PART 2, CHUNK 2/4
+THE PROJECT EXHIBITION — STICKY HORIZONTAL WORK GALLERY
+
+Continue directly from MASTER PART 2 — CHUNK 1/4.
+
+ALL constraints from MASTER PART 1 and CHUNK 2A remain active.
+
+This is NOT permission to redesign previous sections.
+
+Preserve:
+
+* locked original hero
+* Capabilities
+* Scroll Journey
+* Horizontal Manifesto
+* Selected Work introduction
+* Featured Project expansion experience
+* established design system
+* real project data/assets already discovered
+
+This chunk creates the SECOND stage of Selected Work:
+
+FEATURED PROJECT IMMERSION
+→ transition
+→ STICKY HORIZONTAL PROJECT EXHIBITION
+
+Do NOT build the rotating card stack yet.
+Do NOT build PixelCard yet.
+Do NOT build the final Part 2 transition yet.
+
+==================================================
+01 — WHY THIS SECTION EXISTS
+============================
+
+The featured project in 2A gave ONE project cinematic importance.
+
+Now reveal breadth.
+
+But DO NOT switch to a conventional portfolio grid.
+
+Create a sticky horizontal gallery where vertical scroll moves the visitor laterally through BoldFrame's work.
+
+This interaction represents:
+
+ONE FEATURED FRAME
+→ MANY DISTINCT FRAMES.
+
+The visitor should feel like they are walking through a digital exhibition wall.
+
+This is NOT another ticker tape.
+
+Part 1 horizontal manifesto:
+TYPOGRAPHY was moving.
+
+This section:
+PROJECT COMPOSITIONS are moving.
+
+They must feel completely different.
+
+==================================================
+02 — USE REAL PROJECTS ONLY
+===========================
+
+Inspect and reuse the actual project data/assets already present in the repository.
+
+Do not fabricate clients/projects.
+
+Do not use:
+Unsplash
+random placeholder websites
+fake case studies
+fake performance metrics
+fake awards
+
+If there are fewer projects than expected, DESIGN AROUND THE REAL NUMBER.
+
+Do not duplicate projects simply to make the gallery longer.
+
+Prefer approximately 3-6 real projects if available.
+
+Exclude the featured project from this gallery if repeating it would feel redundant.
+
+If strategically useful, it may appear only as a tiny reference/index, not as another identical gallery item.
+
+Each project data object should ideally support:
+
+id
+index
+title
+category
+year
+services
+image
+alt
+url
+
+Only display fields actually supported by existing data.
+
+==================================================
+03 — TRANSITION FROM FEATURED PROJECT
+=====================================
+
+2A ends with the featured project near immersive scale and a subtle lateral cue.
+
+Use that cue.
+
+Do NOT insert:
+huge heading
+paragraph
+then gallery.
+
+Instead, let the immersive project release back into the graphite BoldFrame environment.
+
+Introduce a restrained transition such as:
+
+MORE FRAMES / 002—00X
+
+and a thin horizontal rule/trajectory extending toward the right.
+
+The project count MUST reflect actual available work.
+
+The visitor should visually understand:
+
+"We're moving from one project into the wider body of work."
+
+Give the transition enough breathing room to prevent ScrollTrigger pins from feeling back-to-back.
+
+==================================================
+04 — GALLERY ARCHITECTURE
+=========================
+
+Create a full-width sticky/pinned section.
+
+Desktop:
+
+viewport pins while vertical scroll moves ONE horizontal track from right to left.
+
+Track structure:
+
+[INTRO SPACE]
+[PROJECT 02]
+[PROJECT 03]
+[PROJECT 04]
+...
+[EXIT SPACE]
+
+Do not create full-screen slides.
+
+The track should remain a continuous composition.
+
+Use flex with intentionally VARIABLE gaps.
+
+Some gaps can be approximately:
+6vw
+10vw
+14vw
+
+depending on visual rhythm.
+
+Do not make spacing mathematically identical.
+
+This should resemble a curated exhibition rather than Swiper slides.
+
+==================================================
+05 — PROJECTS MUST HAVE DIFFERENT COMPOSITIONS
+==============================================
+
+CRITICAL:
+
+Do NOT render every project using:
+
+same rectangle
+same title position
+same dimensions.
+
+Create 3-4 reusable composition variants based on project index.
+
+Examples:
+
+TYPE A:
+large landscape frame
+~58-66vw wide
+metadata beneath left edge
+
+TYPE B:
+tall portrait-ish frame
+~32-40vw wide
+project title positioned beside it
+
+TYPE C:
+medium landscape frame
+~45-52vw
+slightly elevated vertically
+
+TYPE D:
+large near-square composition
+~42-48vw
+metadata aligned to opposite edge
+
+Assign these intentionally.
+
+Variation must remain controlled.
+
+All projects should still belong to ONE design system.
+
+Do not randomly rotate every card.
+
+Do not make a scrapbook.
