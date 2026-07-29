@@ -1,0 +1,194 @@
+==================================================
+06 — PROJECT FRAME DESIGN
+=========================
+
+Project imagery should dominate.
+
+Each image frame can use:
+
+* subtle radius ~12-22px
+* thin graphite border
+* overflow hidden
+* optional tiny frame/crop marks
+* restrained background while image loads
+
+No giant shadows.
+
+No glowing purple card borders.
+
+No glass panels behind screenshots.
+
+Project metadata should live OUTSIDE or elegantly overlap the frame rather than making each item look like a product card.
+
+Possible metadata:
+
+03 / PROJECT NAME
+DIGITAL EXPERIENCE
+2026
+
+and services such as:
+
+DESIGN — DEVELOPMENT
+
+Use only real information.
+
+Project title can be substantially larger than metadata.
+
+==================================================
+07 — HORIZONTAL SCROLL ENGINE
+=============================
+
+Use GSAP ScrollTrigger.
+
+The supplied reference specifically requires robust React initialization because horizontal widths must be correct before pinning calculations.
+
+Respect that requirement.
+
+Use:
+useLayoutEffect
+OR useGSAP
+
+after DOM rendering.
+
+Calculate:
+
+horizontalDistance =
+track.scrollWidth - viewportWidth
+
+Do NOT hardcode:
+xPercent: -400
+or
+translateX(-500vw)
+
+when actual geometry can be measured.
+
+Use function-based values where useful.
+
+Conceptual ScrollTrigger:
+
+trigger: section
+start: "top top"
+pin: true
+scrub: ~0.7
+invalidateOnRefresh: true
+
+Calculate end distance based on actual horizontal travel.
+
+The gallery must finish naturally at its final composition.
+
+==================================================
+08 — INITIALIZATION SAFETY
+==========================
+
+This section contains images, fonts and variable-width project frames.
+
+Do NOT calculate ScrollTrigger too early.
+
+Before final measurement, account for:
+
+* component mount
+* document fonts
+* project images affecting dimensions
+* responsive CSS
+* viewport width
+
+Use a robust strategy such as:
+
+document.fonts.ready
+→ requestAnimationFrame
+→ initialize/refresh ScrollTrigger
+
+If image dimensions are already reserved via aspect-ratio, do not unnecessarily wait for every image download.
+
+A tiny controlled delay/safety frame is acceptable.
+
+Do NOT use arbitrary 1-3 second timeouts.
+
+Use ResizeObserver if needed, but debounce/limit refresh behavior.
+
+Clean it up.
+
+==================================================
+09 — INTERNAL PROJECT MOTION
+============================
+
+The entire track moves horizontally.
+
+Within each project, add only SMALL differential motion.
+
+Examples:
+
+image inside frame:
+xPercent -2 → 2
+
+metadata:
+x ~20px at a slightly different rate
+
+tiny project number:
+subtle vertical movement
+
+frame crop marks:
+resolve as project approaches viewport center
+
+This creates depth.
+
+Do NOT create extreme parallax.
+
+Project screenshots must remain readable.
+
+==================================================
+10 — CENTER-FOCUS SYSTEM
+========================
+
+As a project approaches the visual focus zone near viewport center, subtly promote it.
+
+Possible changes:
+
+image opacity:
+0.72 → 1
+
+frame scale:
+0.985 → 1
+
+metadata:
+muted → near-white
+
+small accent line:
+expands
+
+Neighboring projects remain fully visible but slightly subordinate.
+
+Do NOT blur neighboring projects heavily.
+
+Do NOT darken them to near invisibility.
+
+The visitor should always understand what is coming next.
+
+==================================================
+11 — FRAME INDEX / PROGRESS
+===========================
+
+Add a restrained progress system tied to actual gallery progress.
+
+Possible lower edge:
+
+02 ━━━━━ 03 ━━━━━ 04 ━━━━━ 05
+
+OR:
+
+FRAME
+02 / 05
+
+with a thin progress line.
+
+Use actual project count.
+
+Do not create a giant UI widget.
+
+The progress indicator should feel editorial and nearly disappear when not noticed.
+
+As horizontal progress changes, update the active index.
+
+Avoid React state updates on every raw scroll tick if unnecessary.
+
+Use GSAP callbacks efficiently or derive progress with minimal updates.

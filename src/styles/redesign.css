@@ -1921,6 +1921,45 @@
   color: var(--bf-text-tertiary);
 }
 
+/* Services + year on one row */
+.bf-gi-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+/* Year — same scale as services, separated visually */
+.bf-gi-year {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.75vw, 0.68rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gi-year::before {
+  content: '·';
+  margin-right: 0.75em;
+  opacity: 0.45;
+}
+
+/* Accent line — expands via GSAP scaleX as project enters center focus */
+.bf-gi-accent-line {
+  display: block;
+  width: clamp(1.5rem, 3vw, 3rem);
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    rgba(115, 87, 255, 0.85),
+    rgba(115, 87, 255, 0.25)
+  );
+  border-radius: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  margin-top: 0.55rem;
+  /* will-change not set here — GSAP manages it */
+}
+
 /* ── Editorial CTA ───────────────────────────────────────────────── */
 
 .bf-gi-cta {
@@ -2006,6 +2045,98 @@
   transform: scaleX(0);
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   §20 EXIT COMPOSITION — "NOT EVERYTHING / NEEDS THE / SAME FRAME."
+   Lives inside the horizontal track's exit space.
+   Lines are animated via GSAP in onUpdate (opacity + y offset).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-gallery-exit-space {
+  /* Wide enough so the statement can breathe before viewport edge */
+  width: clamp(32vw, 42vw, 52vw);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: clamp(3vw, 5vw, 7vw);
+}
+
+.bf-gex-inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+}
+
+/* Editorial statement */
+.bf-gex-statement {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.bf-gex-line {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 3.5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--bf-text-secondary);
+  will-change: transform, opacity;
+}
+
+/* Third line — accent-tinted */
+.bf-gex-line--accent {
+  color: var(--bf-text-primary);
+  font-style: italic;
+  position: relative;
+  display: inline-block;
+}
+
+/* Thin underline on "SAME FRAME." — echoes the frame motif */
+.bf-gex-line--accent::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.1em;
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    rgba(115, 87, 255, 0.65),
+    rgba(115, 87, 255, 0.12) 75%,
+    transparent
+  );
+  border-radius: 1px;
+}
+
+/* Directional marker — implies return to vertical scroll */
+.bf-gex-return {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.bf-gex-return-label {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gex-return-arrow {
+  font-size: 0.875rem;
+  color: rgba(115, 87, 255, 0.55);
+  line-height: 1;
+}
+
 /* ── Mobile: vertical stacked layout ────────────────────────────── */
 
 @media (max-width: 767px) {
@@ -2028,8 +2159,19 @@
     gap: clamp(2.5rem, 8vw, 4rem);
   }
 
-  .bf-gallery-intro-space,
-  .bf-gallery-exit-space { display: none; }
+  .bf-gallery-intro-space { display: none; }
+
+  /* Exit space on mobile — full width, exit statement shown statically */
+  .bf-gallery-exit-space {
+    width: 100%;
+    padding: clamp(3rem, 8vw, 5rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+    justify-content: flex-start;
+    border-top: 1px solid var(--bf-border-subtle);
+  }
+
+  .bf-gex-line {
+    font-size: clamp(1.4rem, 7vw, 2.2rem);
+  }
 
   .bf-gi { margin-right: 0 !important; transform: none !important; }
 
@@ -2059,4 +2201,69 @@
   .bf-gp { display: none; }
   .bf-gallery-header { position: relative; top: auto; left: auto;
     padding: 1.5rem clamp(1.25rem, 5vw, 2rem) 0; }
+}
+
+/* ── §21 Reduced motion: static stacked layout ─────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-gallery-section { height: auto !important; overflow-x: hidden; }
+
+  .bf-gallery-sticky {
+    position: relative !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  .bf-gallery-track {
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    flex-direction: column;
+    align-items: stretch;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 5rem);
+    gap: clamp(3rem, 8vw, 5rem);
+  }
+
+  .bf-gallery-intro-space { display: none; }
+
+  .bf-gallery-exit-space {
+    width: 100%;
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(1.5rem, 3vw, 2rem);
+    border-top: 1px solid var(--bf-border-subtle);
+  }
+
+  /* Show all exit lines statically */
+  .bf-gex-line,
+  .bf-gex-return { opacity: 1 !important; transform: none !important; }
+
+  .bf-gi { margin-right: 0 !important; transform: none !important; }
+
+  .bf-gi-frame--A,
+  .bf-gi-frame--A2,
+  .bf-gi-frame--C  { width: 100%; }
+  .bf-gi-frame--B  { width: 80vw; aspect-ratio: 16 / 9; }
+  .bf-gi-frame--D  { width: 85vw; aspect-ratio: 16 / 9; }
+
+  .bf-gi--B { flex-direction: column !important; gap: 1rem; }
+  .bf-gi-aside { width: 100%; }
+  .bf-gi--D .bf-gi-below { align-items: flex-start; text-align: left; }
+  .bf-gi--C { transform: none !important; }
+
+  .bf-gp { display: none; }
+  .bf-gallery-header { position: relative; top: auto; left: auto;
+    padding: 1.5rem clamp(1.25rem, 5vw, 2rem) 0; }
+
+  /* Show all gallery items at full opacity */
+  .bf-gi { opacity: 1 !important; }
+  .bf-gi-frame { transform: none !important; }
+  .bf-gi-img { transform: none !important; }
+  .bf-gi-meta { transform: none !important; }
+  .bf-gi-index { transform: none !important; }
+  .bf-gi-accent-line { transform: scaleX(1) !important; opacity: 1 !important; }
+  .bf-gi-crop-tl,
+  .bf-gi-crop-br { opacity: 0.65 !important; }
+  .bf-gi-category,
+  .bf-gi-services,
+  .bf-gi-year { opacity: 1 !important; }
+  .bf-gi-title { opacity: 1 !important; }
 }

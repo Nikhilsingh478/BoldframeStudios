@@ -1,0 +1,169 @@
+==================================================
+11 — STACKING CHOREOGRAPHY
+==========================
+
+Pin the stack section.
+
+Map approximately one viewport-height of scroll per transition, adjusted after testing.
+
+Do not blindly use:
+
+window.innerHeight * (totalCards - 1)
+
+if the actual pacing feels too long.
+
+The animation should behave approximately:
+
+CARD 1 visible.
+
+As CARD 2 arrives:
+CARD 1 scale → ~0.92
+rotation → subtle negative/positive angle
+CARD 2 y: 100% → 0%
+
+As CARD 3 arrives:
+CARD 2 recedes slightly
+CARD 1 remains deeper behind
+CARD 3 becomes dominant.
+
+Continue.
+
+IMPORTANT:
+
+Do not transform ALL old cards identically.
+
+Create accumulated depth.
+
+Example conceptual states:
+
+immediately previous:
+scale .92
+
+two behind:
+scale .88
+
+older:
+scale .85
+
+But keep the visible stack restrained.
+
+Do not create a huge fan of cards.
+
+==================================================
+12 — ROTATION LANGUAGE
+======================
+
+Do not rotate every previous card +5deg.
+
+Use a controlled pattern such as:
+
+Card 1: -2deg
+Card 2: +2.5deg
+Card 3: -1.5deg
+Card 4: +2deg
+
+Final card:
+0deg
+
+This creates controlled imperfection.
+
+As FINAL FRAME arrives, the composition becoming perfectly aligned at 0deg should communicate resolution.
+
+That is meaningful animation.
+
+==================================================
+13 — INTERNAL CARD MOTION
+=========================
+
+Each card can have ONE lightweight internal scroll-linked response.
+
+Direction:
+elements resolve toward focus.
+
+Interface:
+grid/layout lines settle.
+
+Motion:
+one trajectory progresses.
+
+Engineering:
+responsive frames align.
+
+Final Frame:
+image settles from ~1.025 scale to 1.
+
+Do NOT create independent giant timelines for every child.
+
+Internal animation should be subordinate to the stacking movement.
+
+==================================================
+14 — CARD TEXT BEHAVIOR
+=======================
+
+Text must remain readable throughout.
+
+Suggested card composition:
+
+upper-left:
+micro label
+
+lower-left:
+large title
+
+lower/right or upper-right:
+supporting sentence
+
+Visual occupies remaining space.
+
+Do not put all information in the center.
+
+Do not make these look like presentation slides.
+
+Use the existing BoldFrame typography and metadata system.
+
+Some titles can intentionally approach/crop against card edges.
+
+==================================================
+15 — ONE IMPORTANT DETAIL: PHYSICAL DEPTH
+=========================================
+
+Use subtle depth cues WITHOUT generic shadows.
+
+Possible cues:
+
+* tiny border contrast differences
+* previous card visible around edges
+* slight scale difference
+* rotation
+* environmental occlusion
+* subtle background darkness behind stack
+
+Avoid massive box-shadow blur.
+
+The viewer should understand there are physical layers.
+
+==================================================
+16 — OPTIONAL STACK COUNTER
+===========================
+
+Add a very restrained fixed/pinned counter near one viewport edge:
+
+01
+—
+05
+
+As cards progress:
+
+01 → 02 → 03 → 04 → 05
+
+Could also show current label:
+
+03 / MOTION
+
+Do not make it a navigation widget.
+
+Do not require clicking.
+
+It is orientation metadata.
+
+Update efficiently rather than causing React rerenders every animation frame.
