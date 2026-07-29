@@ -165,6 +165,8 @@
   - Tuning: adjust lerp factors in `tick()` for ring lag (`0.12`) and dot speed (`0.45`).
   - Cleanup: removes event listeners, cancels rAF, and restores native cursor on unmount.
 
+
+
   ## License
   Proprietary — All rights reserved by BoldFrame Studios (or the project owner). Do not redistribute without permission.
   
