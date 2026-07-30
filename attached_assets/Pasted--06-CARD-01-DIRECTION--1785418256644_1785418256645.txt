@@ -1,0 +1,204 @@
+==================================================
+06 — CARD 01 / DIRECTION
+========================
+
+Title:
+
+DIRECTION
+
+Micro label:
+
+01 / BEFORE PIXELS
+
+Supporting thought:
+
+"Decide what deserves attention before deciding how it should look."
+
+Visualize strategy without generic sticky notes.
+
+Create an abstract editorial composition using:
+
+* a loose collection of words/ideas
+* grid coordinates
+* one or two competing layout paths
+* a highlighted focal frame
+
+As scroll progresses through this card, scattered elements can subtly resolve toward a clearer hierarchy.
+
+Meaning:
+
+ambiguity → direction.
+
+Do NOT use fake client research or fabricated statistics.
+
+==================================================
+07 — CARD 02 / INTERFACE
+========================
+
+Title:
+
+INTERFACE
+
+Micro label:
+
+02 / STRUCTURE BECOMES VISIBLE
+
+Supporting thought:
+
+"Turn hierarchy into a visual system people understand without thinking about it."
+
+Create a visual built from:
+
+* responsive layout frames
+* typographic blocks
+* image regions
+* grid lines
+* interface modules
+
+It should resemble the DNA of a website layout without becoming a fake Figma screenshot.
+
+As the card arrives:
+
+some structural lines can resolve/snap gently into alignment.
+
+No dramatic animation.
+
+Meaning:
+
+direction → composition.
+
+==================================================
+08 — CARD 03 / MOTION
+=====================
+
+Title:
+
+MOTION
+
+Micro label:
+
+03 / MOVEMENT WITH A JOB
+
+Supporting thought:
+
+"Motion should explain, guide or respond — never exist just because it can."
+
+This card should visually reference the motion philosophy already demonstrated across the site.
+
+Create a restrained sequence of 3-4 frames or states.
+
+For example:
+
+FRAME 01
+element enters
+
+FRAME 02
+element transforms
+
+FRAME 03
+hierarchy resolves
+
+Connect them using a thin trajectory.
+
+One small element may move between states as scroll progresses.
+
+Do NOT build a giant animation inside the already animated stack.
+
+This card should demonstrate intentional motion through restraint.
+
+==================================================
+09 — CARD 04 / ENGINEERING
+==========================
+
+Title:
+
+ENGINEERING
+
+Micro label:
+
+04 / THE INVISIBLE LAYER
+
+Supporting thought:
+
+"Responsive behavior, performance and interaction belong in the build — not in the cleanup."
+
+Visual language:
+
+* structural node/grid system
+* responsive viewport representations
+* small breakpoint labels
+* performance-oriented hierarchy
+* component relationships
+
+Do NOT use Matrix code rain.
+Do NOT use a fake terminal.
+Do NOT dump source code onto the card.
+
+Think:
+
+architectural blueprint of a frontend system.
+
+Possible micro labels:
+
+DESKTOP
+TABLET
+MOBILE
+
+and:
+
+LAYOUT
+MOTION
+PERFORMANCE
+
+Keep technical detail believable and generic rather than fabricating metrics.
+
+==================================================
+10 — CARD 05 / FINAL FRAME
+==========================
+
+This is the resolution.
+
+Title:
+
+FINAL
+FRAME.
+
+Micro label:
+
+05 / EVERYTHING WORKING TOGETHER
+
+Supporting thought:
+
+"The best result feels simple because the complexity has already been handled."
+
+This card should be visually quieter than the others.
+
+Do not finish with more diagrams.
+
+Use a strong real BoldFrame project image IF an appropriate existing asset exists.
+
+If not, create a clean abstract final browser-frame composition from existing design elements rather than inventing a fake project.
+
+The final card should feel:
+
+resolved
+calm
+precise
+complete.
+
+The visual progression across the stack should therefore be:
+
+DIRECTION
+messier
+
+→ INTERFACE
+structured
+
+→ MOTION
+alive
+
+→ ENGINEERING
+systematic
+
+→ FINAL FRAME
+effortless.

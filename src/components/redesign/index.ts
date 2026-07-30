@@ -20,3 +20,4 @@ export { WorkIntro }             from './WorkIntro';
 export { FeaturedWork }          from './FeaturedWork';
 export { WorkGalleryTransition } from './WorkGalleryTransition';
 export { WorkGallery }           from './WorkGallery';
+export { BehindTheFrame }        from './BehindTheFrame';

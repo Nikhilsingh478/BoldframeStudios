@@ -2267,3 +2267,936 @@
   .bf-gi-year { opacity: 1 !important; }
   .bf-gi-title { opacity: 1 !important; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BEHIND THE FRAME — §03 Sticky Card Stack (Master Part 2, Chunk 3/4)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper ──────────────────────────────────────────────────────────────── */
+
+.bf-btf-wrapper {
+  position: relative;
+  overflow-x: clip;
+}
+
+/* ── Intro section (§02 breathing room) ──────────────────────────────────── */
+
+.bf-btf-intro {
+  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 8vw, 8rem) clamp(4rem, 8vh, 7rem);
+  min-height: 30vh;
+  max-width: 100%;
+}
+
+.bf-btf-intro-meta {
+  margin-bottom: clamp(2rem, 4vh, 3.5rem);
+  opacity: 0.45;
+}
+
+.bf-btf-intro-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: clamp(2.5rem, 5vh, 4rem);
+}
+
+.bf-btf-intro-line-a {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--bf-text-secondary);
+}
+
+.bf-btf-intro-line-b {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(3rem, 6.5vw, 7rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--bf-text-primary);
+  /* Asymmetric offset — not centered like a section heading */
+  margin-left: clamp(1.5rem, 4vw, 5rem);
+}
+
+.bf-btf-intro-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-left: clamp(0rem, 2vw, 3rem);
+}
+
+.bf-btf-intro-sub-a {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.25rem, 2.2vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-tertiary);
+  line-height: 1.0;
+}
+
+.bf-btf-intro-sub-b {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.25rem, 2.2vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+  line-height: 1.1;
+  margin-left: clamp(1rem, 2.5vw, 3rem);
+}
+
+/* ── Stack section ────────────────────────────────────────────────────────── */
+
+.bf-btf-stack-section {
+  /* Height set dynamically by GSAP */
+  overflow: hidden;
+}
+
+.bf-btf-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Ambient vignette — fades during §17 exit */
+.bf-btf-stack-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 65% 85% at 50% 50%,
+    transparent 28%,
+    rgba(3, 4, 6, 0.55) 100%
+  );
+  opacity: 0.65;
+}
+
+/* Stack container — cards stack absolutely inside this */
+.bf-btf-stack {
+  position: relative;
+  z-index: 1;
+  width: min(80vw, 1100px);
+  height: min(74vh, 750px);
+}
+
+@media (max-width: 1280px) {
+  .bf-btf-stack {
+    width: min(85vw, 1000px);
+    height: min(72vh, 700px);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .bf-btf-stack {
+    width: min(90vw, 880px);
+    height: min(70vh, 640px);
+  }
+}
+
+/* ── Counter (§16) ────────────────────────────────────────────────────────── */
+
+.bf-btf-counter {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vh, 2.5rem);
+  right: clamp(1.5rem, 3vw, 3rem);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.bf-btf-counter-num {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  color: var(--bf-text-primary);
+  line-height: 1;
+}
+
+.bf-btf-counter-sep {
+  font-family: var(--bf-font-body);
+  font-size: 0.6875rem;
+  color: var(--bf-text-tertiary);
+  letter-spacing: 0.05em;
+  margin: 0.2rem 0;
+}
+
+.bf-btf-counter-total {
+  font-family: var(--bf-font-display);
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  font-weight: 300;
+  color: var(--bf-text-tertiary);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.bf-btf-counter-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.6;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+/* ── Individual card base ─────────────────────────────────────────────────── */
+
+.bf-btf-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  will-change: transform, opacity;
+  /* No giant box-shadow — depth through stacking + contrast (§15) */
+}
+
+/* Inset border for subtle depth perception (§15) */
+.bf-btf-card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  border: 1px solid rgba(243, 242, 238, 0.07);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Visual composition area — fills entire card behind text */
+.bf-btf-card-visual {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Upper-left: micro label */
+.bf-btf-card-micro {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vh, 2rem);
+  left: clamp(1.5rem, 2.5vw, 2.5rem);
+  z-index: 4;
+  opacity: 0.55;
+}
+
+/* Upper-right: supporting thought */
+.bf-btf-card-thought {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vh, 2rem);
+  right: clamp(1.5rem, 2.5vw, 2.5rem);
+  z-index: 4;
+  max-width: 26ch;
+  text-align: right;
+}
+
+.bf-btf-card-thought p {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.72vw, 0.72rem);
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  color: var(--bf-text-tertiary);
+  font-style: italic;
+}
+
+/* Lower-left: large editorial title */
+.bf-btf-card-title {
+  position: absolute;
+  bottom: clamp(1.25rem, 2.5vh, 2rem);
+  left: clamp(1.5rem, 2.5vw, 2.5rem);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bf-btf-card-title-line {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.75rem, 5.5vw, 5.75rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+}
+
+/* Final Frame title — slightly smaller so both lines fit */
+.bf-btf-card--final-frame .bf-btf-card-title-line {
+  font-size: clamp(2.5rem, 5vw, 5.25rem);
+}
+
+/* ── DIRECTION visual ─────────────────────────────────────────────────────── */
+
+.bf-vis-direction {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Grid coordinate ticks */
+.bf-dir-coord {
+  position: absolute;
+  font-family: var(--bf-font-body);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.22;
+}
+
+.bf-dir-coord-1 { top: 14%; left: 18%; }
+.bf-dir-coord-2 { top: 62%; left: 72%; }
+.bf-dir-coord-3 { top: 38%; left: 54%; }
+.bf-dir-coord-4 { top: 78%; left: 36%; }
+
+/* Scattered concept words — varied opacity/size = ambiguity */
+.bf-dir-word {
+  position: absolute;
+  font-family: var(--bf-font-display);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-primary);
+  white-space: nowrap;
+}
+
+.bf-dir-word-1 { top: 20%; left: 30%; font-size: clamp(1.1rem, 2vw, 2rem);    opacity: 0.40; }
+.bf-dir-word-2 { top: 13%; left: 52%; font-size: clamp(0.9rem, 1.6vw, 1.6rem); opacity: 0.28; }
+.bf-dir-word-3 { top: 42%; left: 44%; font-size: clamp(1.5rem, 2.8vw, 2.8rem); opacity: 0.60; color: rgba(115,87,255,0.90); }
+.bf-dir-word-4 { top: 34%; left: 22%; font-size: clamp(0.8rem, 1.4vw, 1.4rem); opacity: 0.22; }
+.bf-dir-word-5 { top: 58%; left: 38%; font-size: clamp(1.2rem, 2.2vw, 2.2rem); opacity: 0.35; }
+.bf-dir-word-6 { top: 25%; left: 62%; font-size: clamp(0.9rem, 1.7vw, 1.7rem); opacity: 0.32; }
+
+/* Focal highlight rectangle — the chosen priority zone */
+.bf-dir-focal {
+  position: absolute;
+  top: 17%;
+  left: 34%;
+  width: 34%;
+  height: 38%;
+  border: 1px solid rgba(115, 87, 255, 0.36);
+  border-radius: 4px;
+  background: rgba(115, 87, 255, 0.03);
+}
+
+.bf-dir-paths {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ── INTERFACE visual ─────────────────────────────────────────────────────── */
+
+.bf-vis-interface {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Layout wireframe — occupies right 60% of card */
+.bf-iface-layout {
+  position: absolute;
+  top: 8%;
+  right: 4%;
+  width: 60%;
+  height: 84%;
+  border: 1px solid rgba(243, 242, 238, 0.10);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(243, 242, 238, 0.01);
+}
+
+.bf-iface-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.08);
+  flex-shrink: 0;
+  background: rgba(243, 242, 238, 0.02);
+}
+
+.bf-iface-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.45;
+}
+
+.bf-iface-nav {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.bf-iface-nav-item {
+  padding: 0.15rem 0.4rem;
+  border: 1px solid rgba(243, 242, 238, 0.12);
+  border-radius: 2px;
+}
+
+.bf-iface-nav-item span,
+.bf-iface-nav-cta span {
+  font-family: var(--bf-font-body);
+  font-size: 0.45rem;
+  letter-spacing: 0.1em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.45;
+}
+
+.bf-iface-nav-cta {
+  padding: 0.15rem 0.5rem;
+  background: rgba(115, 87, 255, 0.20);
+  border: 1px solid rgba(115, 87, 255, 0.30);
+  border-radius: 2px;
+}
+
+.bf-iface-hero-region {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.06);
+  flex-shrink: 0;
+}
+
+.bf-iface-hero-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.bf-iface-hero-img {
+  width: 32%;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  background: rgba(115, 87, 255, 0.12);
+  border: 1px solid rgba(115, 87, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.bf-iface-content-row {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  overflow: hidden;
+}
+
+.bf-iface-col-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.bf-iface-col-side {
+  width: 28%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.bf-iface-txtblock {
+  height: 0.55rem;
+  border-radius: 2px;
+  background: rgba(243, 242, 238, 0.08);
+}
+
+.bf-iface-txtblock--h     { height: 1rem; width: 85%; }
+.bf-iface-txtblock--sub   { height: 0.45rem; width: 70%; }
+.bf-iface-txtblock--sm    { height: 0.45rem; width: 90%; }
+.bf-iface-txtblock--xs    { height: 0.35rem; }
+
+.bf-iface-img-region {
+  flex: 1;
+  border-radius: 3px;
+  background: rgba(115, 87, 255, 0.08);
+  border: 1px solid rgba(115, 87, 255, 0.12);
+  min-height: 3rem;
+}
+
+.bf-iface-module {
+  height: 1.5rem;
+  border-radius: 3px;
+  background: rgba(243, 242, 238, 0.04);
+  border: 1px solid rgba(243, 242, 238, 0.08);
+  margin-top: auto;
+}
+
+/* Grid lines overlay — opacity animated by GSAP (lines become visible) */
+.bf-iface-gridlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.10;
+  /* Repeating grid pattern via CSS */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(115, 87, 255, 0.18) 0,
+      rgba(115, 87, 255, 0.18) 1px,
+      transparent 1px,
+      transparent calc((100% - 1px) / 8)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(115, 87, 255, 0.18) 0,
+      rgba(115, 87, 255, 0.18) 1px,
+      transparent 1px,
+      transparent calc((100% - 1px) / 12)
+    );
+}
+
+/* ── MOTION visual ────────────────────────────────────────────────────────── */
+
+.bf-vis-motion {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6%;
+}
+
+.bf-motion-track {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.bf-motion-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+  z-index: 2;
+}
+
+.bf-motion-frame-num {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.35;
+}
+
+.bf-motion-frame-box {
+  width: clamp(4rem, 8vw, 8.5rem);
+  height: clamp(4rem, 7vh, 7rem);
+  border: 1px solid rgba(243, 242, 238, 0.14);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(243, 242, 238, 0.015);
+  position: relative;
+}
+
+.bf-motion-frame-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-secondary);
+  opacity: 0.55;
+}
+
+/* State indicator inside each frame — positioned differently per state */
+.bf-motion-state {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(243, 242, 238, 0.55);
+  position: absolute;
+}
+
+.bf-motion-state--1 { top: 20%; left: 20%; }                                    /* entering — top-left */
+.bf-motion-state--2 { top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(115,87,255,0.80); } /* transforming — center */
+.bf-motion-state--3 { bottom: 20%; right: 20%; background: rgba(243,242,238,0.90); } /* resolved — bottom-right */
+
+/* Trajectory line behind the frames */
+.bf-motion-line-svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Moving dot — travels along trajectory as card arrives */
+.bf-motion-dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(115, 87, 255, 0.90);
+  transform: translateY(-50%);
+  z-index: 3;
+  will-change: transform;
+  box-shadow: 0 0 6px rgba(115, 87, 255, 0.45);
+}
+
+/* ── ENGINEERING visual ───────────────────────────────────────────────────── */
+
+.bf-vis-engineering {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 5% 8%;
+}
+
+.bf-eng-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  will-change: transform;
+}
+
+.bf-eng-vp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bf-eng-vp-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.45;
+}
+
+.bf-eng-vp-screen {
+  border: 1px solid rgba(243, 242, 238, 0.18);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(243, 242, 238, 0.01);
+}
+
+.bf-eng-vp--desktop .bf-eng-vp-screen { width: clamp(10rem, 18vw, 17rem); height: clamp(7rem, 13vh, 11rem); }
+.bf-eng-vp--tablet  .bf-eng-vp-screen { width: clamp(7rem,  12vw, 11rem); height: clamp(8rem, 14vh, 12rem); }
+.bf-eng-vp--mobile  .bf-eng-vp-screen { width: clamp(4rem,  7vw,  6.5rem); height: clamp(8rem, 14vh, 12rem); }
+
+.bf-eng-vp-chrome {
+  height: 0.6rem;
+  background: rgba(243, 242, 238, 0.04);
+  border-bottom: 1px solid rgba(243, 242, 238, 0.10);
+  flex-shrink: 0;
+}
+
+.bf-eng-vp-body {
+  flex: 1;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bf-eng-row {
+  border-radius: 2px;
+  background: rgba(243, 242, 238, 0.07);
+  flex-shrink: 0;
+}
+
+.bf-eng-row--full { height: 0.55rem; }
+.bf-eng-row--sm   { height: 0.35rem; }
+.bf-eng-row--cols { display: flex; gap: 0.25rem; height: 1.5rem; }
+
+.bf-eng-cell {
+  border-radius: 2px;
+  background: rgba(243, 242, 238, 0.07);
+}
+
+.bf-eng-cell--wide   { flex: 2; }
+.bf-eng-cell--narrow { flex: 1; }
+
+/* Layer classification */
+.bf-eng-layers {
+  display: flex;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: clamp(1.25rem, 2.5vh, 2rem);
+}
+
+.bf-eng-layer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bf-eng-layer-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bf-eng-layer-name {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.55;
+}
+
+/* ── FINAL FRAME visual ───────────────────────────────────────────────────── */
+
+.bf-vis-finalframe {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5% 6%;
+}
+
+.bf-ff-browser {
+  display: flex;
+  flex-direction: column;
+  width: 84%;
+  height: 84%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(243, 242, 238, 0.12);
+  background: rgba(243, 242, 238, 0.02);
+}
+
+.bf-ff-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  background: rgba(243, 242, 238, 0.04);
+  border-bottom: 1px solid rgba(243, 242, 238, 0.08);
+  flex-shrink: 0;
+}
+
+.bf-ff-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.bf-ff-urlbar {
+  flex: 1;
+  margin-left: 0.35rem;
+  background: rgba(243, 242, 238, 0.04);
+  border-radius: 3px;
+  padding: 0.18rem 0.6rem;
+  font-family: var(--bf-font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: rgba(243, 242, 238, 0.30);
+}
+
+.bf-ff-viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.bf-ff-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  will-change: transform;
+}
+
+/* ── Outro section (§18) ──────────────────────────────────────────────────── */
+
+.bf-btf-outro {
+  padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 8vw, 8rem) clamp(6rem, 12vh, 10rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vh, 3.5rem);
+}
+
+.bf-btf-outro-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bf-btf-outro-line {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2rem, 3.8vw, 4.25rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  color: var(--bf-text-primary);
+}
+
+.bf-btf-outro-block--muted .bf-btf-outro-line {
+  color: var(--bf-text-tertiary);
+  font-size: clamp(1.5rem, 2.8vw, 3.25rem);
+  margin-left: clamp(2rem, 5vw, 6rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE (§19 spec) — vertical CSS overlap stack, no GSAP pinning
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+
+  .bf-btf-intro {
+    padding: 4rem 1.5rem 3rem;
+    min-height: auto;
+  }
+
+  .bf-btf-intro-line-a { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+  .bf-btf-intro-line-b { font-size: clamp(2rem, 9vw, 3rem); margin-left: 1rem; }
+  .bf-btf-intro-sub-a,
+  .bf-btf-intro-sub-b  { font-size: clamp(1rem, 5vw, 1.5rem); }
+  .bf-btf-intro-sub-b  { margin-left: 0.75rem; }
+
+  /* Stack section — height overridden by GSAP bail-out; CSS takes full control */
+  .bf-btf-stack-section { height: auto !important; }
+
+  .bf-btf-sticky {
+    position: static !important;
+    height: auto;
+    display: block;
+    padding: 2rem 0 5rem;
+  }
+
+  /* Counter and ambient bg not needed on mobile */
+  .bf-btf-counter,
+  .bf-btf-stack-bg { display: none; }
+
+  /* Vertical stack with CSS overlap */
+  .bf-btf-stack {
+    position: relative;
+    width: 91vw;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bf-btf-card {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    height: clamp(340px, 75vw, 500px);
+    transform: none !important;
+    opacity: 1 !important;
+    margin-bottom: -2.5rem;   /* cards overlap slightly */
+    will-change: auto;
+  }
+
+  /* Subtle static rotations for mobile — ±1deg max (§19) */
+  .bf-btf-card--interface   { rotate: -0.8deg; }
+  .bf-btf-card--motion-card { rotate:  0.7deg; }
+  .bf-btf-card--engineering { rotate: -0.6deg; }
+  .bf-btf-card--final-frame { rotate:  0;      } /* resolves straight */
+
+  .bf-btf-card:last-child { margin-bottom: 0; }
+
+  .bf-btf-card-title-line       { font-size: clamp(2rem, 8vw, 3rem); }
+  .bf-btf-card-thought p        { font-size: 0.625rem; }
+  .bf-btf-card--final-frame .bf-btf-card-title-line { font-size: clamp(1.8rem, 7.5vw, 2.75rem); }
+
+  /* Simplify card visuals on mobile */
+  .bf-vis-motion,
+  .bf-vis-engineering { padding: 0 4%; }
+  .bf-eng-container   { gap: 1rem; }
+  .bf-eng-vp--desktop .bf-eng-vp-screen { width: 8rem;  height: 6rem; }
+  .bf-eng-vp--tablet  .bf-eng-vp-screen { width: 5.5rem; height: 7rem; }
+  .bf-eng-vp--mobile  .bf-eng-vp-screen { width: 3.25rem; height: 7rem; }
+
+  .bf-ff-browser  { width: 90%; height: 82%; }
+
+  .bf-btf-outro { padding: 3.5rem 1.5rem 4rem; gap: 2rem; }
+  .bf-btf-outro-line { font-size: clamp(1.5rem, 7vw, 2.25rem); }
+  .bf-btf-outro-block--muted .bf-btf-outro-line {
+    font-size: clamp(1.1rem, 5.5vw, 1.75rem);
+    margin-left: 1.25rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION (§20 spec) — static vertical editorial sequence
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  /* Disable GSAP pin — section height resets automatically */
+  .bf-btf-stack-section { height: auto !important; }
+
+  .bf-btf-sticky {
+    position: static !important;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 0 5rem;
+    gap: 2.5rem;
+  }
+
+  .bf-btf-counter,
+  .bf-btf-stack-bg { display: none; }
+
+  .bf-btf-stack {
+    position: relative;
+    width: min(80vw, 1100px);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .bf-btf-card {
+    position: relative !important;
+    inset: auto !important;
+    height: min(74vh, 750px);
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+
+  /* All internal elements at their resolved states */
+  .bf-vis-direction              { transform: none !important; }
+  .bf-iface-gridlines            { opacity: 0.9 !important; }
+  .bf-motion-dot                 { transform: translateX(44px) translateY(-50%) !important; }
+  .bf-eng-container              { transform: none !important; }
+  .bf-ff-img                     { transform: none !important; }
+}

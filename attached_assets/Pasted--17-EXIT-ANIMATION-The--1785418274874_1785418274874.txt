@@ -1,0 +1,155 @@
+==================================================
+17 — EXIT ANIMATION
+===================
+
+The FINAL FRAME card must break the repetition.
+
+Once Card 05 arrives:
+
+all earlier cards should visually disappear behind it.
+
+Card 05 becomes perfectly aligned.
+
+rotation → 0
+scale → 1
+
+Then, during the final portion of scroll:
+
+allow the surrounding stack container/background relationship to simplify.
+
+The user should feel:
+
+layers
+layers
+layers
+→ resolution.
+
+Do NOT expand this image fullscreen again.
+
+We already used that transformation in 2A.
+
+No repeated trick.
+
+Instead, let the final card remain a beautifully framed finished object.
+
+Then release the pin.
+
+==================================================
+18 — POST-STACK STATEMENT
+=========================
+
+After pin release, create a short quiet transition.
+
+Use restrained text:
+
+THE COMPLEXITY
+STAYS WITH US.
+
+THE CLARITY
+STAYS WITH YOU.
+
+This should not be another giant 100vw headline.
+
+Use medium-large editorial typography with significant whitespace.
+
+This closes the "Behind the Frame" idea.
+
+Do NOT build the next interaction yet.
+
+==================================================
+19 — MOBILE EXPERIENCE
+======================
+
+Do not force a 5-stage pinned desktop stack onto mobile if it becomes cumbersome.
+
+Below ~768px:
+
+Use a vertical layered sequence.
+
+Each card should:
+
+* occupy ~88-94vw
+* have enough height for its visual
+* overlap the previous card slightly
+* use CSS sticky positioning if smooth and reliable
+
+Possible behavior:
+
+each card becomes sticky briefly as the next card approaches.
+
+Keep rotations extremely subtle:
+~±1deg.
+
+Do not require enormous scroll distance.
+
+Internal animations should simplify.
+
+Final Frame becomes straight/aligned.
+
+The narrative must survive:
+
+layers → finished experience.
+
+==================================================
+20 — REDUCED MOTION
+===================
+
+For prefers-reduced-motion:
+
+Render the five layers as a strong static vertical editorial sequence.
+
+No pinning required.
+
+No rotation animation required.
+
+All information remains visible.
+
+==================================================
+21 — TECHNICAL ROBUSTNESS
+=========================
+
+The supplied reference uses:
+
+ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+
+DO NOT COPY THAT CLEANUP.
+
+It would destroy animations elsewhere on the BoldFrame homepage.
+
+Use scoped cleanup.
+
+Prefer:
+
+useGSAP with scope
+or gsap.context()
+
+Keep references to this component's timeline/ScrollTrigger and kill only those.
+
+Do not register plugins unnecessarily on every render.
+
+Do not create another Lenis root.
+
+Use ResizeObserver only at the stack-container level if required.
+
+Refresh ScrollTrigger responsibly after layout changes.
+
+==================================================
+22 — PERFORMANCE
+================
+
+Five cards with internal visuals must remain efficient.
+
+Prefer:
+CSS
+SVG
+transform
+opacity
+
+Avoid:
+canvas unless genuinely necessary
+heavy blur filters
+dozens of continuously animated particles
+large videos
+continuous RAF loops
+
+Internal animations only need to respond while this section is active.

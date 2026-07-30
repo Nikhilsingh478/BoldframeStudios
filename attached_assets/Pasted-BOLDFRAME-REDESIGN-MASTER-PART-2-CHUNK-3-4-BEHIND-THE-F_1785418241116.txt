@@ -1,0 +1,201 @@
+BOLDFRAME REDESIGN — MASTER PART 2, CHUNK 3/4
+BEHIND THE FRAME — GSAP STICKY CARD STACK
+
+Continue directly from MASTER PART 2 — CHUNKS 1/4 and 2/4.
+
+ALL previous constraints remain active.
+
+Preserve:
+
+* original locked Hero
+* all Master Part 1 sections
+* Featured Project expansion
+* Horizontal Project Exhibition
+* established BoldFrame visual system
+* real project data/assets
+* existing animation architecture
+
+Do NOT redesign previous sections.
+
+This chunk uses the supplied GSAP sticky rotating-card-stack interaction as a TECHNICAL REFERENCE.
+
+However:
+
+DO NOT simply place another stack of project screenshots here.
+
+We have already shown:
+2A = depth of one featured project
+2B = breadth across multiple projects
+
+Repeating screenshots again would make the website feel like an animation/component demo.
+
+This section has a different narrative job:
+
+SHOW WHAT EXISTS
+BEHIND THE FINISHED FRAME.
+
+==================================================
+01 — SECTION CONCEPT
+====================
+
+Create:
+
+BEHIND
+THE FRAME.
+
+This section reveals the layers BoldFrame shapes when building an experience.
+
+The visitor has already seen finished work.
+
+Now expose selected aspects behind it:
+
+01 — DIRECTION
+02 — INTERFACE
+03 — MOTION
+04 — ENGINEERING
+05 — FINAL FRAME
+
+Use approximately five cards if the content supports them.
+
+These are NOT generic service cards.
+
+They are large visual storytelling canvases that physically stack as the visitor scrolls.
+
+The interaction metaphor:
+
+Each new layer arrives.
+The previous layer remains behind it.
+The finished experience is the accumulation of all those decisions.
+
+That gives the STACK a conceptual reason to exist.
+
+==================================================
+02 — TRANSITION FROM HORIZONTAL EXHIBITION
+==========================================
+
+2B ends with:
+
+NOT EVERYTHING
+NEEDS THE
+SAME FRAME.
+
+and horizontal scrolling releases back into normal vertical movement.
+
+Do not immediately begin another pinned interaction.
+
+Give approximately 25-40vh of breathing room on desktop.
+
+Allow the visual velocity of the horizontal gallery to settle.
+
+Introduce small metadata:
+
+03 / BEHIND THE FRAME
+
+Then:
+
+WHAT YOU SEE
+IS THE FINAL FRAME.
+
+WHAT MAKES IT WORK
+LIVES BEHIND IT.
+
+Use this as the conceptual introduction.
+
+Keep typography large and asymmetric.
+
+Do not center it like a section heading.
+
+The second statement may appear slightly later as the user approaches the stack.
+
+==================================================
+03 — CARD STACK FOUNDATION
+==========================
+
+Adapt the supplied StickyCard002 interaction:
+
+* section pins
+* first card begins visible
+* subsequent cards begin below viewport/card container
+* next card travels upward into position
+* previous card scales down
+* previous card rotates slightly
+* process repeats with scroll
+
+Use:
+
+GSAP
+ScrollTrigger
+@gsap/react if already installed
+
+Reuse existing Lenis infrastructure if Part 1 established it.
+
+DO NOT mount another ReactLenis root inside this section if the application already has one.
+
+There must be ONE smooth-scroll architecture.
+
+==================================================
+04 — IMPORTANT IMPROVEMENTS TO REFERENCE
+========================================
+
+Do NOT blindly copy these reference behaviors:
+
+scale: 0.7
+rotation: 5deg
+every card identical
+full image only
+
+That is too aggressive/generic for BoldFrame.
+
+Use more restrained transformations.
+
+Suggested previous-card end state:
+
+scale:
+approximately 0.88-0.93
+
+rotation:
+alternate subtly around -2deg to +3deg
+
+translate:
+small positional displacement if composition benefits
+
+opacity:
+keep mostly visible, perhaps ~0.65-0.85
+
+Each previous card should remain perceptible behind the current one.
+
+The result should resemble layers accumulating on a creative desk/interface, not cards being discarded.
+
+==================================================
+05 — STACK CONTAINER
+====================
+
+Desktop:
+
+Use a pinned viewport-scale section.
+
+Cards should occupy approximately:
+
+width:
+min(72-82vw, ~1200px)
+
+height:
+approximately 68-78vh
+
+Do not use the reference's narrow max-w-sm/card proportions.
+
+These are large editorial canvases.
+
+Center them generally, but allow slight intentional offsets.
+
+The surrounding environment remains graphite.
+
+Cards can use:
+
+* ~18-28px radius
+* subtle border
+* clipped overflow
+* near-black / warm-light surfaces depending on card
+* no giant shadows
+
+Use depth primarily through physical stacking and contrast.
