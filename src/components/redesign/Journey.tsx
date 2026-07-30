@@ -1,25 +1,43 @@
 /**
  * BoldFrame Journey — Scroll-drawn process narrative
+ * ─────────────────────────────────────────────────────────────────
+ * FIXES APPLIED (see inline comments marked FIX:):
  *
- * Scroll tracking: GSAP ScrollTrigger drives a useMotionValue(progress).
- * This is intentional — Framer Motion useScroll({ target }) measures
- * element offsets at React render time, before GSAP pin-spacers from
- * other sections (Manifesto, FeaturedWork) are inserted into the DOM.
- * That causes the trigger to fire at the wrong scroll position.
- * GSAP ScrollTrigger always reads live layout, so it is the correct
- * tool for scroll tracking in this project.
+ * 1. Scroll progressing too fast on a small scroll:
+ *    end: '+=300vh' / '+=200vh' assumed the section's CSS height
+ *    matched exactly. If the actual rendered height differs even
+ *    slightly, progress and real scroll distance desync — small
+ *    scroll = big jump. Replaced with end: 'bottom top', which
+ *    always equals (actual section height - viewport height),
+ *    whatever the CSS says. No more magic-number mismatch possible.
  *
- * Framer Motion is still used for all actual animation (useTransform,
- * useMotionValue, motion components) — the progress value is simply
- * fed in from GSAP rather than from useScroll.
+ * 2. Checkpoint text position broken on mobile:
+ *    The same CHECKPOINTS array (same left/top %) was reused for
+ *    both the desktop path (viewBox 1440x900) and the completely
+ *    different mobile path (viewBox 390x760). The dots never lined
+ *    up with the mobile path shape. Now there are two separate
+ *    layouts (DESKTOP_CHECKPOINTS / MOBILE_CHECKPOINTS), picked via
+ *    a matchMedia-driven `isMobile` state, mirroring the same
+ *    768px breakpoint GSAP itself uses.
  *
- * Desktop section height: 300vh  → trigger end: '+=300vh' (bottom top)
- * Mobile  section height: 200vh  → trigger end: '+=200vh' (bottom top)
- * Both use start: 'top top' — animation begins the moment the section
- * enters the viewport, not some indeterminate time later.
+ * 3. Big empty space after the animation "finishes":
+ *    Checkpoint 5 and the closing text used to be fully resolved
+ *    by progress ~0.82, leaving ~18% of scroll (a big chunk of
+ *    vh) with nothing changing on screen before the section
+ *    released. All beats are now re-spaced evenly across the full
+ *    0 → 1 range, and the path itself now finishes drawing at 0.97
+ *    instead of 0.88, so something is always happening until the
+ *    section is about to hand off to the next one.
+ *
+ * NOTE: end: 'bottom top' fixes the *ratio* between scroll input
+ * and progress output. It does NOT fix an oversized min-height on
+ * .bf-journey-section in your CSS — if that's set way taller than
+ * the content needs, you'll still get a long "held" final frame.
+ * If it still feels long after this, trim that min-height (I don't
+ * have that stylesheet, so I can't check/adjust it from here).
  */
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import {
   motion,
   useTransform,
@@ -33,50 +51,44 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Journey checkpoints ──────────────────────────────────────────
+const MOBILE_BREAKPOINT = 768;
 
-const CHECKPOINTS = [
-  {
-    id: '01',
-    title: 'DISCOVER',
-    copy: 'Understand what deserves attention.',
-    activateAt: 0.10,
-    left: '7%',
-    top: '36%',
-  },
-  {
-    id: '02',
-    title: 'FRAME',
-    copy: 'Give the idea structure and direction.',
-    activateAt: 0.27,
-    left: '64%',
-    top: '23%',
-  },
-  {
-    id: '03',
-    title: 'DESIGN',
-    copy: 'Turn strategy into something unmistakable.',
-    activateAt: 0.44,
-    left: '7%',
-    top: '54%',
-  },
-  {
-    id: '04',
-    title: 'BUILD',
-    copy: 'Engineer the experience for the real browser.',
-    activateAt: 0.60,
-    left: '64%',
-    top: '63%',
-  },
-  {
-    id: '05',
-    title: 'REFINE',
-    copy: 'Remove friction until everything feels inevitable.',
-    activateAt: 0.73,
-    left: '26%',
-    top: '77%',
-  },
+// ─── Journey checkpoints — separate layouts per breakpoint ─────────
+// Copy/title/activateAt shared; only position differs since the two
+// paths are visually unrelated shapes.
+
+const CHECKPOINT_CONTENT = [
+  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.', activateAt: 0.09 },
+  { id: '02', title: 'FRAME', copy: 'Give the idea structure and direction.', activateAt: 0.27 },
+  { id: '03', title: 'DESIGN', copy: 'Turn strategy into something unmistakable.', activateAt: 0.45 },
+  { id: '04', title: 'BUILD', copy: 'Engineer the experience for the real browser.', activateAt: 0.63 },
+  { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.', activateAt: 0.81 },
 ] as const;
+
+// FIX: positions tuned against the DESKTOP_PATH shape (viewBox 1440x900).
+const DESKTOP_POSITIONS = [
+  { left: '6%', top: '15%' },
+  { left: '68%', top: '26%' },
+  { left: '6%', top: '50%' },
+  { left: '68%', top: '68%' },
+  { left: '30%', top: '85%' },
+] as const;
+
+// FIX: positions tuned against the MOBILE_PATH shape (viewBox 390x760),
+// kept clear of the big FROM/SHARP/RESULT text blocks which stack
+// centrally on narrow screens.
+const MOBILE_POSITIONS = [
+  { left: '6%', top: '8%' },
+  { left: '54%', top: '24%' },
+  { left: '8%', top: '42%' },
+  { left: '52%', top: '60%' },
+  { left: '14%', top: '78%' },
+] as const;
+
+function buildCheckpoints(mobile: boolean) {
+  const pos = mobile ? MOBILE_POSITIONS : DESKTOP_POSITIONS;
+  return CHECKPOINT_CONTENT.map((c, i) => ({ ...c, ...pos[i] }));
+}
 
 // ─── SVG Paths ────────────────────────────────────────────────────
 
@@ -128,12 +140,13 @@ const MOBILE_PATH = [
 // ─── Checkpoint annotation ────────────────────────────────────────
 
 interface CPProps {
-  cp: (typeof CHECKPOINTS)[number];
+  cp: ReturnType<typeof buildCheckpoints>[number];
   progress: MotionValue<number>;
   rm: boolean;
+  mobile: boolean;
 }
 
-function CheckpointAnnotation({ cp, progress, rm }: CPProps) {
+function CheckpointAnnotation({ cp, progress, rm, mobile }: CPProps) {
   const dotRef = useRef<HTMLDivElement>(null);
   const activated = useRef(false);
 
@@ -177,7 +190,9 @@ function CheckpointAnnotation({ cp, progress, rm }: CPProps) {
         y: rm ? 0 : y,
         scale: rm ? 1 : scale,
         zIndex: 3,
-        maxWidth: '210px',
+        // FIX: tighter max-width on mobile so copy wraps to 2-3 short
+        // lines instead of stretching almost edge-to-edge.
+        maxWidth: mobile ? '150px' : '210px',
       }}
     >
       <div className="bf-cp-header">
@@ -198,13 +213,14 @@ interface FrameMotifProps {
 }
 
 function FrameMotif({ pathProgress, rm }: FrameMotifProps) {
+  // FIX: re-spaced to match the new evenly-paced timeline.
   const opacity = useTransform(
     pathProgress,
-    [0.22, 0.32, 0.58, 0.68],
+    [0.20, 0.32, 0.62, 0.74],
     [0, 1, 1, 0],
     { clamp: true },
   );
-  const scale = useTransform(pathProgress, [0.22, 0.52], [0.93, 1.0], { clamp: true });
+  const scale = useTransform(pathProgress, [0.20, 0.55], [0.93, 1.0], { clamp: true });
 
   return (
     <motion.div
@@ -234,9 +250,19 @@ export function Journey() {
   const sectionRef = useRef<HTMLElement>(null);
   const rm = useReducedMotion() ?? false;
 
+  // FIX: track breakpoint in React state so checkpoint layout swaps
+  // in sync with the GSAP matchMedia split below (both keyed to 768px).
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
+
   // ── GSAP drives the scroll progress value ────────────────────────
-  // useMotionValue is the bridge: GSAP writes to it via onUpdate,
-  // Framer Motion reads from it via useTransform.
   const progress = useMotionValue(0);
 
   useEffect(() => {
@@ -251,18 +277,17 @@ export function Journey() {
       ctx = gsap.context(() => {
         const mm = gsap.matchMedia();
 
-        // ── Desktop: section is 300vh ──────────────────────────────
-        // start: 'top top'    → triggers when section top = viewport top
-        // end:   '+=300vh'    → triggers when 300vh of scroll have passed
-        //                       (i.e. section has fully traversed the viewport)
-        // This is equivalent to GSAP's 'bottom top' for a 300vh section,
-        // but explicit px/vh avoids any ambiguity with pinned neighbour spacers.
-        mm.add('(min-width: 768px)', () => {
+        // ── Desktop ─────────────────────────────────────────────────
+        // FIX: end: 'bottom top' instead of a hardcoded '+=300vh'.
+        // This always equals (section's real rendered height - viewport
+        // height), so progress can never desync from actual scroll
+        // distance regardless of what the CSS height actually is.
+        mm.add(`(min-width: ${MOBILE_BREAKPOINT}px)`, () => {
           ScrollTrigger.create({
             id: 'bf-journey-desktop',
             trigger: section,
             start: 'top top',
-            end: '+=300vh',
+            end: 'bottom top',
             scrub: true,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
@@ -271,14 +296,13 @@ export function Journey() {
           });
         });
 
-        // ── Mobile: section is 200vh ───────────────────────────────
-        // Same logic, shorter scroll range matching reduced section height.
-        mm.add('(max-width: 767px)', () => {
+        // ── Mobile ──────────────────────────────────────────────────
+        mm.add(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`, () => {
           ScrollTrigger.create({
             id: 'bf-journey-mobile',
             trigger: section,
             start: 'top top',
-            end: '+=200vh',
+            end: 'bottom top',
             scrub: true,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
@@ -289,16 +313,25 @@ export function Journey() {
       }, section);
     }
 
-    // Wait for fonts so layout is stable before measuring the section offset.
     document.fonts.ready.then(() => {
       requestAnimationFrame(() => {
         buildTrigger();
-        // Let GSAP recalculate after any pin-spacers from other sections settle.
         requestAnimationFrame(() => ScrollTrigger.refresh());
       });
     });
 
-    // Rebuild on resize (section height can change, position can shift).
+    // FIX: sibling sections (Manifesto, FeaturedWork) insert their own
+    // pin-spacers into the DOM around the same time this mounts. If
+    // theirs land *after* our first refresh, this section's measured
+    // start/end drift from its true on-screen position — which is
+    // exactly the kind of mismatch that makes progress feel like it
+    // jumps way ahead of the actual scroll. A refresh on window `load`
+    // (everything is definitely mounted by then) plus one delayed
+    // refresh catches that late layout shift.
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', onLoad);
+    const lateRefresh = window.setTimeout(() => ScrollTrigger.refresh(), 1200);
+
     const ro = new ResizeObserver(() => {
       requestAnimationFrame(buildTrigger);
     });
@@ -306,6 +339,8 @@ export function Journey() {
 
     return () => {
       ro.disconnect();
+      window.removeEventListener('load', onLoad);
+      window.clearTimeout(lateRefresh);
       ctx?.revert();
       ScrollTrigger.getAll()
         .filter(t => ['bf-journey-desktop', 'bf-journey-mobile'].includes(t.vars?.id ?? ''))
@@ -316,29 +351,35 @@ export function Journey() {
   }, [rm]);
 
   // ── Derived animation values from progress ────────────────────────
-  // Always call hooks unconditionally; select between animated and
-  // static variants afterwards (Rules of Hooks compliance).
-  const staticOne      = useMotionValue(1);
-  const pathLengthAnim = useTransform(progress, [0, 0.88], [0, 1], { clamp: true });
-  const pathLength     = rm ? staticOne : pathLengthAnim;
+  const staticOne = useMotionValue(1);
+  // FIX: path now finishes drawing at 0.97 instead of 0.88, so the
+  // line is still actively growing right up until the section hands
+  // off — no stretch where the path is static and done early.
+  const pathLengthAnim = useTransform(progress, [0, 0.97], [0, 1], { clamp: true });
+  const pathLength = rm ? staticOne : pathLengthAnim;
 
-  // FROM ROUGH IDEA — enters early, fades mid-journey
+  // FROM ROUGH IDEA — enters early, fades before FRAME beat lands
   const roughOpacity = useTransform(
     progress,
-    [0, 0.07, 0.48, 0.60],
+    [0, 0.06, 0.20, 0.30],
     [0, 1, 1, 0],
     { clamp: true },
   );
-  const roughY = useTransform(progress, [0, 0.07], [24, 0], { clamp: true });
+  const roughY = useTransform(progress, [0, 0.06], [24, 0], { clamp: true });
 
-  // SHARP EXPERIENCE — resolves in final third
-  const sharpOpacity = useTransform(progress, [0.50, 0.63], [0, 1], { clamp: true });
-  const sharpY      = useTransform(progress, [0.50, 0.63], [20, 0], { clamp: true });
-  const sharpScale  = useTransform(progress, [0.50, 0.63], [0.97, 1], { clamp: true });
+  // SHARP EXPERIENCE — resolves mid-journey
+  // FIX: re-spaced off the new evenly-paced checkpoint beats.
+  const sharpOpacity = useTransform(progress, [0.56, 0.68], [0, 1], { clamp: true });
+  const sharpY = useTransform(progress, [0.56, 0.68], [20, 0], { clamp: true });
+  const sharpScale = useTransform(progress, [0.56, 0.68], [0.97, 1], { clamp: true });
 
-  // THE RESULT? — arrives near the end
-  const finalOpacity = useTransform(progress, [0.70, 0.82], [0, 1], { clamp: true });
-  const finalY       = useTransform(progress, [0.70, 0.82], [16, 0], { clamp: true });
+  // THE RESULT? — FIX: now resolves right at the tail (0.88 → 1.0)
+  // instead of finishing at 0.82 and then sitting static for the
+  // remaining 18% of scroll — that gap was the "empty space" bug.
+  const finalOpacity = useTransform(progress, [0.88, 1.0], [0, 1], { clamp: true });
+  const finalY = useTransform(progress, [0.88, 1.0], [16, 0], { clamp: true });
+
+  const checkpoints = buildCheckpoints(isMobile);
 
   return (
     <section
@@ -364,8 +405,8 @@ export function Journey() {
                 x1="120" y1="165"
                 x2="355" y2="842"
               >
-                <stop offset="0%"   stopColor="#7357FF" />
-                <stop offset="74%"  stopColor="#7357FF" />
+                <stop offset="0%" stopColor="#7357FF" />
+                <stop offset="74%" stopColor="#7357FF" />
                 <stop offset="100%" stopColor="#6B8AFF" stopOpacity="0.88" />
               </linearGradient>
             </defs>
@@ -411,7 +452,7 @@ export function Journey() {
           className="bf-journey-rough-block"
           style={{
             opacity: rm ? 1 : roughOpacity,
-            y:       rm ? 0 : roughY,
+            y: rm ? 0 : roughY,
           }}
         >
           <div className="bf-journey-from">FROM</div>
@@ -423,8 +464,8 @@ export function Journey() {
           className="bf-journey-sharp-block"
           style={{
             opacity: rm ? 1 : sharpOpacity,
-            y:       rm ? 0 : sharpY,
-            scale:   rm ? 1 : sharpScale,
+            y: rm ? 0 : sharpY,
+            scale: rm ? 1 : sharpScale,
           }}
         >
           <div className="bf-journey-sharp-label">SHARP</div>
@@ -436,7 +477,7 @@ export function Journey() {
           className="bf-journey-final-block"
           style={{
             opacity: rm ? 1 : finalOpacity,
-            y:       rm ? 0 : finalY,
+            y: rm ? 0 : finalY,
           }}
         >
           <div className="bf-journey-result-label">THE RESULT?</div>
@@ -448,12 +489,13 @@ export function Journey() {
         </motion.div>
 
         {/* ── Five checkpoint annotations ─────────────────────── */}
-        {CHECKPOINTS.map((cp) => (
+        {checkpoints.map((cp) => (
           <CheckpointAnnotation
             key={cp.id}
             cp={cp}
             progress={progress}
             rm={rm}
+            mobile={isMobile}
           />
         ))}
       </div>
