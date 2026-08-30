@@ -423,11 +423,9 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           <div className="footer-nav-col">
             <h4 className="footer-col-title">Navigation</h4>
             <div className="footer-col-links">
-              <a href="#services" onClick={(e) => handleScrollTo(e, 'services')}>Services</a>
-              <a href="#work" onClick={(e) => handleScrollTo(e, 'work')}>Work</a>
-              <a href="#playroom" onClick={(e) => handleScrollTo(e, 'playroom')}>Playroom</a>
+              <a href="#capabilities" onClick={(e) => handleScrollTo(e, 'capabilities')}>Services</a>
+              <a href="#work-gallery" onClick={(e) => handleScrollTo(e, 'work-gallery')}>Work</a>
               <a href="#testimonials" onClick={(e) => handleScrollTo(e, 'testimonials')}>Testimonials</a>
-              <a href="#about" onClick={(e) => handleScrollTo(e, 'about')}>About Us</a>
             </div>
           </div>
 
@@ -453,9 +451,8 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           <div className="footer-nav-col">
             <h4 className="footer-col-title">Resources</h4>
             <div className="footer-col-links">
-              <a href="#work" onClick={(e) => handleScrollTo(e, 'work')}>Case Studies</a>
-              <a href="#services" onClick={(e) => handleScrollTo(e, 'services')}>Our Stack</a>
-              <a href="#about" onClick={(e) => handleScrollTo(e, 'about')}>Process</a>
+              <a href="#work-gallery" onClick={(e) => handleScrollTo(e, 'work-gallery')}>Case Studies</a>
+              <a href="#capabilities" onClick={(e) => handleScrollTo(e, 'capabilities')}>Our Stack</a>
             </div>
           </div>
         </div>

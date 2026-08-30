@@ -392,18 +392,18 @@ export function Journey() {
 
   const roughOpacity = useTransform(
     progress,
-    [0, 0.055, 0.20, 0.30],
+    [0, 0.035, 0.16, 0.24],
     [0, 1, 1, 0],
     { clamp: true },
   );
-  const roughY = useTransform(progress, [0, 0.055], [14, 0], { clamp: true });
+  const roughY = useTransform(progress, [0, 0.035], [18, 0], { clamp: true });
 
-  const sharpOpacity = useTransform(progress, [0.22, 0.36], [0, 1], { clamp: true });
-  const sharpY = useTransform(progress, [0.22, 0.36], [14, 0], { clamp: true });
-  const sharpScale = useTransform(progress, [0.22, 0.36], [0.98, 1], { clamp: true });
+  const sharpOpacity = useTransform(progress, [0.17, 0.30], [0, 1], { clamp: true });
+  const sharpY = useTransform(progress, [0.17, 0.30], [18, 0], { clamp: true });
+  const sharpScale = useTransform(progress, [0.17, 0.30], [0.97, 1], { clamp: true });
 
-  const finalOpacity = useTransform(progress, [0.52, 0.68], [0, 1], { clamp: true });
-  const finalY = useTransform(progress, [0.52, 0.68], [12, 0], { clamp: true });
+  const finalOpacity = useTransform(progress, [0.40, 0.56], [0, 1], { clamp: true });
+  const finalY = useTransform(progress, [0.40, 0.56], [16, 0], { clamp: true });
 
   const checkpoints = buildCheckpoints(isMobile);
 

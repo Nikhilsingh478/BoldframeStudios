@@ -471,7 +471,7 @@
 
 .bf-journey-section {
   position: relative;
-  height: 220vh;
+  height: 180vh;
   overflow-x: hidden;
   background-color: var(--bf-bg-primary);
 }
@@ -772,7 +772,7 @@
 /* ─── Journey mobile overrides ───────────────────────────────── */
 
 @media (max-width: 767px) {
-  .bf-journey-section  { height: 160vh; }
+  .bf-journey-section  { height: 140vh; }
   .bf-journey-desktop  { display: none; }
   .bf-journey-mobile   { display: block; }
 

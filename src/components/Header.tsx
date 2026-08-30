@@ -3,9 +3,8 @@ import StaggeredMenu from './react-bits/StaggeredMenu';
 export function Header({ onContactClick }: { onContactClick: () => void }) {
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '#hero' },
-    { label: 'Services', ariaLabel: 'View our services', link: '#services' },
-    { label: 'Work', ariaLabel: 'View featured work', link: '#work' },
-    { label: 'About', ariaLabel: 'Learn about us', link: '#about' },
+    { label: 'Services', ariaLabel: 'View our services', link: '#capabilities' },
+    { label: 'Work', ariaLabel: 'View selected work', link: '#work-gallery' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '#contact' }
   ];
 

@@ -14,11 +14,7 @@ const FeaturedWork = lazy(() => import('./components/redesign/FeaturedWork').the
 const WorkGalleryTransition = lazy(() => import('./components/redesign/WorkGalleryTransition').then(m => ({ default: m.WorkGalleryTransition })));
 const WorkGallery = lazy(() => import('./components/redesign/WorkGallery').then(m => ({ default: m.WorkGallery })));
 const BehindTheFrame = lazy(() => import('./components/redesign/BehindTheFrame').then(m => ({ default: m.BehindTheFrame })));
-const Work = lazy(() => import('./components/Work').then(m => ({ default: m.Work })));
-const Playroom = lazy(() => import('./components/Playroom').then(m => ({ default: m.Playroom })));
-const Workflow = lazy(() => import('./components/Workflow').then(m => ({ default: m.Workflow })));
 const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({ default: m.Testimonials })));
-const About = lazy(() => import('./components/About').then(m => ({ default: m.About })));
 const ContactModal = lazy(() => import('./components/ContactModal').then(m => ({ default: m.ContactModal })));
 const FloatingContact = lazy(() => import('./components/FloatingContact').then(m => ({ default: m.FloatingContact })));
 const BackToTop = lazy(() => import('./components/BackToTop').then(m => ({ default: m.BackToTop })));
@@ -140,11 +136,7 @@ export default function App() {
                 <WorkGalleryTransition />
                 <WorkGallery />
                 <BehindTheFrame />
-                <Playroom />
-                <Work />
-                <Workflow />
                 <Testimonials />
-                <About />
               </Suspense>
             </div>
           </main>
