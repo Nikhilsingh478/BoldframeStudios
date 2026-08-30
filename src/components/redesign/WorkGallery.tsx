@@ -2,7 +2,7 @@
  * WorkGallery — Sticky horizontal project exhibition (Chunk 2B)
  *
  * Vertical scroll drives a horizontal track left through 5 real projects.
- * Each project has a distinct composition variant (A / B / C / D / A2).
+ * Each project uses one consistent exhibition frame and a clear metadata rail.
  * GSAP ScrollTrigger pins the sticky viewport and moves the track.
  * Center-focus system promotes the nearest project via opacity + scale +
  *   metadata color shift + accent line expansion + crop mark reveal.
@@ -43,8 +43,6 @@ const GALLERY_PROJECTS = [
     image:    '/p2.webp',
     alt:      'Roseberry Massage Spa — booking-first landing page with warm palette and GSAP motion',
     url:      'https://spas-one.vercel.app/',
-    variant:  'A',
-    gapAfter: '10vw',
   },
   {
     id:       'hbl',
@@ -57,8 +55,6 @@ const GALLERY_PROJECTS = [
     image:    '/p3.webp',
     alt:      'HBL corporate website — clean minimal redesign with Locomotive Scroll',
     url:      'https://hbl-eight.vercel.app/',
-    variant:  'B',
-    gapAfter: '14vw',
   },
   {
     id:       'tea',
@@ -71,8 +67,6 @@ const GALLERY_PROJECTS = [
     image:    '/p4.webp',
     alt:      'Organic Green Tea Store — conversion-focused e-commerce with admin dashboard',
     url:      'https://organic-india-clone-garden.vercel.app/',
-    variant:  'C',
-    gapAfter: '8vw',
   },
   {
     id:       'halloween',
@@ -85,8 +79,6 @@ const GALLERY_PROJECTS = [
     image:    '/p5.webp',
     alt:      'Halloween creative webpage — spooky GSAP micro-interactions and seasonal motion',
     url:      'https://halloween-two-rho.vercel.app/',
-    variant:  'D',
-    gapAfter: '12vw',
   },
   {
     id:       'christmas',
@@ -99,8 +91,6 @@ const GALLERY_PROJECTS = [
     image:    '/p6.webp',
     alt:      'Christmas parallax webpage — layered Rellax.js festive composition',
     url:      'https://christmas-webpage.vercel.app/',
-    variant:  'A2',
-    gapAfter: '0',
   },
 ] as const;
 
@@ -118,10 +108,10 @@ interface GalleryItemProps {
 }
 
 function GalleryItem({ project, frameRef, imageRef, metaRef, indexNumRef, accentRef }: GalleryItemProps) {
-  const { index, title, subtitle, category, year, services, image, alt, url, variant, gapAfter } = project;
+  const { index, title, subtitle, category, year, services, image, alt, url } = project;
 
   const meta = (
-    <div className={`bf-gi-meta bf-gi-meta--${variant}`} ref={metaRef}>
+    <div className="bf-gi-meta" ref={metaRef}>
       <span className="bf-gi-index" ref={indexNumRef}>{index}</span>
       <div className="bf-gi-name-block">
         <h3 className="bf-gi-title">{title}</h3>
@@ -138,10 +128,14 @@ function GalleryItem({ project, frameRef, imageRef, metaRef, indexNumRef, accent
   );
 
   const frame = (
-    <div className={`bf-gi-frame bf-gi-frame--${variant}`} ref={frameRef}>
+    <div className="bf-gi-frame" ref={frameRef}>
       {/* Crop marks — top-left and bottom-right corners; resolve at center focus */}
       <div className="bf-gi-crop-tl" aria-hidden="true" />
       <div className="bf-gi-crop-br" aria-hidden="true" />
+      <div className="bf-gi-frame-label" aria-hidden="true">
+        <span>BFS / SELECTED WORK</span>
+        <span>{index}</span>
+      </div>
 
       <img
         ref={imageRef}
@@ -170,29 +164,14 @@ function GalleryItem({ project, frameRef, imageRef, metaRef, indexNumRef, accent
 
   return (
     <div
-      className={`bf-gi bf-gi--${variant}`}
-      style={{ marginRight: gapAfter }}
+      className="bf-gi"
       aria-label={`Project ${index}: ${title}`}
     >
-      {variant === 'B' ? (
-        /* TYPE B: meta left, frame right */
-        <>
-          <div className="bf-gi-aside">
-            {meta}
-            {cta}
-          </div>
-          {frame}
-        </>
-      ) : (
-        /* TYPE A / A2 / C / D: frame on top, meta below */
-        <>
-          {frame}
-          <div className="bf-gi-below">
-            {meta}
-            {cta}
-          </div>
-        </>
-      )}
+      {frame}
+      <div className="bf-gi-below">
+        {meta}
+        {cta}
+      </div>
     </div>
   );
 }
@@ -475,7 +454,8 @@ export function WorkGallery() {
 
         {/* ── Section meta label ──────────────────────────────────── */}
         <div className="bf-gallery-header" aria-hidden="true">
-          <span className="bf-micro">SELECTED WORK / 002 — 006</span>
+          <span className="bf-micro">SELECTED WORK</span>
+          <span className="bf-gallery-header-count">002 — 006</span>
         </div>
 
         {/* ── Horizontal track ────────────────────────────────────── */}

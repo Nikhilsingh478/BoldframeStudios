@@ -34,9 +34,9 @@
  *
  * 2. Scroll amount vs. progress mismatch (from a previous pass):
  *    end: '+=300vh' / '+=200vh' assumed the section's CSS height
- *    matched exactly. Replaced with end: 'bottom top', which always
- *    equals (actual rendered section height − viewport height),
- *    whatever the CSS says — no hardcoded-vh mismatch possible.
+ *    matched exactly. The trigger now ends at 'bottom bottom', which
+ *    matches the point where the 100vh sticky panel naturally releases
+ *    from its section — no progress continues after the panel leaves.
  *
  * 3. Checkpoint text position broken on mobile (from a previous pass):
  *    The same CHECKPOINTS array/positions were reused for both the
@@ -70,11 +70,11 @@ const MOBILE_BREAKPOINT = 768;
 // ─── Journey checkpoints — separate layouts per breakpoint ─────────
 
 const CHECKPOINT_CONTENT = [
-  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.', activateAt: 0.09 },
-  { id: '02', title: 'FRAME', copy: 'Give the idea structure and direction.', activateAt: 0.27 },
-  { id: '03', title: 'DESIGN', copy: 'Turn strategy into something unmistakable.', activateAt: 0.45 },
-  { id: '04', title: 'BUILD', copy: 'Engineer the experience for the real browser.', activateAt: 0.63 },
-  { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.', activateAt: 0.81 },
+  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.', activateAt: 0.07 },
+  { id: '02', title: 'FRAME', copy: 'Give the idea structure and direction.', activateAt: 0.24 },
+  { id: '03', title: 'DESIGN', copy: 'Turn strategy into something unmistakable.', activateAt: 0.41 },
+  { id: '04', title: 'BUILD', copy: 'Engineer the experience for the real browser.', activateAt: 0.58 },
+  { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.', activateAt: 0.75 },
 ] as const;
 
 // Tuned against DESKTOP_PATH's shape (viewBox 1440x900).
@@ -164,19 +164,19 @@ function CheckpointAnnotation({ cp, progress, rm, mobile }: CPProps) {
 
   const opacity = useTransform(
     progress,
-    [cp.activateAt - 0.02, cp.activateAt + 0.04],
+    [cp.activateAt - 0.035, cp.activateAt + 0.045],
     [0, 1],
     { clamp: true },
   );
   const y = useTransform(
     progress,
-    [cp.activateAt - 0.02, cp.activateAt + 0.04],
+    [cp.activateAt - 0.035, cp.activateAt + 0.045],
     [14, 0],
     { clamp: true },
   );
   const scale = useTransform(
     progress,
-    [cp.activateAt - 0.02, cp.activateAt + 0.04],
+    [cp.activateAt - 0.035, cp.activateAt + 0.045],
     [0.97, 1],
     { clamp: true },
   );
@@ -284,19 +284,22 @@ export function Journey() {
       ctx = gsap.context(() => {
         const mm = gsap.matchMedia();
 
-        // FIX: end: 'bottom top' instead of a hardcoded '+=300vh' /
-        // '+=200vh'. Always equals (this section's real rendered
-        // height − viewport height), so it can't desync from the
-        // CSS's actual height.
+        // FIX: end: 'bottom bottom' instead of a hardcoded distance.
+        // The 100vh sticky panel releases when the section bottom reaches
+        // the viewport bottom; ending here keeps every animation frame
+        // visible inside the panel.
         mm.add(`(min-width: ${MOBILE_BREAKPOINT}px)`, () => {
           ScrollTrigger.create({
             id: 'bf-journey-desktop',
             trigger: section,
             start: 'top top',
-            end: 'bottom top',
+            end: 'bottom bottom',
             scrub: true,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
+              progress.set(self.progress);
+            },
+            onRefresh: (self) => {
               progress.set(self.progress);
             },
           });
@@ -307,10 +310,13 @@ export function Journey() {
             id: 'bf-journey-mobile',
             trigger: section,
             start: 'top top',
-            end: 'bottom top',
+            end: 'bottom bottom',
             scrub: true,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
+              progress.set(self.progress);
+            },
+            onRefresh: (self) => {
               progress.set(self.progress);
             },
           });
@@ -386,18 +392,18 @@ export function Journey() {
 
   const roughOpacity = useTransform(
     progress,
-    [0, 0.06, 0.20, 0.30],
+    [0, 0.055, 0.20, 0.30],
     [0, 1, 1, 0],
     { clamp: true },
   );
-  const roughY = useTransform(progress, [0, 0.06], [24, 0], { clamp: true });
+  const roughY = useTransform(progress, [0, 0.055], [14, 0], { clamp: true });
 
-  const sharpOpacity = useTransform(progress, [0.56, 0.68], [0, 1], { clamp: true });
-  const sharpY = useTransform(progress, [0.56, 0.68], [20, 0], { clamp: true });
-  const sharpScale = useTransform(progress, [0.56, 0.68], [0.97, 1], { clamp: true });
+  const sharpOpacity = useTransform(progress, [0.22, 0.36], [0, 1], { clamp: true });
+  const sharpY = useTransform(progress, [0.22, 0.36], [14, 0], { clamp: true });
+  const sharpScale = useTransform(progress, [0.22, 0.36], [0.98, 1], { clamp: true });
 
-  const finalOpacity = useTransform(progress, [0.88, 1.0], [0, 1], { clamp: true });
-  const finalY = useTransform(progress, [0.88, 1.0], [16, 0], { clamp: true });
+  const finalOpacity = useTransform(progress, [0.52, 0.68], [0, 1], { clamp: true });
+  const finalY = useTransform(progress, [0.52, 0.68], [12, 0], { clamp: true });
 
   const checkpoints = buildCheckpoints(isMobile);
 

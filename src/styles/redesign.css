@@ -202,7 +202,7 @@
 @media (min-width: 1024px) {
   .bf-card-strategy    { grid-column: 1 / 5;  grid-row: 1; min-height: 400px; }
   .bf-card-design      { grid-column: 5 / 13; grid-row: 1; min-height: 340px; }
-  .bf-card-development { grid-column: 1 / 8;  grid-row: 2; min-height: 260px; }
+  .bf-card-development { grid-column: 1 / 7;  grid-row: 2; min-height: 260px; }
   .bf-card-performance { grid-column: 7 / 13; grid-row: 2; min-height: 260px; }
 }
 
@@ -465,13 +465,13 @@
 
 /* ═══════════════════════════════════════════════════════════════════
    JOURNEY — Scroll-drawn process narrative
-   300vh section (200vh mobile). Sticky 100vh inner.
+   220vh section (160vh mobile). Sticky 100vh inner.
    SVG z-index 1 | Typography z-index 2 | Checkpoints z-index 3
    ═══════════════════════════════════════════════════════════════════ */
 
 .bf-journey-section {
   position: relative;
-  height: 300vh;
+  height: 220vh;
   overflow-x: hidden;
   background-color: var(--bf-bg-primary);
 }
@@ -772,7 +772,7 @@
 /* ─── Journey mobile overrides ───────────────────────────────── */
 
 @media (max-width: 767px) {
-  .bf-journey-section  { height: 200vh; }
+  .bf-journey-section  { height: 160vh; }
   .bf-journey-desktop  { display: none; }
   .bf-journey-mobile   { display: block; }
 
@@ -2266,6 +2266,194 @@
   .bf-gi-services,
   .bf-gi-year { opacity: 1 !important; }
   .bf-gi-title { opacity: 1 !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GALLERY REFINEMENT — one clear exhibition frame per project
+   The work should read as a curated sequence, not a stack of unrelated
+   card treatments. These rules intentionally override the earlier
+   experimental composition variants while keeping the same GSAP hooks.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-gallery-track {
+  gap: clamp(5rem, 9vw, 10rem);
+}
+
+.bf-gallery-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.bf-gallery-header-count {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  letter-spacing: 0.12em;
+  color: var(--bf-accent);
+}
+
+.bf-gi {
+  width: min(68vw, 960px);
+  margin-right: 0 !important;
+  opacity: 0.76;
+}
+
+.bf-gi-frame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  border-color: rgba(243, 242, 238, 0.18);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.bf-gi-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(115, 87, 255, 0.08), transparent 32%, rgba(0, 0, 0, 0.15));
+  mix-blend-mode: screen;
+}
+
+.bf-gi-frame-label {
+  position: absolute;
+  inset: 0.85rem 1rem auto;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--bf-font-body);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(243, 242, 238, 0.72);
+  pointer-events: none;
+}
+
+.bf-gi-frame-label span:last-child {
+  color: var(--bf-accent);
+}
+
+.bf-gi-img {
+  transform: scale(1.015);
+  transition: transform 700ms var(--bf-ease-out), filter 700ms var(--bf-ease-out);
+  filter: saturate(0.9);
+}
+
+.bf-gi-below {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2rem;
+}
+
+.bf-gi-meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(9rem, 0.8fr);
+  grid-template-rows: auto auto auto;
+  column-gap: 1.25rem;
+  row-gap: 0.28rem;
+  align-items: end;
+}
+
+.bf-gi-index {
+  grid-row: 1 / span 2;
+  align-self: start;
+  padding-top: 0.12rem;
+  font-size: 0.65rem;
+}
+
+.bf-gi-name-block {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.bf-gi-category {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: start;
+  margin-top: 0;
+  line-height: 1.45;
+}
+
+.bf-gi-meta-row {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.bf-gi-accent-line {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  width: 100%;
+  margin-top: 0.7rem;
+  background: linear-gradient(to right, var(--bf-accent), rgba(115, 87, 255, 0));
+}
+
+.bf-gi-cta {
+  margin-top: 0;
+  white-space: nowrap;
+  padding: 0.55rem 0;
+  border-bottom-color: rgba(243, 242, 238, 0.35);
+}
+
+.bf-gi:hover .bf-gi-img {
+  transform: scale(1.045);
+  filter: saturate(1);
+}
+
+@media (max-width: 767px) {
+  .bf-gallery-track {
+    gap: clamp(3.5rem, 12vw, 5rem);
+  }
+
+  .bf-gi {
+    width: 100%;
+    opacity: 1;
+  }
+
+  .bf-gi-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .bf-gi-below {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .bf-gi-meta {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .bf-gi-category {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .bf-gi-meta-row {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .bf-gi-accent-line {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  .bf-gi-cta {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-gi-img {
+    transform: none !important;
+    filter: none;
+  }
+
+  .bf-gi {
+    opacity: 1 !important;
+  }
 }
 
 

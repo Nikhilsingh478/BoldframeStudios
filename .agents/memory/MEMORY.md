@@ -1,0 +1,1 @@
+- [Sticky scroll trigger alignment](journey-scrolltrigger-sticky.md) — CSS sticky panels should end ScrollTrigger when the parent bottom reaches the viewport bottom.
