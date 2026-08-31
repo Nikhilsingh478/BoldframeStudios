@@ -650,66 +650,6 @@
   margin-top: 0.04em;
 }
 
-/* Browser frame motif — sits at z-index 2 above the SVG path.
-   Path appears to "enter" the frame interior. */
-.bf-frame-motif {
-  position: absolute;
-  left: 57%;
-  top: 15%;
-  width: 150px;
-  height: 108px;
-  border: 1px solid var(--bf-border-mid);
-  border-radius: var(--bf-radius-md);
-  background: var(--bf-bg-surface);
-  z-index: 2;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.bf-fm-chrome {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0 8px;
-  height: 22px;
-  border-bottom: 1px solid var(--bf-border-subtle);
-  background: var(--bf-bg-secondary);
-}
-
-.bf-fm-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  opacity: 0.75;
-  flex-shrink: 0;
-}
-
-.bf-fm-url-bar {
-  flex: 1;
-  height: 8px;
-  background: var(--bf-border-subtle);
-  border-radius: 4px;
-  margin-left: 5px;
-}
-
-.bf-fm-body {
-  padding: 10px 10px 8px;
-}
-
-.bf-fm-line {
-  background: var(--bf-border-mid);
-  border-radius: 3px;
-  display: block;
-}
-
-.bf-fm-block {
-  margin-top: 8px;
-  height: 30px;
-  background: var(--bf-border-subtle);
-  border-radius: 4px;
-  width: 100%;
-}
-
 /* ─── Checkpoint annotations ─────────────────────────────────── */
 
 .bf-cp {

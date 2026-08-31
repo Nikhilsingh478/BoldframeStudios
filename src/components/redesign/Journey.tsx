@@ -70,11 +70,11 @@ const MOBILE_BREAKPOINT = 768;
 // ─── Journey checkpoints — separate layouts per breakpoint ─────────
 
 const CHECKPOINT_CONTENT = [
-  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.', activateAt: 0.07 },
-  { id: '02', title: 'FRAME', copy: 'Give the idea structure and direction.', activateAt: 0.24 },
-  { id: '03', title: 'DESIGN', copy: 'Turn strategy into something unmistakable.', activateAt: 0.41 },
-  { id: '04', title: 'BUILD', copy: 'Engineer the experience for the real browser.', activateAt: 0.58 },
-  { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.', activateAt: 0.75 },
+  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.', activateAt: 0.08 },
+  { id: '02', title: 'FRAME', copy: 'Give the idea structure and direction.', activateAt: 0.22 },
+  { id: '03', title: 'DESIGN', copy: 'Turn strategy into something unmistakable.', activateAt: 0.40 },
+  { id: '04', title: 'BUILD', copy: 'Engineer the experience for the real browser.', activateAt: 0.55 },
+  { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.', activateAt: 0.78 },
 ] as const;
 
 // A compact right-side rail keeps the stage notes legible without
@@ -164,8 +164,8 @@ function CheckpointAnnotation({ cp, progress, rm, mobile }: CPProps) {
 
   const opacity = useTransform(
     progress,
-    [cp.activateAt - 0.035, cp.activateAt + 0.045],
-    [0, 1],
+    [cp.activateAt - 0.035, cp.activateAt + 0.045, cp.activateAt + 0.16, cp.activateAt + 0.28],
+    [0, 1, 1, 0.42],
     { clamp: true },
   );
   const y = useTransform(
@@ -251,7 +251,7 @@ export function Journey() {
           pinSpacing: true,
           start: 'top top',
           end: () => `+=${Math.round(window.innerHeight * (
-            window.innerWidth < MOBILE_BREAKPOINT ? 0.42 : 0.62
+            window.innerWidth < MOBILE_BREAKPOINT ? 0.9 : 1.35
           ))}`,
           scrub: true,
           invalidateOnRefresh: true,
@@ -332,20 +332,13 @@ export function Journey() {
   const pathLengthAnim = useTransform(progress, [0, 0.97], [0, 1], { clamp: true });
   const pathLength = rm ? staticOne : pathLengthAnim;
 
-  const roughOpacity = useTransform(
-    progress,
-    [0, 0.035, 0.16, 0.24],
-    [0, 1, 1, 0],
-    { clamp: true },
-  );
-  const roughY = useTransform(progress, [0, 0.035], [18, 0], { clamp: true });
-
-  const sharpOpacity = useTransform(progress, [0.17, 0.30], [0, 1], { clamp: true });
-  const sharpY = useTransform(progress, [0.17, 0.30], [18, 0], { clamp: true });
-  const sharpScale = useTransform(progress, [0.17, 0.30], [0.97, 1], { clamp: true });
-
-  const finalOpacity = useTransform(progress, [0.40, 0.56], [0, 1], { clamp: true });
-  const finalY = useTransform(progress, [0.40, 0.56], [16, 0], { clamp: true });
+  const roughOpacity = useTransform(progress, [0, 0.04, 0.22, 0.30], [0, 1, 1, 0], { clamp: true });
+  const roughY = useTransform(progress, [0, 0.04, 0.22, 0.30], [18, 0, 0, -14], { clamp: true });
+  const sharpOpacity = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [0, 1, 1, 0], { clamp: true });
+  const sharpY = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [18, 0, 0, -14], { clamp: true });
+  const sharpScale = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [0.97, 1, 1, 0.99], { clamp: true });
+  const finalOpacity = useTransform(progress, [0.63, 0.72], [0, 1], { clamp: true });
+  const finalY = useTransform(progress, [0.63, 0.72], [16, 0], { clamp: true });
 
   const checkpoints = buildCheckpoints(isMobile);
 
