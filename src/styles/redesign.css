@@ -465,13 +465,13 @@
 
 /* ═══════════════════════════════════════════════════════════════════
    JOURNEY — Scroll-drawn process narrative
-   GSAP-pinned 100vh panel with a short, explicit scroll distance.
+   GSAP-pinned responsive panel with a short, explicit scroll distance.
    SVG z-index 1 | Typography z-index 2 | Checkpoints z-index 3
    ═══════════════════════════════════════════════════════════════════ */
 
 .bf-journey-section {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100vh + clamp(120px, 15vh, 150px));
   overflow-x: hidden;
   background-color: var(--bf-bg-primary);
 }
@@ -479,9 +479,9 @@
 .bf-journey-sticky {
   position: relative;
   top: 0;
-  height: 100vh;
+  height: calc(100vh + clamp(120px, 15vh, 150px));
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* SVG overlay — always fills the sticky container */
@@ -572,8 +572,8 @@
 .bf-journey-sharp-label {
   position: absolute;
   right: auto;
-  left: 7%;
-  top: 46%;
+  left: calc(7% + 24px);
+  top: calc(46% - 72px);
   font-family: var(--bf-font-display);
   font-size: clamp(1.5rem, 3vw, 3rem);
   font-weight: 700;
@@ -584,8 +584,8 @@
 
 .bf-journey-experience {
   position: absolute;
-  left: 7%;
-  top: 53%;
+  left: calc(7% + 24px);
+  top: calc(53% - 72px);
   font-family: var(--bf-font-display);
   font-size: clamp(2.4rem, 5.5vw, 6rem);
   font-weight: 800;
@@ -600,7 +600,7 @@
   position: absolute;
   right: auto;
   left: 7%;
-  top: 70%;
+  top: calc(70% + 135px);
   font-family: var(--bf-font-body);
   font-size: var(--bf-text-sm);
   font-weight: 500;
@@ -612,7 +612,7 @@
 .bf-journey-final-text {
   position: absolute;
   left: 7%;
-  top: 78%;
+  top: calc(78% + 135px);
   display: flex;
   flex-direction: column;
 }
@@ -728,14 +728,14 @@
 
   .bf-journey-sharp-label {
     right: auto;
-    left: 7%;
-    top: 43%;
+    left: calc(7% + 22px);
+    top: calc(43% - 64px);
     font-size: clamp(1.3rem, 6vw, 2rem);
   }
 
   .bf-journey-experience {
-    left: 7%;
-    top: 50%;
+    left: calc(7% + 22px);
+    top: calc(50% - 64px);
     font-size: clamp(1.6rem, 7.5vw, 2.8rem);
     white-space: normal;
     max-width: 52%;
@@ -744,12 +744,12 @@
   .bf-journey-result-label {
     right: auto;
     left: 7%;
-    top: 69%;
+    top: calc(69% + 120px);
   }
 
   .bf-journey-final-text {
     left: 7%;
-    top: 74%;
+    top: calc(74% + 120px);
     max-width: 62%;
   }
 
