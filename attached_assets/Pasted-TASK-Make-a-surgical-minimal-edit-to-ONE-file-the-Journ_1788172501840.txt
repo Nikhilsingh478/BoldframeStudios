@@ -1,0 +1,71 @@
+TASK: Make a surgical, minimal edit to ONE file: the Journey component 
+(the scroll-drawn "process narrative" section, class bf-journey-section). 
+Do NOT touch any other component, any other CSS block, the Hero, 
+Manifesto, FeaturedWork, WorkGallery, or BehindTheFrame sections. Do NOT 
+refactor, rename, reformat, or "improve" anything beyond what is listed 
+below. If you believe a change outside this file is required, STOP and 
+tell me instead of making it.
+
+CONTEXT: This component pins for one scroll pass and reveals content in 
+three narrative beats: "FROM ROUGH IDEA" → "SHARP EXPERIENCE" → "THE 
+RESULT?" — plus 5 checkpoint annotations (DISCOVER, FRAME, DESIGN, 
+BUILD, REFINE) that appear alongside them. The current bug: some of 
+these opacity/y motion values were only given a fade-IN, never a fade-
+OUT, so multiple beats stack up and stay on screen simultaneously by 
+the end of the scroll — that's the "cluttered" look. Checkpoints also 
+stay at full opacity forever once triggered, adding to the pile-up.
+
+REQUIRED END STATE — verify each of these exact values exists in the 
+Journey component function body. If any differ, replace ONLY that line, 
+preserving all surrounding code, imports, comments, and structure 
+exactly as-is:
+
+1. CHECKPOINT_CONTENT activateAt values must be exactly:
+   01 DISCOVER: 0.08
+   02 FRAME: 0.22
+   03 DESIGN: 0.40
+   04 BUILD: 0.55
+   05 REFINE: 0.78
+
+2. Inside CheckpointAnnotation, the `opacity` useTransform must use 
+   FOUR keyframe points (not two), so each checkpoint dims after its 
+   moment passes instead of staying fully lit:
+   useTransform(progress,
+     [cp.activateAt - 0.035, cp.activateAt + 0.045, cp.activateAt + 0.16, cp.activateAt + 0.28],
+     [0, 1, 1, 0.42],
+     { clamp: true })
+   (y and scale transforms for the checkpoint stay as 2-point entrance-only, unchanged.)
+
+3. Inside the Journey() function, the three phase transforms must be:
+   const roughOpacity = useTransform(progress, [0, 0.04, 0.22, 0.30], [0, 1, 1, 0], { clamp: true });
+   const roughY = useTransform(progress, [0, 0.04, 0.22, 0.30], [18, 0, 0, -14], { clamp: true });
+   const sharpOpacity = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [0, 1, 1, 0], { clamp: true });
+   const sharpY = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [18, 0, 0, -14], { clamp: true });
+   const sharpScale = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [0.97, 1, 1, 0.99], { clamp: true });
+   const finalOpacity = useTransform(progress, [0.63, 0.72], [0, 1], { clamp: true });
+   const finalY = useTransform(progress, [0.63, 0.72], [16, 0], { clamp: true });
+   Note: finalOpacity/finalY intentionally stay 2-point (fade-in only, 
+   no fade-out) — it's the last beat and should remain visible.
+
+4. The ScrollTrigger `end` callback inside buildTrigger() must read:
+   end: () => `+=${Math.round(window.innerHeight * (
+     window.innerWidth < MOBILE_BREAKPOINT ? 0.9 : 1.35
+   ))}`,
+
+5. Confirm there is NO CSS anywhere in the stylesheet for 
+   .bf-frame-motif, .bf-fm-chrome, .bf-fm-dot, .bf-fm-url-bar, 
+   .bf-fm-body, .bf-fm-line, .bf-fm-block — these are dead rules with 
+   no matching JSX. If present, delete only these rules, nothing 
+   adjacent.
+
+DO NOT CHANGE: the SVG path data (DESKTOP_PATH/MOBILE_PATH), the 
+DESKTOP_POSITIONS/MOBILE_POSITIONS coordinates, the pin/refresh/
+MutationObserver logic in the useEffect, any className, any JSX 
+structure, any CSS positioning (top/left percentages) for the text 
+blocks or checkpoints, or anything in the reduced-motion media query.
+
+AFTER EDITING: show me a diff of exactly what changed, limited to the 
+lines above. Do not run a build, do not touch package.json, do not 
+touch any file other than the one containing the Journey component and 
+(only if step 5 finds dead rules) the stylesheet containing 
+.bf-journey-section.
