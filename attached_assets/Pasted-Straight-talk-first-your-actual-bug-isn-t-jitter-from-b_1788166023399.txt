@@ -1,0 +1,89 @@
+Straight talk first: your actual bug isn't jitter from bad code hygiene — it's a design/animation-sequencing problem. Walking through the transform math:
+
+- `roughOpacity` fades in, holds, and fades **out** (0.16→0.24). Fine.
+- `sharpOpacity` only fades **in** (0.17→0.30) — it never fades out, so it sits on screen forever after.
+- `finalOpacity` only fades **in** (0.40→0.56) — same thing.
+- Every checkpoint's opacity transform clamps to `1` once passed and never comes back down.
+
+Net effect: by the time you're 60% through the scroll, you have "SHARP EXPERIENCE," "THE RESULT," **and all 5 checkpoint annotations** simultaneously at full opacity on one 100vh screen. That's the clutter — it's not a rendering bug, it's that nothing you show ever leaves. A story needs beats that end, not beats that pile up.
+
+Secondary issue: the checkpoint `activateAt` values (0.07, 0.24, 0.41, 0.58, 0.75) and the text-block fade windows overlap heavily around 0.17–0.41, so several animations fire in the same few frames of scroll — that reads as jittery even though each individual transform is smooth.
+
+There's also one dead leftover: `.bf-frame-motif` / `.bf-fm-*` CSS (~40 lines) has no matching JSX anywhere in the component. It's not causing the visual bug, but it's confusing anyone reading the file later. Delete it.
+
+Here's the actual fix — three clean phases (Rough → Sharp → Result), each fades in, holds, and fades out before the next begins, and checkpoints dim to a "completed" state instead of staying lit forever:
+
+```tsx
+// ─── Derived animation values from progress ────────────────────────
+const staticOne = useMotionValue(1);
+const pathLengthAnim = useTransform(progress, [0, 0.97], [0, 1], { clamp: true });
+const pathLength = rm ? staticOne : pathLengthAnim;
+
+// PHASE A — "FROM ROUGH IDEA"  (0.00 → 0.30)
+const roughOpacity = useTransform(progress, [0, 0.04, 0.22, 0.30], [0, 1, 1, 0], { clamp: true });
+const roughY       = useTransform(progress, [0, 0.04, 0.22, 0.30], [18, 0, 0, -14], { clamp: true });
+
+// PHASE B — "SHARP EXPERIENCE"  (0.28 → 0.65)
+const sharpOpacity = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [0, 1, 1, 0], { clamp: true });
+const sharpY       = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [18, 0, 0, -14], { clamp: true });
+const sharpScale   = useTransform(progress, [0.28, 0.34, 0.57, 0.65], [0.97, 1, 1, 0.99], { clamp: true });
+
+// PHASE C — "THE RESULT?"  (0.63 → 1.0, this is the finale so it stays)
+const finalOpacity = useTransform(progress, [0.63, 0.72], [0, 1], { clamp: true });
+const finalY       = useTransform(progress, [0.63, 0.72], [16, 0], { clamp: true });
+```
+
+Update the checkpoint content to match the three phases instead of being scattered independently:
+
+```tsx
+const CHECKPOINT_CONTENT = [
+  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.', activateAt: 0.08 },
+  { id: '02', title: 'FRAME',    copy: 'Give the idea structure and direction.', activateAt: 0.22 },
+  { id: '03', title: 'DESIGN',   copy: 'Turn strategy into something unmistakable.', activateAt: 0.40 },
+  { id: '04', title: 'BUILD',    copy: 'Engineer the experience for the real browser.', activateAt: 0.55 },
+  { id: '05', title: 'REFINE',   copy: 'Remove friction until everything feels inevitable.', activateAt: 0.78 },
+] as const;
+```
+
+And the key fix — checkpoints dim once their beat has passed, instead of staying at full brightness forever:
+
+```tsx
+function CheckpointAnnotation({ cp, progress, rm, mobile }: CPProps) {
+  const dotRef = useRef<HTMLDivElement>(null);
+  const activated = useRef(false);
+
+  // Rises to full opacity for its beat, then settles to a dim
+  // "completed" state so it doesn't compete with whatever comes next.
+  const opacity = useTransform(
+    progress,
+    [cp.activateAt - 0.035, cp.activateAt + 0.045, cp.activateAt + 0.16, cp.activateAt + 0.28],
+    [0, 1, 1, 0.42],
+    { clamp: true },
+  );
+  const y = useTransform(
+    progress,
+    [cp.activateAt - 0.035, cp.activateAt + 0.045],
+    [14, 0],
+    { clamp: true },
+  );
+  const scale = useTransform(
+    progress,
+    [cp.activateAt - 0.035, cp.activateAt + 0.045],
+    [0.97, 1],
+    { clamp: true },
+  );
+
+  // ...rest unchanged
+```
+
+Finally, give the section enough scroll room to let three sequential phases breathe instead of cramming them into ~60vh of scroll:
+
+```tsx
+end: () => `+=${Math.round(window.innerHeight * (
+  window.innerWidth < MOBILE_BREAKPOINT ? 0.9 : 1.35
+))}`,
+```
+
+That's the whole fix. Everything else in the file — the MutationObserver refresh, the mobile/desktop path split, the `bottom bottom` end point — is doing what it's supposed to and isn't part of the clutter problem, so I left it alone rather than rewriting things that already work.
+
+One more thing worth doing while you're in there: delete the `.bf-frame-motif`, `.bf-fm-chrome`, `.bf-fm-dot`, `.bf-fm-url-bar`, `.bf-fm-body`, `.bf-fm-line`, `.bf-fm-block` CSS rules — dead code with no corresponding markup, just noise for the next person reading this file.
