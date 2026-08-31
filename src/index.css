@@ -132,6 +132,10 @@
 
 @layer base {
 
+  html {
+    position: relative;
+  }
+
   *,
   :after,
   :before,

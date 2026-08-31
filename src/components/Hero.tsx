@@ -22,7 +22,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
 
   const scrollToWork = () => {
-    const element = document.getElementById('work');
+    const element = document.getElementById('work-gallery');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }

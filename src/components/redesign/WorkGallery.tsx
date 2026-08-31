@@ -101,13 +101,12 @@ type GalleryProject = (typeof GALLERY_PROJECTS)[number];
 interface GalleryItemProps {
   project:      GalleryProject;
   frameRef:     (el: HTMLDivElement | null) => void;
-  imageRef:     (el: HTMLImageElement | null) => void;
   metaRef:      (el: HTMLDivElement | null) => void;
   indexNumRef:  (el: HTMLSpanElement | null) => void;
   accentRef:    (el: HTMLDivElement | null) => void;
 }
 
-function GalleryItem({ project, frameRef, imageRef, metaRef, indexNumRef, accentRef }: GalleryItemProps) {
+function GalleryItem({ project, frameRef, metaRef, indexNumRef, accentRef }: GalleryItemProps) {
   const { index, title, subtitle, category, year, services, image, alt, url } = project;
 
   const meta = (
@@ -132,17 +131,12 @@ function GalleryItem({ project, frameRef, imageRef, metaRef, indexNumRef, accent
       {/* Crop marks — top-left and bottom-right corners; resolve at center focus */}
       <div className="bf-gi-crop-tl" aria-hidden="true" />
       <div className="bf-gi-crop-br" aria-hidden="true" />
-      <div className="bf-gi-frame-label" aria-hidden="true">
-        <span>BFS / SELECTED WORK</span>
-        <span>{index}</span>
-      </div>
 
       <img
-        ref={imageRef}
         src={image}
         alt={alt}
         className="bf-gi-img"
-        loading="lazy"
+        loading="eager"
         decoding="async"
         sizes="(max-width: 767px) 100vw, (max-width: 1023px) 80vw, 66vw"
       />
@@ -213,7 +207,6 @@ export function WorkGallery() {
 
   // Ref arrays populated by callback refs during render
   const frameRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const imageRefs    = useRef<(HTMLImageElement | null)[]>([]);
   const metaRefs     = useRef<(HTMLDivElement | null)[]>([]);
   const indexNumRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const accentRefs   = useRef<(HTMLDivElement | null)[]>([]);
@@ -271,6 +264,16 @@ export function WorkGallery() {
 
         // Set section height so scroll space = pin duration + horizontal travel
         section.style.height = `${vh + distance}px`;
+        gsap.set(track, { x: 0 });
+
+        // Cache frame geometry once per build. Reading layout inside onUpdate
+        // forced a reflow on every scroll frame and caused visible jitter.
+        const trackRect = track.getBoundingClientRect();
+        const frameCenters = frameRefs.current.map((frame) => {
+          if (!frame) return 0;
+          const rect = frame.getBoundingClientRect();
+          return rect.left + rect.width / 2 - trackRect.left;
+        });
 
         // ── Initial states for differential-motion elements ─────────
         // Crop marks start dim (resolve toward center)
@@ -300,29 +303,21 @@ export function WorkGallery() {
             start:               'top top',
             end:                 () => `+=${distance}`,
             pin:                 sticky,
-            scrub:               0.7,
+            scrub:               true,
             invalidateOnRefresh: true,
             anticipatePin:       1,
 
             onUpdate(self) {
               const p = self.progress;
 
-              // ── §09 Internal image parallax (−3% → +3% over full scroll) ──
-              imageRefs.current.forEach((img) => {
-                if (img) gsap.set(img, { xPercent: 3 - p * 6 });
-              });
+              const trackOffset = -distance * p;
 
-              // ── §09 Metadata x-drift (slightly lagging differential) ──
-              // Each meta block drifts 20px opposite to scroll direction at a
-              // rate 15% slower than the track — simulating parallax depth.
+              // Metadata gets a restrained differential drift without any
+              // layout reads during scrolling.
               metaRefs.current.forEach((meta, i) => {
                 if (!meta) return;
-                const frame = frameRefs.current[i];
-                if (!frame) return;
-                const rect    = frame.getBoundingClientRect();
-                const centerX = (rect.left + rect.right) / 2;
-                const dist    = centerX - vw / 2;  // signed: negative = left of center
-                // Pull metadata slightly opposite — creates tension with frame
+                const centerX = trackRect.left + trackOffset + frameCenters[i];
+                const dist = centerX - vw / 2;
                 const xShift  = Math.max(-20, Math.min(20, dist * 0.04));
                 gsap.set(meta, { x: xShift });
               });
@@ -330,10 +325,7 @@ export function WorkGallery() {
               // ── §09 Index number subtle vertical float ─────────────────
               indexNumRefs.current.forEach((num, i) => {
                 if (!num) return;
-                const frame = frameRefs.current[i];
-                if (!frame) return;
-                const rect    = frame.getBoundingClientRect();
-                const centerX = (rect.left + rect.right) / 2;
+                const centerX = trackRect.left + trackOffset + frameCenters[i];
                 const dist    = Math.abs(centerX - vw / 2);
                 // Float up 4px when out of focus, settle at 0 when in center
                 const yFloat  = Math.min(4, dist * 0.008);
@@ -344,8 +336,7 @@ export function WorkGallery() {
               const viewportCenter = vw / 2;
               frameRefs.current.forEach((frame, i) => {
                 if (!frame) return;
-                const rect     = frame.getBoundingClientRect();
-                const centerX  = (rect.left + rect.right) / 2;
+                const centerX  = trackRect.left + trackOffset + frameCenters[i];
                 const absDist  = Math.abs(centerX - viewportCenter);
                 // Normalised: 1 = fully focused (center), 0 = muted (>55vw away)
                 const focus    = Math.max(0, 1 - absDist / (vw * 0.55));
@@ -415,8 +406,7 @@ export function WorkGallery() {
     document.fonts.ready.then(() => {
       requestAnimationFrame(() => {
         buildGallery();
-        // Second rAF: let other ST triggers (Manifesto, FeaturedWork) insert
-        // pin-spacers so our section offset is accurate before ST.refresh()
+        // Second rAF lets sibling pin-spacers settle before refresh.
         requestAnimationFrame(() => ScrollTrigger.refresh());
       });
     });
@@ -428,7 +418,7 @@ export function WorkGallery() {
         requestAnimationFrame(buildGallery);
       }, 140);
     });
-    ro.observe(section);
+    ro.observe(track);
 
     return () => {
       clearTimeout(resizeTimer);
@@ -469,7 +459,6 @@ export function WorkGallery() {
               key={project.id}
               project={project}
               frameRef={(el)    => { frameRefs.current[i]    = el; }}
-              imageRef={(el)    => { imageRefs.current[i]    = el; }}
               metaRef={(el)     => { metaRefs.current[i]     = el; }}
               indexNumRef={(el) => { indexNumRefs.current[i] = el; }}
               accentRef={(el)   => { accentRefs.current[i]   = el; }}

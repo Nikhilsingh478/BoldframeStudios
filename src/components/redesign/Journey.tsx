@@ -77,24 +77,24 @@ const CHECKPOINT_CONTENT = [
   { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.', activateAt: 0.75 },
 ] as const;
 
-// Tuned against DESKTOP_PATH's shape (viewBox 1440x900).
+// A compact right-side rail keeps the stage notes legible without
+// competing with the three main narrative beats.
 const DESKTOP_POSITIONS = [
-  { left: '6%', top: '15%' },
-  { left: '68%', top: '26%' },
-  { left: '6%', top: '50%' },
-  { left: '68%', top: '68%' },
-  { left: '30%', top: '85%' },
+  { left: '72%', top: '17%' },
+  { left: '76%', top: '32%' },
+  { left: '72%', top: '47%' },
+  { left: '76%', top: '62%' },
+  { left: '72%', top: '77%' },
 ] as const;
 
-// Tuned against MOBILE_PATH's shape (viewBox 390x760), kept clear of
-// the big FROM/SHARP/RESULT text blocks that stack centrally on narrow
-// screens.
+// On mobile the rail stays on the right and copies are hidden by CSS,
+// leaving a simple sequence of stage names beside the narrative.
 const MOBILE_POSITIONS = [
-  { left: '6%', top: '8%' },
-  { left: '54%', top: '24%' },
-  { left: '8%', top: '42%' },
-  { left: '52%', top: '60%' },
-  { left: '14%', top: '78%' },
+  { left: '58%', top: '13%' },
+  { left: '62%', top: '30%' },
+  { left: '58%', top: '47%' },
+  { left: '62%', top: '64%' },
+  { left: '58%', top: '81%' },
 ] as const;
 
 function buildCheckpoints(mobile: boolean) {
@@ -215,44 +215,6 @@ function CheckpointAnnotation({ cp, progress, rm, mobile }: CPProps) {
   );
 }
 
-// ─── Frame motif ──────────────────────────────────────────────────
-
-interface FrameMotifProps {
-  pathProgress: MotionValue<number>;
-  rm: boolean;
-}
-
-function FrameMotif({ pathProgress, rm }: FrameMotifProps) {
-  const opacity = useTransform(
-    pathProgress,
-    [0.20, 0.32, 0.62, 0.74],
-    [0, 1, 1, 0],
-    { clamp: true },
-  );
-  const scale = useTransform(pathProgress, [0.20, 0.55], [0.93, 1.0], { clamp: true });
-
-  return (
-    <motion.div
-      className="bf-frame-motif"
-      aria-hidden="true"
-      style={{ opacity: rm ? 1 : opacity, scale: rm ? 1 : scale }}
-    >
-      <div className="bf-fm-chrome">
-        <span className="bf-fm-dot" style={{ background: '#FF5F57' }} />
-        <span className="bf-fm-dot" style={{ background: '#FEBC2E' }} />
-        <span className="bf-fm-dot" style={{ background: '#28C840' }} />
-        <div className="bf-fm-url-bar" />
-      </div>
-      <div className="bf-fm-body">
-        <div className="bf-fm-line" style={{ width: '54%', height: '9px' }} />
-        <div className="bf-fm-line" style={{ width: '78%', height: '6px', marginTop: '10px' }} />
-        <div className="bf-fm-line" style={{ width: '66%', height: '6px', marginTop: '6px' }} />
-        <div className="bf-fm-block" />
-      </div>
-    </motion.div>
-  );
-}
-
 // ─── Main Journey section ─────────────────────────────────────────
 
 export function Journey() {
@@ -282,44 +244,24 @@ export function Journey() {
       if (ctx) ctx.revert();
 
       ctx = gsap.context(() => {
-        const mm = gsap.matchMedia();
-
-        // FIX: end: 'bottom bottom' instead of a hardcoded distance.
-        // The 100vh sticky panel releases when the section bottom reaches
-        // the viewport bottom; ending here keeps every animation frame
-        // visible inside the panel.
-        mm.add(`(min-width: ${MOBILE_BREAKPOINT}px)`, () => {
-          ScrollTrigger.create({
-            id: 'bf-journey-desktop',
-            trigger: section,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: true,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              progress.set(self.progress);
-            },
-            onRefresh: (self) => {
-              progress.set(self.progress);
-            },
-          });
-        });
-
-        mm.add(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`, () => {
-          ScrollTrigger.create({
-            id: 'bf-journey-mobile',
-            trigger: section,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: true,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              progress.set(self.progress);
-            },
-            onRefresh: (self) => {
-              progress.set(self.progress);
-            },
-          });
+        ScrollTrigger.create({
+          id: 'bf-journey',
+          trigger: section,
+          pin: section,
+          pinSpacing: true,
+          start: 'top top',
+          end: () => `+=${Math.round(window.innerHeight * (
+            window.innerWidth < MOBILE_BREAKPOINT ? 0.42 : 0.62
+          ))}`,
+          scrub: true,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            progress.set(self.progress);
+          },
+          onRefresh: (self) => {
+            progress.set(self.progress);
+          },
         });
       }, section);
     }
@@ -337,7 +279,7 @@ export function Journey() {
     const lateRefresh = window.setTimeout(() => ScrollTrigger.refresh(), 1200);
 
     const ro = new ResizeObserver(() => {
-      requestAnimationFrame(buildTrigger);
+      requestAnimationFrame(() => ScrollTrigger.refresh());
     });
     ro.observe(section);
 
@@ -378,7 +320,7 @@ export function Journey() {
       window.clearTimeout(stopObserving);
       ctx?.revert();
       ScrollTrigger.getAll()
-        .filter(t => ['bf-journey-desktop', 'bf-journey-mobile'].includes(t.vars?.id ?? ''))
+        .filter(t => t.vars?.id === 'bf-journey')
         .forEach(t => t.kill());
       progress.set(0);
     };
@@ -463,9 +405,6 @@ export function Journey() {
             />
           </svg>
         </div>
-
-        {/* ── Frame motif ─────────────────────────────────────── */}
-        <FrameMotif pathProgress={progress} rm={rm} />
 
         {/* ── Section metadata ────────────────────────────────── */}
         <div className="bf-journey-meta" aria-hidden="true">
