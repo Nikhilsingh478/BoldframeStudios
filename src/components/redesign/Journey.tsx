@@ -34,9 +34,8 @@
  *
  * 2. Scroll amount vs. progress mismatch (from a previous pass):
  *    end: '+=300vh' / '+=200vh' assumed the section's CSS height
- *    matched exactly. The trigger now includes the panel's responsive
- *    extension so the longer final beat has enough room to resolve
- *    from its section — no progress continues after the panel leaves.
+ *    matched exactly. The trigger uses a short, explicit viewport-relative
+ *    travel distance so progress stays owned by the page scroll.
  *
  * 3. Checkpoint text position broken on mobile (from a previous pass):
  *    The same CHECKPOINTS array/positions were reused for both the
@@ -66,8 +65,6 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const MOBILE_BREAKPOINT = 768;
-const JOURNEY_EXTENSION_DESKTOP = 135;
-const JOURNEY_EXTENSION_MOBILE = 120;
 
 // ─── Journey checkpoints — separate layouts per breakpoint ─────────
 
@@ -251,10 +248,6 @@ export function Journey() {
           start: 'top top',
           end: () => `+=${Math.round(window.innerHeight * (
             window.innerWidth < MOBILE_BREAKPOINT ? 0.9 : 1.35
-           ) + (
-             window.innerWidth < MOBILE_BREAKPOINT
-               ? JOURNEY_EXTENSION_MOBILE
-               : JOURNEY_EXTENSION_DESKTOP
            ))}`,
           scrub: true,
           invalidateOnRefresh: true,

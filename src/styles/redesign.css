@@ -471,17 +471,17 @@
 
 .bf-journey-section {
   position: relative;
-  min-height: calc(100vh + clamp(120px, 15vh, 150px));
-  overflow-x: hidden;
+  min-height: 100vh;
+  overflow: clip;
   background-color: var(--bf-bg-primary);
 }
 
 .bf-journey-sticky {
   position: relative;
   top: 0;
-  height: calc(100vh + clamp(120px, 15vh, 150px));
+  height: 100vh;
   width: 100%;
-  overflow: visible;
+  overflow: clip;
 }
 
 /* SVG overlay — always fills the sticky container */
@@ -600,7 +600,7 @@
   position: absolute;
   right: auto;
   left: 7%;
-  top: calc(70% + 135px);
+  top: 70%;
   font-family: var(--bf-font-body);
   font-size: var(--bf-text-sm);
   font-weight: 500;
@@ -612,7 +612,7 @@
 .bf-journey-final-text {
   position: absolute;
   left: 7%;
-  top: calc(78% + 135px);
+  top: 78%;
   display: flex;
   flex-direction: column;
 }
@@ -744,12 +744,12 @@
   .bf-journey-result-label {
     right: auto;
     left: 7%;
-    top: calc(69% + 120px);
+    top: 69%;
   }
 
   .bf-journey-final-text {
     left: 7%;
-    top: calc(74% + 120px);
+    top: 74%;
     max-width: 62%;
   }
 
