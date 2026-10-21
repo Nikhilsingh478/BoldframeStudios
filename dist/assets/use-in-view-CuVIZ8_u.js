@@ -1,0 +1,1 @@
+import{r as f}from"./radix-D4tmaoiR.js";import{al as p}from"./motion-B42wbOFf.js";function w(e,{root:t,margin:n,amount:s,once:r=!1,initial:o=!1}={}){const[u,i]=f.useState(o);return f.useEffect(()=>{if(!e.current||r&&u)return;const a=()=>(i(!0),r?void 0:()=>i(!1)),c={root:t&&t.current||void 0,margin:n,amount:s};return p(e.current,a,c)},[t,e,n,r,s]),u}export{w as u};

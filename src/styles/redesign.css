@@ -1,0 +1,3324 @@
+/*
+ * BoldFrame Redesign — Post-Hero Design System
+ * Scoped entirely under .boldframe-redesign
+ * Hero is LOCKED — nothing in this file touches it.
+ *
+ * Fonts already loaded in index.html:
+ *   DISPLAY  → 'DM Sans'  (variable weight 100–1000)
+ *   BODY     → 'Inter'    (400, 500, 600, 700)
+ *   MICRO    → 'Inter'    uppercase + wide tracking
+ */
+
+/* ─── Design Tokens ──────────────────────────────────────────────── */
+
+.boldframe-redesign {
+  /* Backgrounds — near-black graphite range, never flat black */
+  --bf-bg-base:      #08090B; /* deepest */
+  --bf-bg-primary:   #0A0B0E; /* default section bg */
+  --bf-bg-secondary: #0C0D10; /* slightly elevated */
+  --bf-bg-surface:   #111318; /* cards, panels */
+  --bf-bg-inset:     #0E0F13; /* subtle inset / bento cells */
+
+  /* Text */
+  --bf-text-primary:   #F3F2EE; /* warm near-white */
+  --bf-text-secondary: #96989F; /* muted mid-tone */
+  --bf-text-tertiary:  #5A5C63; /* faintest labels */
+
+  /* Accents */
+  --bf-accent:         #7357FF; /* electric violet — primary */
+  --bf-accent-dim:     rgba(115, 87, 255, 0.12); /* ghost fills */
+  --bf-accent-glow:    rgba(115, 87, 255, 0.25); /* subtle halos */
+  --bf-cyan:           #55DDF5; /* use VERY sparingly */
+  --bf-cyan-dim:       rgba(85, 221, 245, 0.08);
+
+  /* Borders */
+  --bf-border-subtle:  rgba(243, 242, 238, 0.06);
+  --bf-border-mid:     rgba(243, 242, 238, 0.12);
+  --bf-border-strong:  rgba(243, 242, 238, 0.20);
+  --bf-border-accent:  rgba(115, 87, 255, 0.30);
+
+  /* Typography */
+  --bf-font-display: 'DM Sans', -apple-system, sans-serif;
+  --bf-font-body:    'Inter', -apple-system, sans-serif;
+
+  /* Type scale — display uses clamp() for fluid sizing */
+  --bf-text-micro:   0.6875rem;   /* 11px — uppercase metadata */
+  --bf-text-xs:      0.75rem;     /* 12px */
+  --bf-text-sm:      0.875rem;    /* 14px */
+  --bf-text-base:    1rem;        /* 16px */
+  --bf-text-md:      1.125rem;    /* 18px */
+  --bf-text-lg:      1.375rem;    /* 22px */
+  --bf-text-xl:      1.75rem;     /* 28px */
+  --bf-text-2xl:     clamp(2rem,   3.5vw, 2.75rem);
+  --bf-text-3xl:     clamp(2.5rem, 5vw,   4rem);
+  --bf-text-4xl:     clamp(3rem,   6.5vw, 5.5rem);
+  --bf-text-display: clamp(4rem,   9vw,   9rem);   /* hero-scale editorial moments */
+  --bf-text-giant:   clamp(5rem,   12vw,  12rem);  /* full-viewport spectacle */
+
+  /* Spacing rhythm */
+  --bf-space-xs:   0.5rem;
+  --bf-space-sm:   1rem;
+  --bf-space-md:   1.5rem;
+  --bf-space-lg:   2.5rem;
+  --bf-space-xl:   4rem;
+  --bf-space-2xl:  6rem;
+  --bf-space-3xl:  9rem;
+  --bf-space-4xl:  12rem;
+
+  /* Section padding — shrinks on mobile */
+  --bf-section-py: clamp(5rem, 10vw, 9rem);
+  --bf-section-px: clamp(1.25rem, 5vw, 5rem);
+
+  /* Radii */
+  --bf-radius-xs: 2px;
+  --bf-radius-sm: 4px;
+  --bf-radius-md: 8px;
+  --bf-radius-lg: 14px;
+  --bf-radius-xl: 20px;
+
+  /* Transitions */
+  --bf-ease-out:      cubic-bezier(0.16, 1, 0.3, 1);       /* snappy settle */
+  --bf-ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);      /* deliberate */
+  --bf-ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);   /* slight overshoot */
+  --bf-duration-fast: 200ms;
+  --bf-duration-mid:  400ms;
+  --bf-duration-slow: 700ms;
+
+  /* Base styles for the redesign zone */
+  background-color: var(--bf-bg-primary);
+  color: var(--bf-text-primary);
+  font-family: var(--bf-font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────── */
+
+/* DISPLAY — DM Sans, large architectural type */
+.bf-display {
+  font-family: var(--bf-font-display);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.bf-display-giant  { font-size: var(--bf-text-giant);   }
+.bf-display-xl     { font-size: var(--bf-text-display); }
+.bf-display-lg     { font-size: var(--bf-text-4xl);     }
+.bf-display-md     { font-size: var(--bf-text-3xl);     }
+.bf-display-sm     { font-size: var(--bf-text-2xl);     }
+
+/* BODY — Inter, highly readable */
+.bf-body {
+  font-family: var(--bf-font-body);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+}
+
+.bf-body-lg  { font-size: var(--bf-text-lg); }
+.bf-body-md  { font-size: var(--bf-text-base); }
+.bf-body-sm  { font-size: var(--bf-text-sm); }
+
+/* MICRO — uppercase metadata labels */
+.bf-micro {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+/* Accent text */
+.bf-text-accent { color: var(--bf-accent); }
+.bf-text-cyan   { color: var(--bf-cyan);   }
+.bf-text-muted  { color: var(--bf-text-secondary); }
+.bf-text-faint  { color: var(--bf-text-tertiary); }
+
+/* ─── Layout Helpers ─────────────────────────────────────────────── */
+
+/* Max-width container with asymmetric left-leaning padding */
+.bf-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--bf-section-px);
+}
+
+/* Standard section padding */
+.bf-section {
+  padding-block: var(--bf-section-py);
+}
+
+/* Asymmetric grid — 12 columns with left emphasis */
+.bf-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* Edge-to-edge bleeds */
+.bf-bleed-left  { margin-left:  calc(-1 * var(--bf-section-px)); }
+.bf-bleed-right { margin-right: calc(-1 * var(--bf-section-px)); }
+
+/* ─── Surface / Border Utilities ─────────────────────────────────── */
+
+.bf-surface {
+  background-color: var(--bf-bg-surface);
+  border: 1px solid var(--bf-border-subtle);
+}
+
+.bf-surface-inset {
+  background-color: var(--bf-bg-inset);
+  border: 1px solid var(--bf-border-subtle);
+}
+
+/* Thin horizontal rule */
+.bf-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--bf-border-subtle);
+}
+
+/* Accent rule — short, left-aligned */
+.bf-rule-accent {
+  width: 2.5rem;
+  height: 2px;
+  background: var(--bf-accent);
+  border-radius: 2px;
+}
+
+/* ─── Capabilities — Bento Grid ─────────────────────────────────── */
+
+.bf-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(0.6rem, 1vw, 1rem);
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  .bf-card-strategy    { grid-column: 1 / 5;  grid-row: 1; min-height: 400px; }
+  .bf-card-design      { grid-column: 5 / 13; grid-row: 1; min-height: 340px; }
+  .bf-card-development { grid-column: 1 / 7;  grid-row: 2; min-height: 260px; }
+  .bf-card-performance { grid-column: 7 / 13; grid-row: 2; min-height: 260px; }
+}
+
+/* Tablet (640px – 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bf-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bf-card-strategy    { grid-column: 1; grid-row: 1; min-height: 320px; }
+  .bf-card-design      { grid-column: 2; grid-row: 1; min-height: 320px; }
+  .bf-card-development { grid-column: 1 / 3; grid-row: 2; min-height: 240px; }
+  .bf-card-performance { grid-column: 1 / 3; grid-row: 3; min-height: 220px; }
+}
+
+/* Mobile (< 640px) — stacked with intentional varied heights */
+@media (max-width: 639px) {
+  .bf-bento-grid        { grid-template-columns: 1fr; }
+  .bf-card-design       { order: 1; min-height: 300px; }
+  .bf-card-strategy     { order: 2; min-height: 260px; }
+  .bf-card-development  { order: 3; min-height: 230px; }
+  .bf-card-performance  { order: 4; min-height: 200px; }
+}
+
+/* ─── Bento Card Base ────────────────────────────────────────────── */
+
+.bf-bento-card {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bf-bg-surface);
+  border: 1px solid var(--bf-border-subtle);
+  border-radius: 22px;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  /* Spotlight custom props — updated by JS */
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-opacity: 0;
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  /* GPU layer for transform */
+  will-change: transform;
+}
+
+/* Spotlight layer */
+.bf-bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 300px at var(--spot-x) var(--spot-y),
+    rgba(115, 87, 255, 0.08),
+    transparent 70%
+  );
+  opacity: var(--spot-opacity);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+/* Active hover state — border brightens */
+.bf-bento-card[data-active="true"] {
+  border-color: rgba(115, 87, 255, 0.32);
+  box-shadow:
+    0 0 0 1px rgba(115, 87, 255, 0.10) inset,
+    0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* All children above spotlight layer */
+.bf-bento-card > * { position: relative; z-index: 1; }
+
+/* ─── Bento Card Inner Layout ────────────────────────────────────── */
+
+.bf-card-index {
+  font-family: var(--bf-font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  margin-bottom: auto;
+}
+
+.bf-card-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.6rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--bf-text-primary);
+  margin-top: auto;
+}
+
+.bf-card-meta {
+  font-family: var(--bf-font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bf-accent);
+  margin-top: 0.5rem;
+}
+
+.bf-card-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.8rem, 1.1vw, 0.875rem);
+  line-height: 1.6;
+  color: var(--bf-text-secondary);
+  margin-top: 0.75rem;
+  max-width: 38ch;
+}
+
+.bf-card-visual-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-block: 1.25rem;
+  min-height: 100px;
+}
+
+.bf-card-visual {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* ─── Design Card Frames Visual ──────────────────────────────────── */
+
+.bf-design-frames {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.bf-frame {
+  position: absolute;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bf-frame-bar {
+  height: 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 6px;
+}
+
+.bf-frame-bar::before,
+.bf-frame-bar::after,
+.bf-frame-dot {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bf-frame-body {
+  flex: 1;
+  padding: 7px;
+}
+
+/* Frame 3 — back */
+.bf-frame-3 {
+  width: 130px; height: 82px;
+  top: 24px; left: 50px;
+  border-color: rgba(115, 87, 255, 0.18);
+}
+.bf-frame-3 .bf-frame-bar        { background: rgba(115, 87, 255, 0.05); border-color: rgba(115, 87, 255, 0.12); }
+.bf-frame-3 .bf-frame-bar::before { background: rgba(115, 87, 255, 0.25); }
+.bf-frame-3 .bf-frame-bar::after  { background: rgba(115, 87, 255, 0.15); }
+.bf-frame-3 .bf-frame-body        { background: rgba(115, 87, 255, 0.025); }
+
+/* Frame 2 — mid */
+.bf-frame-2 {
+  width: 145px; height: 90px;
+  top: 12px; left: 25px;
+  border-color: rgba(115, 87, 255, 0.32);
+}
+.bf-frame-2 .bf-frame-bar        { background: rgba(115, 87, 255, 0.08); border-color: rgba(115, 87, 255, 0.2); }
+.bf-frame-2 .bf-frame-bar::before { background: rgba(115, 87, 255, 0.45); }
+.bf-frame-2 .bf-frame-bar::after  { background: rgba(115, 87, 255, 0.25); }
+.bf-frame-2 .bf-frame-body {
+  background-image:
+    linear-gradient(transparent 55%, rgba(243,242,238,0.05) 55%, rgba(243,242,238,0.05) 58%, transparent 58%),
+    linear-gradient(transparent 70%, rgba(243,242,238,0.04) 70%, rgba(243,242,238,0.04) 73%, transparent 73%);
+}
+
+/* Frame 1 — front */
+.bf-frame-1 {
+  width: 155px; height: 97px;
+  top: 0; left: 0;
+  border-color: rgba(115, 87, 255, 0.58);
+}
+.bf-frame-1 .bf-frame-bar        { background: rgba(115, 87, 255, 0.12); border-color: rgba(115, 87, 255, 0.32); }
+.bf-frame-1 .bf-frame-bar::before { background: #7357FF; }
+.bf-frame-1 .bf-frame-bar::after  { background: rgba(115, 87, 255, 0.45); }
+.bf-frame-1 .bf-frame-body {
+  background-image:
+    linear-gradient(transparent 45%, rgba(243,242,238,0.07) 45%, rgba(243,242,238,0.07) 48%, transparent 48%),
+    linear-gradient(transparent 62%, rgba(243,242,238,0.05) 62%, rgba(243,242,238,0.05) 65%, transparent 65%),
+    linear-gradient(transparent 78%, rgba(243,242,238,0.04) 78%, rgba(243,242,238,0.04) 81%, transparent 81%);
+}
+
+/* Frame shift on active */
+.bf-bento-card[data-active="true"] .bf-frame-3 { transform: translate(6px, 5px); }
+.bf-bento-card[data-active="true"] .bf-frame-2 { transform: translate(3px, 2px); }
+.bf-bento-card[data-active="true"] .bf-frame-1 { transform: translate(-2px, -2px); }
+
+/* ─── Performance SVG Animation ──────────────────────────────────── */
+
+.bf-perf-line {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: bf-draw-line 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+@keyframes bf-draw-line {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ─── Click Particles ────────────────────────────────────────────── */
+
+@keyframes bf-particle {
+  0%   { opacity: 0.85; transform: translate(-50%, -50%) translate(0px, 0px); }
+  100% { opacity: 0;    transform: translate(-50%, -50%) translate(var(--dx), var(--dy)); }
+}
+
+/* ─── Motion Utilities ───────────────────────────────────────────── */
+
+/* Base for scroll-reveal — set via JS (GSAP/Framer) */
+.bf-reveal {
+  will-change: transform, opacity;
+}
+
+/* Reduced-motion override — all new animations must respect this */
+@media (prefers-reduced-motion: reduce) {
+  .boldframe-redesign *,
+  .boldframe-redesign *::before,
+  .boldframe-redesign *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   JOURNEY — Scroll-drawn process narrative
+   GSAP-pinned responsive panel with a short, explicit scroll distance.
+   SVG z-index 1 | Typography z-index 2 | Checkpoints z-index 3
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-journey-section {
+  position: relative;
+  min-height: 100vh;
+  overflow: clip;
+  background-color: var(--bf-bg-primary);
+}
+
+.bf-journey-sticky {
+  position: relative;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: clip;
+}
+
+/* SVG overlay — always fills the sticky container */
+.bf-journey-svgwrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bf-journey-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bf-journey-desktop { display: block; }
+.bf-journey-mobile  { display: none; }
+
+/* Section metadata — top-left, always visible */
+.bf-journey-meta {
+  position: absolute;
+  top: 5.5%;
+  left: 7%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  pointer-events: none;
+}
+
+.bf-journey-meta-label {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-journey-meta-range {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--bf-accent);
+}
+
+/* Typography blocks — each is an absolute inset-0 container.
+   Children are positioned absolutely within it.
+   The Framer Motion y-transform slides the whole block together. */
+.bf-journey-rough-block,
+.bf-journey-sharp-block,
+.bf-journey-final-block {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* FROM ROUGH IDEA */
+.bf-journey-from {
+  position: absolute;
+  left: 7%;
+  top: 12%;
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-journey-rough-idea {
+  position: absolute;
+  left: 7%;
+  top: 19%;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.8rem, 7vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+  white-space: nowrap;
+}
+
+/* SHARP EXPERIENCE */
+.bf-journey-sharp-label {
+  position: absolute;
+  right: auto;
+  left: calc(7% + 24px);
+  top: calc(46% - 72px);
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--bf-text-secondary);
+}
+
+.bf-journey-experience {
+  position: absolute;
+  left: calc(7% + 24px);
+  top: calc(53% - 72px);
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.4rem, 5.5vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+  white-space: nowrap;
+}
+
+/* THE RESULT / Final statement */
+.bf-journey-result-label {
+  position: absolute;
+  right: auto;
+  left: 7%;
+  top: 70%;
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-sm);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-journey-final-text {
+  position: absolute;
+  left: 7%;
+  top: 78%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bf-jf-line-a {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1rem, 2.2vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+  display: block;
+  line-height: 1.15;
+}
+
+.bf-jf-line-b {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 4vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--bf-text-primary);
+  display: block;
+  line-height: 1;
+  margin-top: 0.08em;
+}
+
+.bf-jf-line-c {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.2rem, 5.5vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--bf-text-primary);
+  display: block;
+  line-height: 0.92;
+  white-space: nowrap;
+  margin-top: 0.04em;
+}
+
+/* ─── Checkpoint annotations ─────────────────────────────────── */
+
+.bf-cp {
+  pointer-events: none;
+  will-change: opacity, transform;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(115, 87, 255, 0.32);
+}
+
+.bf-cp-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.bf-cp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bf-accent);
+  opacity: 0.35;
+  flex-shrink: 0;
+  transition: opacity 0.25s ease;
+}
+
+.bf-cp-dot.bf-cp-activated {
+  opacity: 1;
+  animation: bf-cp-pulse 0.65s ease-out forwards;
+}
+
+@keyframes bf-cp-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(115, 87, 255, 0.65); }
+  55%  { box-shadow: 0 0 0 8px rgba(115, 87, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(115, 87, 255, 0); }
+}
+
+.bf-cp-index {
+  font-family: var(--bf-font-body);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-cp-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(0.65rem, 1vw, 0.875rem);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--bf-text-primary);
+  margin-bottom: 4px;
+}
+
+.bf-cp-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.65rem, 0.9vw, 0.75rem);
+  line-height: 1.55;
+  color: var(--bf-text-secondary);
+}
+
+/* ─── Journey mobile overrides ───────────────────────────────── */
+
+@media (max-width: 767px) {
+  .bf-journey-section  { min-height: 100vh; }
+  .bf-journey-desktop  { display: none; }
+  .bf-journey-mobile   { display: block; }
+
+  .bf-journey-rough-idea {
+    font-size: clamp(2rem, 9vw, 3.2rem);
+    white-space: normal;
+    max-width: 52%;
+  }
+
+  .bf-journey-sharp-label {
+    right: auto;
+    left: calc(7% + 22px);
+    top: calc(43% - 64px);
+    font-size: clamp(1.3rem, 6vw, 2rem);
+  }
+
+  .bf-journey-experience {
+    left: calc(7% + 22px);
+    top: calc(50% - 64px);
+    font-size: clamp(1.6rem, 7.5vw, 2.8rem);
+    white-space: normal;
+    max-width: 52%;
+  }
+
+  .bf-journey-result-label {
+    right: auto;
+    left: 7%;
+    top: 69%;
+  }
+
+  .bf-journey-final-text {
+    left: 7%;
+    top: 74%;
+    max-width: 62%;
+  }
+
+  .bf-jf-line-a { font-size: clamp(0.8rem, 3.5vw, 1.2rem); }
+  .bf-jf-line-b { font-size: clamp(1.3rem, 5.5vw, 2rem); }
+  .bf-jf-line-c { font-size: clamp(1.6rem, 6.5vw, 2.5rem); white-space: normal; }
+
+  .bf-cp { max-width: 145px !important; }
+  .bf-cp-copy { display: none; }
+}
+
+/* Reduced motion: collapse sticky, show all content statically */
+@media (prefers-reduced-motion: reduce) {
+  .bf-journey-section {
+    height: auto;
+    overflow: visible;
+  }
+
+  .bf-journey-sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: clamp(4rem, 8vw, 7rem) var(--bf-section-px);
+  }
+
+  .bf-journey-svgwrap { display: none; }
+  .bf-journey-rough-block,
+  .bf-journey-sharp-block,
+  .bf-journey-final-block {
+    position: static;
+    display: block;
+    margin-bottom: 3rem;
+  }
+
+  .bf-journey-from,
+  .bf-journey-rough-idea,
+  .bf-journey-sharp-label,
+  .bf-journey-experience,
+  .bf-journey-result-label,
+  .bf-journey-final-text {
+    position: static;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .bf-journey-rough-idea,
+  .bf-journey-experience,
+  .bf-jf-line-c { white-space: normal; }
+
+  .bf-cp {
+    position: static !important;
+    display: inline-block;
+    margin: 0.5rem 1.5rem 0.5rem 0;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MANIFESTO — Horizontal typographic sentence
+   Desktop: GSAP-pinned horizontal track
+   Mobile: Vertical editorial stack
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-manifesto-section {
+  position: relative;
+  background-color: var(--bf-bg-primary);
+}
+
+/* Divider line entering the Manifesto — echoes Journey path */
+.bf-manifesto-transition {
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(3rem, 6vw, 7rem);
+  height: clamp(3rem, 5vw, 5rem);
+  overflow: hidden;
+}
+
+.bf-manifesto-transition-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--bf-accent) 0%, rgba(115,87,255,0.08) 60%, transparent 100%);
+}
+
+/* The pinned viewport — 100vh, content centered vertically */
+.bf-manifesto-pin {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  will-change: transform;
+}
+
+/* The moving horizontal track */
+.bf-manifesto-track {
+  display: flex;
+  align-items: center;
+  padding-inline: clamp(4rem, 7vw, 8rem);
+  white-space: nowrap;
+  will-change: transform;
+  user-select: none;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+/* ── Manifesto Typography ──────────────────────────────────────── */
+
+/* Connecting words — lighter weight, slightly smaller */
+.bf-mani-text {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.8rem, 5vw, 6.5rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--bf-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Keyword emphasis words */
+.bf-mani-word {
+  font-family: var(--bf-font-display);
+  font-size: clamp(3.5rem, 6.5vw, 8.5rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--bf-text-primary);
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Spacer between elements */
+.bf-mani-space {
+  display: inline-block;
+  width: clamp(0.75rem, 1.5vw, 2rem);
+  flex-shrink: 0;
+}
+
+/* ── Emphasis treatments (max 3 techniques) ─────────────────── */
+
+/* 1. Violet fill — DIRECTION + LIFE */
+.bf-mani-violet { color: var(--bf-accent); }
+
+/* 2. Outline type — CHARACTER */
+.bf-mani-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(243, 242, 238, 0.7);
+}
+
+/* 3. Italic — MOVING */
+.bf-mani-italic {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* FRAME — italic with a box drawn around it */
+.bf-mani-frame-word {
+  font-style: italic;
+  font-weight: 700;
+  color: var(--bf-text-primary);
+  position: relative;
+  padding: 0.04em 0.18em;
+}
+
+.bf-mani-frame-word::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(115, 87, 255, 0.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* Tail phrase — lighter */
+.bf-mani-tail { color: var(--bf-text-secondary); font-weight: 300; }
+
+/* ── Inline visual elements ──────────────────────────────────── */
+
+/* Entry continuation line — echoes the Journey path's final horizontal move */
+.bf-mani-entry {
+  display: inline-flex;
+  align-items: center;
+  margin-right: clamp(2.5rem, 5vw, 6rem);
+  flex-shrink: 0;
+  opacity: 0.65;
+}
+
+/* SVG-based separators between phrases */
+.bf-mani-sep {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-inline: clamp(1.5rem, 3vw, 4.5rem);
+}
+
+/* Small screen/browser frame inline */
+.bf-mani-screen {
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: clamp(70px, 7vw, 110px);
+  height: clamp(48px, 5vw, 76px);
+  border: 1px solid var(--bf-border-mid);
+  border-radius: var(--bf-radius-sm);
+  background: var(--bf-bg-surface);
+  overflow: hidden;
+  margin-inline: clamp(1.5rem, 3vw, 4.5rem);
+  vertical-align: middle;
+  align-self: center;
+}
+
+.bf-mani-screen-chrome {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 5px;
+  height: 14px;
+  background: var(--bf-bg-secondary);
+  border-bottom: 1px solid var(--bf-border-subtle);
+  flex-shrink: 0;
+}
+
+.bf-mani-screen-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bf-mani-screen-body {
+  flex: 1;
+  padding: 5px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  justify-content: center;
+}
+
+.bf-mani-screen-line {
+  height: 4px;
+  background: var(--bf-border-mid);
+  border-radius: 2px;
+}
+
+/* End padding ensures breathing room before release */
+.bf-mani-end-pad {
+  display: inline-block;
+  width: 22vw;
+  flex-shrink: 0;
+}
+
+/* ── Mobile manifesto — vertical editorial stack ─────────────── */
+
+.bf-manifesto-mobile {
+  display: none;
+  padding: clamp(4rem, 8vw, 7rem) var(--bf-section-px);
+}
+
+.bf-mani-phrase {
+  margin-bottom: clamp(2rem, 5.5vw, 3.5rem);
+}
+
+.bf-mani-phrase-small {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+  display: block;
+  margin-bottom: 0.1em;
+}
+
+.bf-mani-phrase-big {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.2rem, 9.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--bf-text-primary);
+  display: block;
+}
+
+/* Apply same emphasis on mobile */
+.bf-mani-phrase-big.bf-mani-violet { color: var(--bf-accent); }
+.bf-mani-phrase-big.bf-mani-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(243, 242, 238, 0.7);
+}
+.bf-mani-phrase-big.bf-mani-italic { font-style: italic; }
+.bf-mani-phrase-big.bf-mani-frame-word {
+  display: inline-block;
+  font-style: italic;
+  padding: 0.04em 0.15em;
+}
+
+.bf-mani-meta {
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* ── Responsive: mobile shows vertical, hides horizontal ─────── */
+@media (max-width: 767px) {
+  .bf-manifesto-pin     { display: none; }
+  .bf-manifesto-mobile  { display: block; }
+  .bf-manifesto-transition { display: none; }
+}
+
+/* Reduced motion: always show vertical */
+@media (prefers-reduced-motion: reduce) {
+  .bf-manifesto-pin     { display: none !important; }
+  .bf-manifesto-mobile  { display: block !important; }
+  .bf-manifesto-transition { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SELECTED WORK INTRO — Quiet anticipation header
+   Selected work heading before the exhibition
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-work-intro-section {
+  background-color: var(--bf-bg-primary);
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+  padding-inline: var(--bf-section-px);
+  overflow: hidden;
+}
+
+.bf-work-intro-meta {
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.bf-work-selected {
+  font-family: var(--bf-font-display);
+  font-size: clamp(3.5rem, 7.5vw, 8.5rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  color: var(--bf-text-primary);
+  display: block;
+}
+
+.bf-work-work {
+  font-family: var(--bf-font-display);
+  font-size: clamp(4rem, 9.5vw, 11rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.88;
+  color: var(--bf-text-primary);
+  display: block;
+  margin-left: clamp(2rem, 7vw, 7rem);
+  margin-top: 0.04em;
+  white-space: nowrap;
+}
+
+.bf-work-intro-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.875rem, 1.4vw, 1.0625rem);
+  line-height: 1.7;
+  color: var(--bf-text-secondary);
+  max-width: 50ch;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  margin-left: clamp(2rem, 7vw, 7rem);
+}
+
+/* Mounting point — no visual, just structure */
+.bf-work-grid-mount {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  min-height: 1px;
+}
+
+@media (max-width: 767px) {
+  .bf-work-work {
+    margin-left: 0;
+    white-space: normal;
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+  .bf-work-intro-copy {
+    margin-left: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FEATURED WORK — Cinematic frame expansion
+   200vh section (140vh mobile). Sticky 100vh inner.
+   Frame: 50vw framed object → 100vw×100vh immersive viewport.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-fw-section {
+  position: relative;
+  height: 200vh;
+  background-color: var(--bf-bg-primary);
+  overflow-x: hidden;
+}
+
+.bf-fw-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bf-bg-primary);
+}
+
+/* ── Project metadata — top-left, counter-moves up on scroll ── */
+
+.bf-fw-meta {
+  position: absolute;
+  top: clamp(2rem, 5vh, 3.5rem);
+  left: clamp(1.25rem, 5vw, 5rem);
+  z-index: 4;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ── Title block — bottom-left, counter-moves down on scroll ── */
+
+.bf-fw-title-block {
+  position: absolute;
+  left: clamp(1.25rem, 5vw, 5rem);
+  bottom: clamp(2.5rem, 7vh, 5rem);
+  z-index: 4;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.bf-fw-project-name {
+  font-family: var(--bf-font-display);
+  font-size: clamp(2rem, 4.5vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+  display: block;
+}
+
+.bf-fw-project-type {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.7rem, 1vw, 0.875rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--bf-text-secondary);
+  display: block;
+  margin-top: 0.55em;
+}
+
+.bf-fw-project-services {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.65rem, 0.9vw, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  display: block;
+  margin-top: 0.25em;
+}
+
+/* ── Expanding frame — positioned absolutely by GSAP ─────────── */
+
+.bf-fw-frame {
+  position: absolute;
+  border: 1px solid var(--bf-border-mid);
+  overflow: hidden;
+  z-index: 2;
+  /* aspect-ratio reserves space before GSAP sets explicit px dimensions */
+  aspect-ratio: 16 / 9;
+  background: var(--bf-bg-surface);
+}
+
+.bf-fw-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  /* will-change set by GSAP only during animation, not permanently */
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Pointer follower — desktop only, immersive phase only ──────── */
+
+.bf-fw-follower {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05em;
+  width: 72px;
+  height: 72px;
+  border: 1px solid rgba(243, 242, 238, 0.55);
+  border-radius: 2px;
+  background: rgba(8, 9, 11, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.bf-fw-follower span {
+  font-family: var(--bf-font-body);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--bf-text-primary);
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+/* Never render follower on touch devices */
+@media (pointer: coarse), (max-width: 767px) {
+  .bf-fw-follower { display: none; }
+}
+
+/* Crop marks on initial frame — top-right and bottom-left */
+.bf-fw-frame-mark-tr,
+.bf-fw-frame-mark-bl {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.bf-fw-frame-mark-tr {
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  border-top: 1.5px solid rgba(243, 242, 238, 0.45);
+  border-right: 1.5px solid rgba(243, 242, 238, 0.45);
+}
+
+.bf-fw-frame-mark-bl {
+  bottom: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-bottom: 1.5px solid rgba(243, 242, 238, 0.45);
+  border-left: 1.5px solid rgba(243, 242, 238, 0.45);
+}
+
+/* ── Viewport corner marks — brief flash as frame hits edges ─── */
+
+.bf-fw-corners {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.bf-fw-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+}
+
+.bf-fw-corner-tl {
+  top:    clamp(12px, 2vw, 22px);
+  left:   clamp(12px, 2vw, 22px);
+  border-top:  1.5px solid rgba(115, 87, 255, 0.7);
+  border-left: 1.5px solid rgba(115, 87, 255, 0.7);
+}
+
+.bf-fw-corner-tr {
+  top:    clamp(12px, 2vw, 22px);
+  right:  clamp(12px, 2vw, 22px);
+  border-top:   1.5px solid rgba(115, 87, 255, 0.7);
+  border-right: 1.5px solid rgba(115, 87, 255, 0.7);
+}
+
+.bf-fw-corner-bl {
+  bottom: clamp(12px, 2vw, 22px);
+  left:   clamp(12px, 2vw, 22px);
+  border-bottom: 1.5px solid rgba(115, 87, 255, 0.7);
+  border-left:   1.5px solid rgba(115, 87, 255, 0.7);
+}
+
+.bf-fw-corner-br {
+  bottom: clamp(12px, 2vw, 22px);
+  right:  clamp(12px, 2vw, 22px);
+  border-bottom: 1.5px solid rgba(115, 87, 255, 0.7);
+  border-right:  1.5px solid rgba(115, 87, 255, 0.7);
+}
+
+/* ── Immersive overlay — edge-positioned, appears at phase 4 ─── */
+
+.bf-fw-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.25rem, 4vw, 3.5rem);
+  /* Very soft bottom gradient for readability only where text sits */
+  background: linear-gradient(
+    to top,
+    rgba(8, 9, 11, 0.55) 0%,
+    rgba(8, 9, 11, 0.18) 28%,
+    transparent 52%
+  );
+}
+
+.bf-fw-overlay-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.bf-fw-overlay-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.1rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--bf-text-primary);
+  line-height: 1;
+}
+
+.bf-fw-overlay-category {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.65rem, 1vw, 0.8rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: rgba(243, 242, 238, 0.65);
+}
+
+/* Editorial CTA — no pill button */
+.bf-fw-overlay-cta {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.75rem, 1.1vw, 0.9375rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bf-text-primary);
+  text-decoration: none;
+  pointer-events: all;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.35);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.bf-fw-overlay-cta:hover {
+  color: var(--bf-accent);
+  border-color: var(--bf-accent);
+}
+
+.bf-fw-cta-arrow {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+/* ── Exit cue — lateral expectation for next section ──────────── */
+
+.bf-fw-exit {
+  position: absolute;
+  bottom: clamp(1rem, 2.5vh, 2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, transform;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  white-space: nowrap;
+}
+
+.bf-fw-exit-label {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-fw-exit-rule {
+  display: block;
+  width: clamp(2rem, 5vw, 5rem);
+  height: 1px;
+  background: linear-gradient(to right, rgba(115, 87, 255, 0.5), rgba(115, 87, 255, 0.08));
+}
+
+.bf-fw-exit-more {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(243, 242, 238, 0.45);
+}
+
+/* ── Reduced motion: static editorial layout ─────────────────────
+   Applied by BOTH:
+   1. @media (prefers-reduced-motion) — OS-level preference
+   2. .bf-fw-rm class — set by React's useReducedMotion() hook
+   ────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-fw-section,
+  .bf-fw-section.bf-fw-rm {
+    height: auto !important;
+    overflow: visible;
+  }
+}
+
+.bf-fw-section.bf-fw-rm {
+  height: auto !important;
+  overflow: visible;
+}
+
+/* Shared rules for both OS pref and class */
+@media (prefers-reduced-motion: reduce) {
+  .bf-fw-sticky { position: static; height: auto; overflow: visible;
+    padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 5rem);
+    display: flex; flex-direction: column; gap: 2rem; }
+  .bf-fw-meta, .bf-fw-title-block { position: static; }
+  .bf-fw-frame { position: relative !important; width: 100% !important;
+    height: auto !important; left: 0 !important; top: 0 !important;
+    border-radius: 12px !important; aspect-ratio: 16 / 9; }
+  .bf-fw-img { position: relative !important; transform: none !important; }
+  .bf-fw-overlay { opacity: 1 !important; position: relative !important; }
+  .bf-fw-exit { opacity: 1 !important; position: relative !important;
+    transform: none !important; left: 0 !important; }
+  .bf-fw-corners, .bf-fw-follower { display: none; }
+}
+
+.bf-fw-section.bf-fw-rm .bf-fw-sticky {
+  position: static; height: auto; overflow: visible;
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 5rem);
+  display: flex; flex-direction: column; gap: 2rem;
+}
+.bf-fw-section.bf-fw-rm .bf-fw-meta,
+.bf-fw-section.bf-fw-rm .bf-fw-title-block { position: static; }
+.bf-fw-section.bf-fw-rm .bf-fw-frame {
+  position: relative !important; width: 100% !important;
+  height: auto !important; left: 0 !important; top: 0 !important;
+  border-radius: 12px !important; aspect-ratio: 16 / 9;
+}
+.bf-fw-section.bf-fw-rm .bf-fw-img { position: relative !important; transform: none !important; }
+.bf-fw-section.bf-fw-rm .bf-fw-overlay { opacity: 1 !important; position: relative !important; }
+.bf-fw-section.bf-fw-rm .bf-fw-exit {
+  opacity: 1 !important; position: relative !important;
+  transform: none !important; left: 0 !important;
+}
+.bf-fw-section.bf-fw-rm .bf-fw-corners,
+.bf-fw-section.bf-fw-rm .bf-fw-follower { display: none; }
+
+/* ── Mobile adjustments ─────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  .bf-fw-section { height: 140vh; }
+
+  .bf-fw-title-block {
+    bottom: auto;
+    top: clamp(3rem, 10vh, 5rem);
+    left: clamp(1.25rem, 5vw, 2rem);
+  }
+
+  .bf-fw-project-name {
+    font-size: clamp(1.6rem, 7vw, 2.5rem);
+  }
+
+  .bf-fw-overlay {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .bf-fw-exit {
+    bottom: 1rem;
+    font-size: 0.6rem;
+  }
+
+  .bf-fw-corner { width: 16px; height: 16px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WORK GALLERY TRANSITION — Bridge between FeaturedWork and gallery
+   72vh breathing room prevents back-to-back pin collisions.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-gt-section {
+  position: relative;
+  height: 72vh;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(1.25rem, 5vw, 5rem);
+  background: var(--bf-bg-primary);
+  overflow: hidden;
+}
+
+.bf-gt-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vh, 2rem);
+}
+
+.bf-gt-head {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.bf-gt-label {
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gt-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.bf-gt-range {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--bf-text-primary);
+}
+
+.bf-gt-total {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gt-rule-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.bf-gt-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(115, 87, 255, 0.6),
+    rgba(115, 87, 255, 0.1) 70%,
+    transparent 100%
+  );
+  transform-origin: left;
+}
+
+.bf-gt-arrow {
+  font-family: var(--bf-font-body);
+  font-size: 1rem;
+  color: rgba(115, 87, 255, 0.6);
+  flex-shrink: 0;
+}
+
+.bf-gt-copy {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: var(--bf-text-tertiary);
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .bf-gt-section { height: auto; padding: clamp(3rem, 8vw, 5rem) clamp(1.25rem, 5vw, 2rem); }
+  .bf-gt-range { font-size: clamp(1.4rem, 7vw, 2rem); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WORK GALLERY — Sticky horizontal project exhibition
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Section wrapper — height set dynamically by GSAP ────────────── */
+
+.bf-gallery-section {
+  position: relative;
+  background: var(--bf-bg-primary);
+  /* overflow-x: clip keeps vertical scroll but hides horizontal spill */
+  overflow-x: clip;
+}
+
+.bf-gallery-sticky {
+  position: relative;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Section micro-label ─────────────────────────────────────────── */
+
+.bf-gallery-header {
+  position: absolute;
+  top: clamp(1.75rem, 4vh, 3rem);
+  left: clamp(1.25rem, 5vw, 5rem);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.bf-gallery-header .bf-micro {
+  color: var(--bf-text-tertiary);
+}
+
+/* ── Horizontal track ────────────────────────────────────────────── */
+
+.bf-gallery-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  will-change: transform;
+  /* Padding: intro on left, exit on right (also via .bf-gallery-exit-space) */
+  padding: 0;
+}
+
+.bf-gallery-intro-space {
+  width: clamp(1.25rem, 3vw, 3rem);
+  flex-shrink: 0;
+}
+
+.bf-gallery-exit-space {
+  width: 16vw;
+  flex-shrink: 0;
+}
+
+/* ── Gallery item — base ─────────────────────────────────────────── */
+
+.bf-gi {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* TYPE B is a flex row: meta-left, frame-right */
+.bf-gi--B {
+  flex-direction: row;
+  align-items: center;
+  gap: 3vw;
+}
+
+/* TYPE C is slightly elevated */
+.bf-gi--C {
+  transform: translateY(-5vh);
+}
+
+/* ── Frame ───────────────────────────────────────────────────────── */
+
+.bf-gi-frame {
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid var(--bf-border-mid);
+  overflow: hidden;
+  background: var(--bf-bg-surface);
+  flex-shrink: 0;
+}
+
+/* Composition variants — widths and aspect ratios */
+.bf-gi-frame--A  { width: 60vw;  aspect-ratio: 16 / 9; }
+.bf-gi-frame--A2 { width: 58vw;  aspect-ratio: 16 / 9; }
+.bf-gi-frame--B  { width: 36vw;  aspect-ratio: 3 / 4;  }
+.bf-gi-frame--C  { width: 48vw;  aspect-ratio: 16 / 9; }
+.bf-gi-frame--D  { width: 44vw;  aspect-ratio: 1 / 1;  }
+
+/* ── Image inside frame ──────────────────────────────────────────── */
+
+.bf-gi-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Crop marks — two-corner editorial detail ────────────────────── */
+
+.bf-gi-crop-tl,
+.bf-gi-crop-br {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bf-gi-crop-tl {
+  top: 0;
+  left: 0;
+  border-top:  1.5px solid rgba(243, 242, 238, 0.4);
+  border-left: 1.5px solid rgba(243, 242, 238, 0.4);
+}
+
+.bf-gi-crop-br {
+  bottom: 0;
+  right:  0;
+  border-bottom: 1.5px solid rgba(243, 242, 238, 0.4);
+  border-right:  1.5px solid rgba(243, 242, 238, 0.4);
+}
+
+/* ── Metadata — outside / beside the frame ───────────────────────── */
+
+/* Metadata below the frame (A, A2, C, D) */
+.bf-gi-below {
+  margin-top: clamp(0.75rem, 1.5vh, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.bf-gi--D .bf-gi-below {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Metadata beside frame (B) */
+.bf-gi-aside {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.5vh, 1.25rem);
+  width: 16vw;
+  flex-shrink: 0;
+}
+
+.bf-gi-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.bf-gi-index {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(115, 87, 255, 0.7);
+}
+
+.bf-gi-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.bf-gi-title {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.1rem, 2vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--bf-text-primary);
+  margin: 0;
+}
+
+.bf-gi-subtitle {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.65rem, 0.85vw, 0.75rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--bf-text-secondary);
+}
+
+.bf-gi-category {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.8vw, 0.7rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  margin-top: 0.25em;
+}
+
+.bf-gi-services {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.75vw, 0.68rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+/* Services + year on one row */
+.bf-gi-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+/* Year — same scale as services, separated visually */
+.bf-gi-year {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.75vw, 0.68rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gi-year::before {
+  content: '·';
+  margin-right: 0.75em;
+  opacity: 0.45;
+}
+
+/* Accent line — expands via GSAP scaleX as project enters center focus */
+.bf-gi-accent-line {
+  display: block;
+  width: clamp(1.5rem, 3vw, 3rem);
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    rgba(115, 87, 255, 0.85),
+    rgba(115, 87, 255, 0.25)
+  );
+  border-radius: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  margin-top: 0.55rem;
+  /* will-change not set here — GSAP manages it */
+}
+
+/* ── Editorial CTA ───────────────────────────────────────────────── */
+
+.bf-gi-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.75vw, 0.7rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bf-text-secondary);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.2);
+  transition: color 0.25s ease, border-color 0.25s ease;
+  margin-top: 0.4rem;
+}
+
+.bf-gi-cta:hover {
+  color: var(--bf-accent);
+  border-color: var(--bf-accent);
+}
+
+.bf-gi-cta-arrow { font-size: 0.9em; }
+
+/* ── Progress indicator ──────────────────────────────────────────── */
+
+.bf-gp {
+  position: absolute;
+  top: clamp(1.75rem, 4vh, 3rem);
+  right: clamp(1.25rem, 5vw, 5rem);
+  z-index: 8;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.bf-gp-indices {
+  display: flex;
+  align-items: center;
+}
+
+.bf-gp-item {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+  transition: color 0.35s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bf-gp-item.bf-gp-active {
+  color: var(--bf-text-primary);
+}
+
+.bf-gp-dash {
+  display: inline-block;
+  width: clamp(1.5rem, 3vw, 3.5rem);
+  height: 1px;
+  background: var(--bf-border-mid);
+  margin: 0 0.6rem;
+  vertical-align: middle;
+}
+
+/* Overall progress line */
+.bf-gp-bar {
+  width: clamp(6rem, 14vw, 12rem);
+  height: 1px;
+  background: var(--bf-border-subtle);
+}
+
+.bf-gp-fill {
+  height: 100%;
+  background: var(--bf-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   §20 EXIT COMPOSITION — "NOT EVERYTHING / NEEDS THE / SAME FRAME."
+   Lives inside the horizontal track's exit space.
+   Lines are animated via GSAP in onUpdate (opacity + y offset).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-gallery-exit-space {
+  /* Wide enough so the statement can breathe before viewport edge */
+  width: clamp(32vw, 42vw, 52vw);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: clamp(3vw, 5vw, 7vw);
+}
+
+.bf-gex-inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+}
+
+/* Editorial statement */
+.bf-gex-statement {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.bf-gex-line {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.8rem, 3.5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--bf-text-secondary);
+  will-change: transform, opacity;
+}
+
+/* Third line — accent-tinted */
+.bf-gex-line--accent {
+  color: var(--bf-text-primary);
+  font-style: italic;
+  position: relative;
+  display: inline-block;
+}
+
+/* Thin underline on "SAME FRAME." — echoes the frame motif */
+.bf-gex-line--accent::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.1em;
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    rgba(115, 87, 255, 0.65),
+    rgba(115, 87, 255, 0.12) 75%,
+    transparent
+  );
+  border-radius: 1px;
+}
+
+/* Directional marker — implies return to vertical scroll */
+.bf-gex-return {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.bf-gex-return-label {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bf-text-tertiary);
+}
+
+.bf-gex-return-arrow {
+  font-size: 0.875rem;
+  color: rgba(115, 87, 255, 0.55);
+  line-height: 1;
+}
+
+/* ── Mobile: vertical stacked layout ────────────────────────────── */
+
+@media (max-width: 767px) {
+  .bf-gallery-section { height: auto !important; overflow-x: hidden; }
+
+  .bf-gallery-sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .bf-gallery-track {
+    position: relative;
+    top: auto;
+    transform: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 2rem);
+    gap: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .bf-gallery-intro-space { display: none; }
+
+  /* Exit space on mobile — full width, exit statement shown statically */
+  .bf-gallery-exit-space {
+    width: 100%;
+    padding: clamp(3rem, 8vw, 5rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+    justify-content: flex-start;
+    border-top: 1px solid var(--bf-border-subtle);
+  }
+
+  .bf-gex-line {
+    font-size: clamp(1.4rem, 7vw, 2.2rem);
+  }
+
+  .bf-gi { margin-right: 0 !important; transform: none !important; }
+
+  /* All frames go full-width on mobile */
+  .bf-gi-frame--A,
+  .bf-gi-frame--A2,
+  .bf-gi-frame--C  { width: 100%; }
+  .bf-gi-frame--B  { width: 80vw; aspect-ratio: 16 / 9; }
+  .bf-gi-frame--D  { width: 85vw; aspect-ratio: 16 / 9; }
+
+  /* TYPE B: stack vertically on mobile */
+  .bf-gi--B {
+    flex-direction: column !important;
+    gap: 1rem;
+  }
+  .bf-gi-aside { width: 100%; }
+
+  /* TYPE D: left-align on mobile */
+  .bf-gi--D .bf-gi-below { align-items: flex-start; text-align: left; }
+
+  /* Reset TYPE C elevation */
+  .bf-gi--C { transform: none; }
+
+  /* Scale titles up slightly for readability */
+  .bf-gi-title { font-size: clamp(1.25rem, 5vw, 2rem); }
+
+  .bf-gp { display: none; }
+  .bf-gallery-header { position: relative; top: auto; left: auto;
+    padding: 1.5rem clamp(1.25rem, 5vw, 2rem) 0; }
+}
+
+/* ── §21 Reduced motion: static stacked layout ─────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-gallery-section { height: auto !important; overflow-x: hidden; }
+
+  .bf-gallery-sticky {
+    position: relative !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  .bf-gallery-track {
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    flex-direction: column;
+    align-items: stretch;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 5rem);
+    gap: clamp(3rem, 8vw, 5rem);
+  }
+
+  .bf-gallery-intro-space { display: none; }
+
+  .bf-gallery-exit-space {
+    width: 100%;
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(1.5rem, 3vw, 2rem);
+    border-top: 1px solid var(--bf-border-subtle);
+  }
+
+  /* Show all exit lines statically */
+  .bf-gex-line,
+  .bf-gex-return { opacity: 1 !important; transform: none !important; }
+
+  .bf-gi { margin-right: 0 !important; transform: none !important; }
+
+  .bf-gi-frame--A,
+  .bf-gi-frame--A2,
+  .bf-gi-frame--C  { width: 100%; }
+  .bf-gi-frame--B  { width: 80vw; aspect-ratio: 16 / 9; }
+  .bf-gi-frame--D  { width: 85vw; aspect-ratio: 16 / 9; }
+
+  .bf-gi--B { flex-direction: column !important; gap: 1rem; }
+  .bf-gi-aside { width: 100%; }
+  .bf-gi--D .bf-gi-below { align-items: flex-start; text-align: left; }
+  .bf-gi--C { transform: none !important; }
+
+  .bf-gp { display: none; }
+  .bf-gallery-header { position: relative; top: auto; left: auto;
+    padding: 1.5rem clamp(1.25rem, 5vw, 2rem) 0; }
+
+  /* Show all gallery items at full opacity */
+  .bf-gi { opacity: 1 !important; }
+  .bf-gi-frame { transform: none !important; }
+  .bf-gi-img { transform: none !important; }
+  .bf-gi-meta { transform: none !important; }
+  .bf-gi-index { transform: none !important; }
+  .bf-gi-accent-line { transform: scaleX(1) !important; opacity: 1 !important; }
+  .bf-gi-crop-tl,
+  .bf-gi-crop-br { opacity: 0.65 !important; }
+  .bf-gi-category,
+  .bf-gi-services,
+  .bf-gi-year { opacity: 1 !important; }
+  .bf-gi-title { opacity: 1 !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GALLERY REFINEMENT — one clear exhibition frame per project
+   The work should read as a curated sequence, not a stack of unrelated
+   card treatments. These rules intentionally override the earlier
+   experimental composition variants while keeping the same GSAP hooks.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-gallery-track {
+  gap: clamp(3rem, 6vw, 6rem);
+}
+
+.bf-gallery-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.bf-gallery-header-count {
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  letter-spacing: 0.12em;
+  color: var(--bf-accent);
+}
+
+.bf-gi {
+  width: min(68vw, 960px);
+  margin-right: 0 !important;
+  opacity: 0.76;
+}
+
+.bf-gi-frame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  border-color: rgba(243, 242, 238, 0.18);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.bf-gi-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(115, 87, 255, 0.08), transparent 32%, rgba(0, 0, 0, 0.15));
+  mix-blend-mode: screen;
+}
+
+.bf-gi-frame-label {
+  position: absolute;
+  inset: 0.85rem 1rem auto;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--bf-font-body);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(243, 242, 238, 0.72);
+  pointer-events: none;
+}
+
+.bf-gi-frame-label span:last-child {
+  color: var(--bf-accent);
+}
+
+.bf-gi-img {
+  transform: scale(1.01);
+  transition: filter 500ms var(--bf-ease-out);
+  filter: saturate(0.9);
+}
+
+.bf-gi-below {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2rem;
+}
+
+.bf-gi-meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(9rem, 0.8fr);
+  grid-template-rows: auto auto auto;
+  column-gap: 1.25rem;
+  row-gap: 0.28rem;
+  align-items: end;
+}
+
+.bf-gi-index {
+  grid-row: 1 / span 2;
+  align-self: start;
+  padding-top: 0.12rem;
+  font-size: 0.65rem;
+}
+
+.bf-gi-name-block {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.bf-gi-category {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: start;
+  margin-top: 0;
+  line-height: 1.45;
+}
+
+.bf-gi-meta-row {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.bf-gi-accent-line {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  width: 100%;
+  margin-top: 0.7rem;
+  background: linear-gradient(to right, var(--bf-accent), rgba(115, 87, 255, 0));
+}
+
+.bf-gi-cta {
+  margin-top: 0;
+  white-space: nowrap;
+  padding: 0.55rem 0;
+  border-bottom-color: rgba(243, 242, 238, 0.35);
+}
+
+.bf-gi:hover .bf-gi-img {
+  transform: scale(1.045);
+  filter: saturate(1);
+}
+
+@media (max-width: 767px) {
+  .bf-gallery-track {
+    gap: clamp(3.5rem, 12vw, 5rem);
+  }
+
+  .bf-gi {
+    width: 100%;
+    opacity: 1;
+  }
+
+  .bf-gi-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .bf-gi-below {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .bf-gi-meta {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .bf-gi-category {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .bf-gi-meta-row {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .bf-gi-accent-line {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  .bf-gi-cta {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-gi-img {
+    transform: none !important;
+    filter: none;
+  }
+
+  .bf-gi {
+    opacity: 1 !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BEHIND THE FRAME — §03 Sticky Card Stack (Master Part 2, Chunk 3/4)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper ──────────────────────────────────────────────────────────────── */
+
+.bf-btf-wrapper {
+  position: relative;
+  overflow-x: clip;
+}
+
+/* ── Intro section (§02 breathing room) ──────────────────────────────────── */
+
+.bf-btf-intro {
+  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 8vw, 8rem) clamp(4rem, 8vh, 7rem);
+  min-height: 30vh;
+  max-width: 100%;
+}
+
+.bf-btf-intro-meta {
+  margin-bottom: clamp(2rem, 4vh, 3.5rem);
+  opacity: 0.45;
+}
+
+.bf-btf-intro-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: clamp(2.5rem, 5vh, 4rem);
+}
+
+.bf-btf-intro-line-a {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--bf-text-secondary);
+}
+
+.bf-btf-intro-line-b {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(3rem, 6.5vw, 7rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--bf-text-primary);
+  /* Asymmetric offset — not centered like a section heading */
+  margin-left: clamp(1.5rem, 4vw, 5rem);
+}
+
+.bf-btf-intro-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-left: clamp(0rem, 2vw, 3rem);
+}
+
+.bf-btf-intro-sub-a {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.25rem, 2.2vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-tertiary);
+  line-height: 1.0;
+}
+
+.bf-btf-intro-sub-b {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.25rem, 2.2vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-secondary);
+  line-height: 1.1;
+  margin-left: clamp(1rem, 2.5vw, 3rem);
+}
+
+/* ── Stack section ────────────────────────────────────────────────────────── */
+
+.bf-btf-stack-section {
+  /* Height set dynamically by GSAP */
+  overflow: hidden;
+}
+
+.bf-btf-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Ambient vignette — fades during §17 exit */
+.bf-btf-stack-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 65% 85% at 50% 50%,
+    transparent 28%,
+    rgba(3, 4, 6, 0.55) 100%
+  );
+  opacity: 0.65;
+}
+
+/* Stack container — cards stack absolutely inside this */
+.bf-btf-stack {
+  position: relative;
+  z-index: 1;
+  width: min(80vw, 1100px);
+  height: min(74vh, 750px);
+}
+
+@media (max-width: 1280px) {
+  .bf-btf-stack {
+    width: min(85vw, 1000px);
+    height: min(72vh, 700px);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .bf-btf-stack {
+    width: min(90vw, 880px);
+    height: min(70vh, 640px);
+  }
+}
+
+/* ── Counter (§16) ────────────────────────────────────────────────────────── */
+
+.bf-btf-counter {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vh, 2.5rem);
+  right: clamp(1.5rem, 3vw, 3rem);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.bf-btf-counter-num {
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  color: var(--bf-text-primary);
+  line-height: 1;
+}
+
+.bf-btf-counter-sep {
+  font-family: var(--bf-font-body);
+  font-size: 0.6875rem;
+  color: var(--bf-text-tertiary);
+  letter-spacing: 0.05em;
+  margin: 0.2rem 0;
+}
+
+.bf-btf-counter-total {
+  font-family: var(--bf-font-display);
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  font-weight: 300;
+  color: var(--bf-text-tertiary);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.bf-btf-counter-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.6;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+/* ── Individual card base ─────────────────────────────────────────────────── */
+
+.bf-btf-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  will-change: transform, opacity;
+  /* No giant box-shadow — depth through stacking + contrast (§15) */
+}
+
+/* Inset border for subtle depth perception (§15) */
+.bf-btf-card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  border: 1px solid rgba(243, 242, 238, 0.07);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Visual composition area — fills entire card behind text */
+.bf-btf-card-visual {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Upper-left: micro label */
+.bf-btf-card-micro {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vh, 2rem);
+  left: clamp(1.5rem, 2.5vw, 2.5rem);
+  z-index: 4;
+  opacity: 0.55;
+}
+
+/* Upper-right: supporting thought */
+.bf-btf-card-thought {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vh, 2rem);
+  right: clamp(1.5rem, 2.5vw, 2.5rem);
+  z-index: 4;
+  max-width: 26ch;
+  text-align: right;
+}
+
+.bf-btf-card-thought p {
+  font-family: var(--bf-font-body);
+  font-size: clamp(0.6rem, 0.72vw, 0.72rem);
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  color: var(--bf-text-tertiary);
+  font-style: italic;
+}
+
+/* Lower-left: large editorial title */
+.bf-btf-card-title {
+  position: absolute;
+  bottom: clamp(1.25rem, 2.5vh, 2rem);
+  left: clamp(1.5rem, 2.5vw, 2.5rem);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bf-btf-card-title-line {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2.75rem, 5.5vw, 5.75rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: var(--bf-text-primary);
+}
+
+/* Final Frame title — slightly smaller so both lines fit */
+.bf-btf-card--final-frame .bf-btf-card-title-line {
+  font-size: clamp(2.5rem, 5vw, 5.25rem);
+}
+
+/* ── DIRECTION visual ─────────────────────────────────────────────────────── */
+
+.bf-vis-direction {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Grid coordinate ticks */
+.bf-dir-coord {
+  position: absolute;
+  font-family: var(--bf-font-body);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.22;
+}
+
+.bf-dir-coord-1 { top: 14%; left: 18%; }
+.bf-dir-coord-2 { top: 62%; left: 72%; }
+.bf-dir-coord-3 { top: 38%; left: 54%; }
+.bf-dir-coord-4 { top: 78%; left: 36%; }
+
+/* Scattered concept words — varied opacity/size = ambiguity */
+.bf-dir-word {
+  position: absolute;
+  font-family: var(--bf-font-display);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-primary);
+  white-space: nowrap;
+}
+
+.bf-dir-word-1 { top: 20%; left: 30%; font-size: clamp(1.1rem, 2vw, 2rem);    opacity: 0.40; }
+.bf-dir-word-2 { top: 13%; left: 52%; font-size: clamp(0.9rem, 1.6vw, 1.6rem); opacity: 0.28; }
+.bf-dir-word-3 { top: 42%; left: 44%; font-size: clamp(1.5rem, 2.8vw, 2.8rem); opacity: 0.60; color: rgba(115,87,255,0.90); }
+.bf-dir-word-4 { top: 34%; left: 22%; font-size: clamp(0.8rem, 1.4vw, 1.4rem); opacity: 0.22; }
+.bf-dir-word-5 { top: 58%; left: 38%; font-size: clamp(1.2rem, 2.2vw, 2.2rem); opacity: 0.35; }
+.bf-dir-word-6 { top: 25%; left: 62%; font-size: clamp(0.9rem, 1.7vw, 1.7rem); opacity: 0.32; }
+
+/* Focal highlight rectangle — the chosen priority zone */
+.bf-dir-focal {
+  position: absolute;
+  top: 17%;
+  left: 34%;
+  width: 34%;
+  height: 38%;
+  border: 1px solid rgba(115, 87, 255, 0.36);
+  border-radius: 4px;
+  background: rgba(115, 87, 255, 0.03);
+}
+
+.bf-dir-paths {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ── INTERFACE visual ─────────────────────────────────────────────────────── */
+
+.bf-vis-interface {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Layout wireframe — occupies right 60% of card */
+.bf-iface-layout {
+  position: absolute;
+  top: 8%;
+  right: 4%;
+  width: 60%;
+  height: 84%;
+  border: 1px solid rgba(243, 242, 238, 0.10);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(243, 242, 238, 0.01);
+}
+
+.bf-iface-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.08);
+  flex-shrink: 0;
+  background: rgba(243, 242, 238, 0.02);
+}
+
+.bf-iface-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.45;
+}
+
+.bf-iface-nav {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.bf-iface-nav-item {
+  padding: 0.15rem 0.4rem;
+  border: 1px solid rgba(243, 242, 238, 0.12);
+  border-radius: 2px;
+}
+
+.bf-iface-nav-item span,
+.bf-iface-nav-cta span {
+  font-family: var(--bf-font-body);
+  font-size: 0.45rem;
+  letter-spacing: 0.1em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.45;
+}
+
+.bf-iface-nav-cta {
+  padding: 0.15rem 0.5rem;
+  background: rgba(115, 87, 255, 0.20);
+  border: 1px solid rgba(115, 87, 255, 0.30);
+  border-radius: 2px;
+}
+
+.bf-iface-hero-region {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(243, 242, 238, 0.06);
+  flex-shrink: 0;
+}
+
+.bf-iface-hero-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.bf-iface-hero-img {
+  width: 32%;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  background: rgba(115, 87, 255, 0.12);
+  border: 1px solid rgba(115, 87, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.bf-iface-content-row {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  overflow: hidden;
+}
+
+.bf-iface-col-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.bf-iface-col-side {
+  width: 28%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.bf-iface-txtblock {
+  height: 0.55rem;
+  border-radius: 2px;
+  background: rgba(243, 242, 238, 0.08);
+}
+
+.bf-iface-txtblock--h     { height: 1rem; width: 85%; }
+.bf-iface-txtblock--sub   { height: 0.45rem; width: 70%; }
+.bf-iface-txtblock--sm    { height: 0.45rem; width: 90%; }
+.bf-iface-txtblock--xs    { height: 0.35rem; }
+
+.bf-iface-img-region {
+  flex: 1;
+  border-radius: 3px;
+  background: rgba(115, 87, 255, 0.08);
+  border: 1px solid rgba(115, 87, 255, 0.12);
+  min-height: 3rem;
+}
+
+.bf-iface-module {
+  height: 1.5rem;
+  border-radius: 3px;
+  background: rgba(243, 242, 238, 0.04);
+  border: 1px solid rgba(243, 242, 238, 0.08);
+  margin-top: auto;
+}
+
+/* Grid lines overlay — opacity animated by GSAP (lines become visible) */
+.bf-iface-gridlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.10;
+  /* Repeating grid pattern via CSS */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(115, 87, 255, 0.18) 0,
+      rgba(115, 87, 255, 0.18) 1px,
+      transparent 1px,
+      transparent calc((100% - 1px) / 8)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(115, 87, 255, 0.18) 0,
+      rgba(115, 87, 255, 0.18) 1px,
+      transparent 1px,
+      transparent calc((100% - 1px) / 12)
+    );
+}
+
+/* ── MOTION visual ────────────────────────────────────────────────────────── */
+
+.bf-vis-motion {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6%;
+}
+
+.bf-motion-track {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.bf-motion-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+  z-index: 2;
+}
+
+.bf-motion-frame-num {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.35;
+}
+
+.bf-motion-frame-box {
+  width: clamp(4rem, 8vw, 8.5rem);
+  height: clamp(4rem, 7vh, 7rem);
+  border: 1px solid rgba(243, 242, 238, 0.14);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(243, 242, 238, 0.015);
+  position: relative;
+}
+
+.bf-motion-frame-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-text-secondary);
+  opacity: 0.55;
+}
+
+/* State indicator inside each frame — positioned differently per state */
+.bf-motion-state {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(243, 242, 238, 0.55);
+  position: absolute;
+}
+
+.bf-motion-state--1 { top: 20%; left: 20%; }                                    /* entering — top-left */
+.bf-motion-state--2 { top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(115,87,255,0.80); } /* transforming — center */
+.bf-motion-state--3 { bottom: 20%; right: 20%; background: rgba(243,242,238,0.90); } /* resolved — bottom-right */
+
+/* Trajectory line behind the frames */
+.bf-motion-line-svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Moving dot — travels along trajectory as card arrives */
+.bf-motion-dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(115, 87, 255, 0.90);
+  transform: translateY(-50%);
+  z-index: 3;
+  will-change: transform;
+  box-shadow: 0 0 6px rgba(115, 87, 255, 0.45);
+}
+
+/* ── ENGINEERING visual ───────────────────────────────────────────────────── */
+
+.bf-vis-engineering {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 5% 8%;
+}
+
+.bf-eng-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  will-change: transform;
+}
+
+.bf-eng-vp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bf-eng-vp-label {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.45;
+}
+
+.bf-eng-vp-screen {
+  border: 1px solid rgba(243, 242, 238, 0.18);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(243, 242, 238, 0.01);
+}
+
+.bf-eng-vp--desktop .bf-eng-vp-screen { width: clamp(10rem, 18vw, 17rem); height: clamp(7rem, 13vh, 11rem); }
+.bf-eng-vp--tablet  .bf-eng-vp-screen { width: clamp(7rem,  12vw, 11rem); height: clamp(8rem, 14vh, 12rem); }
+.bf-eng-vp--mobile  .bf-eng-vp-screen { width: clamp(4rem,  7vw,  6.5rem); height: clamp(8rem, 14vh, 12rem); }
+
+.bf-eng-vp-chrome {
+  height: 0.6rem;
+  background: rgba(243, 242, 238, 0.04);
+  border-bottom: 1px solid rgba(243, 242, 238, 0.10);
+  flex-shrink: 0;
+}
+
+.bf-eng-vp-body {
+  flex: 1;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bf-eng-row {
+  border-radius: 2px;
+  background: rgba(243, 242, 238, 0.07);
+  flex-shrink: 0;
+}
+
+.bf-eng-row--full { height: 0.55rem; }
+.bf-eng-row--sm   { height: 0.35rem; }
+.bf-eng-row--cols { display: flex; gap: 0.25rem; height: 1.5rem; }
+
+.bf-eng-cell {
+  border-radius: 2px;
+  background: rgba(243, 242, 238, 0.07);
+}
+
+.bf-eng-cell--wide   { flex: 2; }
+.bf-eng-cell--narrow { flex: 1; }
+
+/* Layer classification */
+.bf-eng-layers {
+  display: flex;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: clamp(1.25rem, 2.5vh, 2rem);
+}
+
+.bf-eng-layer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bf-eng-layer-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bf-eng-layer-name {
+  font-family: var(--bf-font-body);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  color: var(--bf-text-tertiary);
+  opacity: 0.55;
+}
+
+/* ── FINAL FRAME visual ───────────────────────────────────────────────────── */
+
+.bf-vis-finalframe {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5% 6%;
+}
+
+.bf-ff-browser {
+  display: flex;
+  flex-direction: column;
+  width: 84%;
+  height: 84%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(243, 242, 238, 0.12);
+  background: rgba(243, 242, 238, 0.02);
+}
+
+.bf-ff-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  background: rgba(243, 242, 238, 0.04);
+  border-bottom: 1px solid rgba(243, 242, 238, 0.08);
+  flex-shrink: 0;
+}
+
+.bf-ff-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.bf-ff-urlbar {
+  flex: 1;
+  margin-left: 0.35rem;
+  background: rgba(243, 242, 238, 0.04);
+  border-radius: 3px;
+  padding: 0.18rem 0.6rem;
+  font-family: var(--bf-font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: rgba(243, 242, 238, 0.30);
+}
+
+.bf-ff-viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.bf-ff-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  will-change: transform;
+}
+
+/* ── Outro section (§18) ──────────────────────────────────────────────────── */
+
+.bf-btf-outro {
+  padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 8vw, 8rem) clamp(6rem, 12vh, 10rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vh, 3.5rem);
+}
+
+.bf-btf-outro-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bf-btf-outro-line {
+  display: block;
+  font-family: var(--bf-font-display);
+  font-size: clamp(2rem, 3.8vw, 4.25rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  color: var(--bf-text-primary);
+}
+
+.bf-btf-outro-block--muted .bf-btf-outro-line {
+  color: var(--bf-text-tertiary);
+  font-size: clamp(1.5rem, 2.8vw, 3.25rem);
+  margin-left: clamp(2rem, 5vw, 6rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE (§19 spec) — vertical CSS overlap stack, no GSAP pinning
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+
+  .bf-btf-intro {
+    padding: 4rem 1.5rem 3rem;
+    min-height: auto;
+  }
+
+  .bf-btf-intro-line-a { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+  .bf-btf-intro-line-b { font-size: clamp(2rem, 9vw, 3rem); margin-left: 1rem; }
+  .bf-btf-intro-sub-a,
+  .bf-btf-intro-sub-b  { font-size: clamp(1rem, 5vw, 1.5rem); }
+  .bf-btf-intro-sub-b  { margin-left: 0.75rem; }
+
+  /* Stack section — height overridden by GSAP bail-out; CSS takes full control */
+  .bf-btf-stack-section { height: auto !important; }
+
+  .bf-btf-sticky {
+    position: static !important;
+    height: auto;
+    display: block;
+    padding: 2rem 0 5rem;
+  }
+
+  /* Counter and ambient bg not needed on mobile */
+  .bf-btf-counter,
+  .bf-btf-stack-bg { display: none; }
+
+  /* Vertical stack with CSS overlap */
+  .bf-btf-stack {
+    position: relative;
+    width: 91vw;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bf-btf-card {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    height: clamp(340px, 75vw, 500px);
+    transform: none !important;
+    opacity: 1 !important;
+    margin-bottom: -2.5rem;   /* cards overlap slightly */
+    will-change: auto;
+  }
+
+  /* Subtle static rotations for mobile — ±1deg max (§19) */
+  .bf-btf-card--interface   { rotate: -0.8deg; }
+  .bf-btf-card--motion-card { rotate:  0.7deg; }
+  .bf-btf-card--engineering { rotate: -0.6deg; }
+  .bf-btf-card--final-frame { rotate:  0;      } /* resolves straight */
+
+  .bf-btf-card:last-child { margin-bottom: 0; }
+
+  .bf-btf-card-title-line       { font-size: clamp(2rem, 8vw, 3rem); }
+  .bf-btf-card-thought p        { font-size: 0.625rem; }
+  .bf-btf-card--final-frame .bf-btf-card-title-line { font-size: clamp(1.8rem, 7.5vw, 2.75rem); }
+
+  /* Simplify card visuals on mobile */
+  .bf-vis-motion,
+  .bf-vis-engineering { padding: 0 4%; }
+  .bf-eng-container   { gap: 1rem; }
+  .bf-eng-vp--desktop .bf-eng-vp-screen { width: 8rem;  height: 6rem; }
+  .bf-eng-vp--tablet  .bf-eng-vp-screen { width: 5.5rem; height: 7rem; }
+  .bf-eng-vp--mobile  .bf-eng-vp-screen { width: 3.25rem; height: 7rem; }
+
+  .bf-ff-browser  { width: 90%; height: 82%; }
+
+  .bf-btf-outro { padding: 3.5rem 1.5rem 4rem; gap: 2rem; }
+  .bf-btf-outro-line { font-size: clamp(1.5rem, 7vw, 2.25rem); }
+  .bf-btf-outro-block--muted .bf-btf-outro-line {
+    font-size: clamp(1.1rem, 5.5vw, 1.75rem);
+    margin-left: 1.25rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION (§20 spec) — static vertical editorial sequence
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  /* Disable GSAP pin — section height resets automatically */
+  .bf-btf-stack-section { height: auto !important; }
+
+  .bf-btf-sticky {
+    position: static !important;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 0 5rem;
+    gap: 2.5rem;
+  }
+
+  .bf-btf-counter,
+  .bf-btf-stack-bg { display: none; }
+
+  .bf-btf-stack {
+    position: relative;
+    width: min(80vw, 1100px);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .bf-btf-card {
+    position: relative !important;
+    inset: auto !important;
+    height: min(74vh, 750px);
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+
+  /* All internal elements at their resolved states */
+  .bf-vis-direction              { transform: none !important; }
+  .bf-iface-gridlines            { opacity: 0.9 !important; }
+  .bf-motion-dot                 { transform: translateX(44px) translateY(-50%) !important; }
+  .bf-eng-container              { transform: none !important; }
+  .bf-ff-img                     { transform: none !important; }
+}
