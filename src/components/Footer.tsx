@@ -1,38 +1,41 @@
+import { CONTACT_EMAIL, SOCIAL_LINKS } from '../site';
+
 interface FooterProps {
   onContactClick: () => void;
-  onPrivacyClick?: () => void;
-  onTermsClick?: () => void;
+  onPrivacyClick: () => void;
+  onTermsClick: () => void;
 }
 
 export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterProps) {
   return (
     <footer className="site-footer" id="contact">
-      <div className="footer-main">
-        <p className="footer-kicker">The next good thing starts somewhere.</p>
-        <div className="footer-invite">
-          <h2>Have something<br /><em>in mind?</em></h2>
-          <button className="button button-inverse" type="button" onClick={onContactClick}>
-            Tell us about it <span aria-hidden="true">↗</span>
-          </button>
-        </div>
-        <div className="footer-lower">
-          <a className="footer-email" href="mailto:nikhilwebworks@gmail.com">nikhilwebworks@gmail.com</a>
-          <div className="footer-links" aria-label="Footer links">
-            <a href="#capabilities">Services</a>
-            <a href="#work-gallery">Work</a>
-            <a href="https://github.com/Nikhilsingh478" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://www.linkedin.com/in/nikhilsingh14788" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            {onPrivacyClick && <button type="button" onClick={onPrivacyClick}>Privacy</button>}
-            {onTermsClick && <button type="button" onClick={onTermsClick}>Terms</button>}
+      <div className="container">
+        <div className="cta">
+          <h2>Have a project in mind?</h2>
+          <p>
+            Tell us what you&rsquo;re working on. We&rsquo;ll reply with next steps and an honest
+            idea of what it would take.
+          </p>
+          <div className="cta-actions">
+            <button className="btn btn-accent" type="button" onClick={onContactClick}>
+              Start a project <span aria-hidden="true">→</span>
+            </button>
+            <a className="cta-email" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
           </div>
         </div>
-      </div>
-      <div className="footer-legal">
-        <a className="footer-wordmark" href="#hero">BoldFrame Studios</a>
-        <span>© {new Date().getFullYear()} BoldFrame Studios</span>
-        <a href="#hero" className="back-to-top">Back to top ↑</a>
+
+        <div className="footer-bar">
+          <span>© {new Date().getFullYear()} BoldFrame Studios</span>
+          <nav className="footer-links" aria-label="Footer">
+            {SOCIAL_LINKS.map((link) => (
+              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+            ))}
+            <button type="button" onClick={onPrivacyClick}>Privacy</button>
+            <button type="button" onClick={onTermsClick}>Terms</button>
+            <a href="#top">Back to top ↑</a>
+          </nav>
+        </div>
       </div>
     </footer>
   );
 }
-export default Footer;

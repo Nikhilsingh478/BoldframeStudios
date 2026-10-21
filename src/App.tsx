@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Capabilities } from './components/redesign/Capabilities';
-import { Journey } from './components/redesign/Journey';
-import { WorkGallery } from './components/redesign/WorkGallery';
+import { Work } from './components/Work';
+import { Services } from './components/Services';
+import { Process } from './components/Process';
 import { ContactModal } from './components/ContactModal';
 import { LegalModals } from './components/LegalModals';
 import { Footer } from './components/Footer';
@@ -14,7 +14,7 @@ export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
-  // Load EmailJS and SweetAlert only when needed
+  // Load EmailJS only when the contact form is opened
   const loadContactScripts = () => {
     const emailJsPublicKey = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
     
@@ -50,7 +50,7 @@ export default function App() {
     <>
       <Helmet>
         <title>BoldFrame Studios</title>
-        <meta name="description" content="BoldFrame Studios brings strategy, design and frontend development together to make distinctive websites." />
+        <meta name="description" content="BoldFrame Studios is a design and development studio in India. We plan, design and build fast, responsive websites for brands, shops and service businesses." />
         <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
         <meta name="author" content="Nikhil Webworks" />
         <link rel="canonical" href="https://boldframestudios.in/" />
@@ -59,16 +59,13 @@ export default function App() {
         <meta property="og:title" content="BoldFrame Studios" />
         <meta property="og:description" content="Strategy, design and frontend development for distinctive websites." />
         <meta property="og:url" content="https://boldframestudios.in/" />
-        <meta property="og:image" content="/preview.png" />
+        <meta property="og:image" content="https://boldframestudios.in/p1.webp" />
         <meta property="og:site_name" content="BoldFrame Studios" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="BoldFrame Studios" />
         <meta name="twitter:description" content="Strategy, design and frontend development for distinctive websites." />
-        <meta name="twitter:image" content="/preview.png" />
-        {/* Viewport & Fallbacks */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="twitter:image" content="https://boldframestudios.in/p1.webp" />
         <meta name="robots" content="index, follow" />
         {/* Structured Data (JSON-LD) */}
         <script type="application/ld+json">{`
@@ -84,28 +81,15 @@ export default function App() {
   ]
 }
         `}</script>
-        <script type="application/ld+json">{`
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "BoldFrame Studios",
-  "url": "https://boldframestudios.in/",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://boldframestudios.in/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-        `}</script>
       </Helmet>
-      <div className="studio-site">
+      <div className="site" id="top">
         <a className="skip-link" href="#main-content">Skip to content</a>
         <Header onContactClick={openContactModal} />
         <main id="main-content">
           <Hero onContactClick={openContactModal} />
-          <Capabilities />
-          <Journey />
-          <WorkGallery />
+          <Work />
+          <Services />
+          <Process />
         </main>
         <Footer
           onContactClick={openContactModal}
