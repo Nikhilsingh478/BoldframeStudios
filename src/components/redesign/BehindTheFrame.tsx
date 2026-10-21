@@ -32,6 +32,7 @@ import { useRef, useLayoutEffect } from 'react';
 import { useReducedMotion, motion, useInView } from 'motion/react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { refreshPins } from './refreshPins';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -491,12 +492,16 @@ export function BehindTheFrame() {
         const cards = cardRefs.current;
         if (cards.some(c => !c)) return;
 
+        // Waiting cards sit a full viewport down. ('100%' of the card's own
+        // height left their top edge peeking in below the active card.)
+        const OFFSCREEN = vh;
+
         // ── Initial card states ───────────────────────────────────────
         // Card 0 sits visible; cards 1-4 start below the stack container
         cards.forEach((card, i) => {
           if (!card) return;
           gsap.set(card, {
-            y:               i === 0 ? 0 : '100%',
+            y:               i === 0 ? 0 : OFFSCREEN,
             scale:           1,
             rotation:        0,
             opacity:         1,
@@ -517,31 +522,37 @@ export function BehindTheFrame() {
         });
 
         // ── Stacking timeline (spec §11–§12) ─────────────────────────
-        // Duration=4, one unit per transition. Scrub maps scroll → tween progress.
+        // Duration=4, one unit per transition. Each arrival takes ARRIVE of
+        // its unit and the rest is a hold, so every card rests fully in view
+        // (title readable) before the next one starts covering it.
         // ease:'none' — scrub(1.0) provides the smooth feel.
+        const ARRIVE = 0.65;
         const tl = gsap.timeline({ paused: true });
 
         // Transition 0 (t=0..1): Card 1 slides up, Card 0 recedes
-        tl.fromTo(cards[1]!, { y: '100%' }, { y: '0%', ease: 'none', duration: 1 }, 0)
-          .to(cards[0]!, { scale: 0.92, rotation: CARD_DATA[0].rotation, opacity: 0.80, ease: 'none', duration: 1 }, 0);
+        tl.fromTo(cards[1]!, { y: OFFSCREEN }, { y: '0%', ease: 'none', duration: ARRIVE }, 0)
+          .to(cards[0]!, { scale: 0.92, rotation: CARD_DATA[0].rotation, opacity: 0.80, ease: 'none', duration: ARRIVE }, 0);
 
         // Transition 1 (t=1..2): Card 2 arrives; Card 1 recedes; Card 0 deepens
-        tl.fromTo(cards[2]!, { y: '100%' }, { y: '0%', ease: 'none', duration: 1 }, 1)
-          .to(cards[1]!, { scale: 0.92, rotation: CARD_DATA[1].rotation, opacity: 0.80, ease: 'none', duration: 1 }, 1)
-          .to(cards[0]!, { scale: 0.88, opacity: 0.72, ease: 'none', duration: 1 }, 1);
+        tl.fromTo(cards[2]!, { y: OFFSCREEN }, { y: '0%', ease: 'none', duration: ARRIVE }, 1)
+          .to(cards[1]!, { scale: 0.92, rotation: CARD_DATA[1].rotation, opacity: 0.80, ease: 'none', duration: ARRIVE }, 1)
+          .to(cards[0]!, { scale: 0.88, opacity: 0.72, ease: 'none', duration: ARRIVE }, 1);
 
         // Transition 2 (t=2..3): Card 3 arrives
-        tl.fromTo(cards[3]!, { y: '100%' }, { y: '0%', ease: 'none', duration: 1 }, 2)
-          .to(cards[2]!, { scale: 0.92, rotation: CARD_DATA[2].rotation, opacity: 0.80, ease: 'none', duration: 1 }, 2)
-          .to(cards[1]!, { scale: 0.88, opacity: 0.72, ease: 'none', duration: 1 }, 2)
-          .to(cards[0]!, { scale: 0.85, opacity: 0.65, ease: 'none', duration: 1 }, 2);
+        tl.fromTo(cards[3]!, { y: OFFSCREEN }, { y: '0%', ease: 'none', duration: ARRIVE }, 2)
+          .to(cards[2]!, { scale: 0.92, rotation: CARD_DATA[2].rotation, opacity: 0.80, ease: 'none', duration: ARRIVE }, 2)
+          .to(cards[1]!, { scale: 0.88, opacity: 0.72, ease: 'none', duration: ARRIVE }, 2)
+          .to(cards[0]!, { scale: 0.85, opacity: 0.65, ease: 'none', duration: ARRIVE }, 2);
 
         // Transition 3 (t=3..4): FINAL FRAME arrives at rotation=0 — the resolution
-        tl.fromTo(cards[4]!, { y: '100%', rotation: 0 }, { y: '0%', rotation: 0, ease: 'none', duration: 1 }, 3)
-          .to(cards[3]!, { scale: 0.92, rotation: CARD_DATA[3].rotation, opacity: 0.80, ease: 'none', duration: 1 }, 3)
-          .to(cards[2]!, { scale: 0.88, opacity: 0.72, ease: 'none', duration: 1 }, 3)
-          .to(cards[1]!, { scale: 0.85, opacity: 0.65, ease: 'none', duration: 1 }, 3);
+        tl.fromTo(cards[4]!, { y: OFFSCREEN, rotation: 0 }, { y: '0%', rotation: 0, ease: 'none', duration: ARRIVE }, 3)
+          .to(cards[3]!, { scale: 0.92, rotation: CARD_DATA[3].rotation, opacity: 0.80, ease: 'none', duration: ARRIVE }, 3)
+          .to(cards[2]!, { scale: 0.88, opacity: 0.72, ease: 'none', duration: ARRIVE }, 3)
+          .to(cards[1]!, { scale: 0.85, opacity: 0.65, ease: 'none', duration: ARRIVE }, 3);
         // Card 0 remains at 0.85 / 0.65 — set in transition 2
+
+        // Hold FINAL FRAME so the timeline still spans 0..TRANSITIONS
+        tl.to({}, { duration: 1 - ARRIVE }, 3 + ARRIVE);
 
         // ── ScrollTrigger ─────────────────────────────────────────────
         ScrollTrigger.create({
@@ -559,7 +570,7 @@ export function BehindTheFrame() {
             const p = self.progress;
 
             // ── Counter (direct DOM — no React rerenders) ──────────────
-            const activeIdx = Math.min(Math.floor(p * TRANSITIONS + 0.08), TOTAL_CARDS - 1);
+            const activeIdx = Math.min(Math.floor(p * TRANSITIONS + 0.4), TOTAL_CARDS - 1);
             const numEl     = counterRef.current?.querySelector<HTMLElement>('.bf-btf-counter-num');
             const lblEl     = counterRef.current?.querySelector<HTMLElement>('.bf-btf-counter-label');
             if (numEl) numEl.textContent = CARD_DATA[activeIdx].index;
@@ -607,15 +618,24 @@ export function BehindTheFrame() {
     document.fonts.ready.then(() => {
       requestAnimationFrame(() => {
         buildStack();
-        requestAnimationFrame(() => ScrollTrigger.refresh());
+        requestAnimationFrame(refreshPins);
       });
     });
 
     // Single ResizeObserver scoped to stack section, debounced 160ms
+    // Only a width change needs a rebuild. Building or reverting a pin
+    // changes the section's height, so reacting to every resize made the
+    // observer rebuild the animation in an endless loop.
+    let lastWidth = window.innerWidth;
     const ro = new ResizeObserver(() => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        requestAnimationFrame(buildStack);
+        requestAnimationFrame(() => {
+          buildStack();
+          refreshPins();
+        });
       }, 160);
     });
     ro.observe(stackSection);

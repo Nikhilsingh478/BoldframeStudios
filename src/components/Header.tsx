@@ -4,12 +4,12 @@ export function Header({ onContactClick }: { onContactClick: () => void }) {
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '#hero' },
     { label: 'Services', ariaLabel: 'View our services', link: '#capabilities' },
+    { label: 'Process', ariaLabel: 'See how a project runs', link: '#journey' },
     { label: 'Work', ariaLabel: 'View selected work', link: '#work-gallery' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '#contact' }
   ];
 
   const socialItems = [
-    { label: 'Twitter', link: 'https://twitter.com' },
     { label: 'GitHub', link: 'https://github.com/Nikhilsingh478' },
     { label: 'LinkedIn', link: 'https://www.linkedin.com/in/nikhilsingh14788' }
   ];

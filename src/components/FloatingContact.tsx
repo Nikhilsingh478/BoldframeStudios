@@ -15,7 +15,7 @@ export function FloatingContact({ onContactClick }: FloatingContactProps) {
   ];
 
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-8 right-8 z-50 floating-contact">
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -47,11 +47,12 @@ export function FloatingContact({ onContactClick }: FloatingContactProps) {
 
       <motion.button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-16 h-16 rounded-full bg-[#5B3CFF] text-[#E6EEF3] flex items-center justify-center shadow-lg shadow-[#5B3CFF]/30"
+        className="w-16 h-16 rounded-full bg-[#5B3CFF] text-[#E6EEF3] flex items-center justify-center shadow-lg shadow-[#5B3CFF]/30 floating-contact-btn"
         whileHover={{ scale: 1.1, backgroundColor: '#7055ff' }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-        aria-label={isExpanded ? 'Close menu' : 'Open menu'}
+        aria-label={isExpanded ? 'Close contact options' : 'Contact options'}
+        aria-expanded={isExpanded}
       >
         <AnimatePresence mode="wait">
           {isExpanded ? (

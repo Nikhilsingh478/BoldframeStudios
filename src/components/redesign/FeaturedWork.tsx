@@ -20,6 +20,7 @@ import { useRef, useEffect } from 'react';
 import { useReducedMotion } from 'motion/react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { refreshPins } from './refreshPins';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -213,11 +214,11 @@ export function FeaturedWork() {
           0.15
         );
 
-        // 0.15–0.55 — metadata drifts up + fades
-        tl.to(meta, { y: isMobile ? -14 : -20, opacity: 0.25, ease: 'none', duration: 0.40 }, 0.15);
+        // 0.15–0.55 — metadata drifts up + fades out (the overlay repeats it)
+        tl.to(meta, { y: isMobile ? -14 : -20, opacity: 0, ease: 'none', duration: 0.40 }, 0.15);
 
-        // 0.15–0.50 — title drifts down (tension)
-        tl.to(titleEl, { y: isMobile ? 18 : 30, opacity: 0.12, ease: 'none', duration: 0.35 }, 0.15);
+        // 0.15–0.50 — title drifts down and fades out, so it can't ghost behind the overlay title
+        tl.to(titleEl, { y: isMobile ? 18 : 30, opacity: 0, ease: 'none', duration: 0.35 }, 0.15);
 
         // 0.72–0.82 — BOLD/FRAME corner marks flash
         if (corners && !isMobile) {
@@ -231,11 +232,16 @@ export function FeaturedWork() {
         // 0.88–1.00 — exit cue appears
         tl.to(exit, { opacity: 1, y: 0, ease: 'none', duration: 0.12 }, 0.88);
 
+        // Hold the immersive state briefly before the pin releases.
+        tl.to({}, { duration: 0.2 });
+
+        // GSAP owns the pin. Distances use % (of viewport height): GSAP does
+        // not understand "vh" here and would read "+=200vh" as 200px.
         ScrollTrigger.create({
           id:                  'bf-featured-work',
           trigger:             section,
           start:               'top top',
-          end:                 isMobile ? '+=140vh' : '+=200vh',
+          end:                 isMobile ? '+=150%' : '+=220%',
           pin:                 sticky,
           scrub:               1.1,
           invalidateOnRefresh: true,
@@ -250,7 +256,7 @@ export function FeaturedWork() {
     function whenReady() {
       requestAnimationFrame(() => {
         buildAnimation();
-        requestAnimationFrame(() => ScrollTrigger.refresh());
+        requestAnimationFrame(refreshPins);
       });
     }
 
@@ -265,10 +271,19 @@ export function FeaturedWork() {
     });
 
     // ResizeObserver scoped to section element, debounced 120ms
+    // Only a width change needs a rebuild. Building or reverting a pin
+    // changes the section's height, so reacting to every resize made the
+    // observer rebuild the animation in an endless loop.
+    let lastWidth = window.innerWidth;
     const ro = new ResizeObserver(() => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        requestAnimationFrame(buildAnimation);
+        requestAnimationFrame(() => {
+          buildAnimation();
+          refreshPins();
+        });
       }, 120);
     });
     ro.observe(section);

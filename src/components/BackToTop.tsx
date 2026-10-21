@@ -14,7 +14,7 @@ export function BackToTop() {
       }
     };
 
-    window.addEventListener('scroll', toggleVisibility);
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
@@ -33,7 +33,7 @@ export function BackToTop() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 left-8 z-40 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-[#5B3CFF]/20 transition-colors shadow-lg"
+          className="fixed bottom-8 left-8 z-40 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-[#5B3CFF]/20 transition-colors shadow-lg back-to-top"
           whileHover={{ scale: 1.1, y: -4 }}
           whileTap={{ scale: 0.95 }}
           aria-label="Back to top"

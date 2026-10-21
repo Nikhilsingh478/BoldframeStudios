@@ -6,7 +6,6 @@ import { motion, useInView } from 'motion/react';
 const CAPABILITIES = [
   {
     id: '01',
-    frameLabel: 'FRAME 001',
     title: 'STRATEGY',
     meta: 'POSITIONING — UX — STRUCTURE',
     copy: 'We find the sharpest way to frame the idea before a pixel gets polished.',
@@ -15,7 +14,6 @@ const CAPABILITIES = [
   },
   {
     id: '02',
-    frameLabel: 'FRAME 002',
     title: 'DESIGN',
     meta: 'ART DIRECTION — UI — MOTION',
     copy: 'Distinct visual systems designed around the brand — not around a template.',
@@ -24,7 +22,6 @@ const CAPABILITIES = [
   },
   {
     id: '03',
-    frameLabel: 'FRAME 003',
     title: 'DEVELOPMENT',
     meta: 'REACT — FRONTEND — RESPONSIVE',
     copy: 'Production-ready builds where motion, responsiveness and performance are part of the architecture.',
@@ -33,7 +30,6 @@ const CAPABILITIES = [
   },
   {
     id: '04',
-    frameLabel: 'FRAME 004',
     title: 'PERFORMANCE',
     meta: 'SPEED — SEO — OPTIMIZATION',
     copy: 'Fast loads, deliberate interactions and the final 10% that separates functional from finished.',
@@ -231,19 +227,15 @@ function BentoCard({ cap, cardRef, onCardClick, isMobile }: CardProps) {
       role="article"
       aria-label={`Capability: ${cap.title}`}
     >
-      {/* Top row: index + frame label */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-        <span className="bf-card-index">BFS / CAPABILITY {cap.id}</span>
-        <span className="bf-card-index">{cap.frameLabel}</span>
-      </div>
+      <span className="bf-card-index">{cap.id}</span>
 
       {/* Abstract visual */}
       <div className="bf-card-visual-area">
         <Visual />
       </div>
 
-      {/* Title + metadata + copy */}
-      <div style={{ marginTop: 'auto' }}>
+      {/* Title + metadata + copy — top-aligned so titles line up across a row */}
+      <div>
         <div className="bf-card-title">{cap.title}</div>
         <div className="bf-card-meta">{cap.meta}</div>
         <p className="bf-card-copy">{cap.copy}</p>
@@ -353,13 +345,13 @@ function EditorialHeader() {
         {line(0.50,
           <span style={{
             fontFamily: 'var(--bf-font-display)',
-            fontSize: 'clamp(3.2rem, 10vw, var(--bf-text-display))',
+            fontSize: 'clamp(2.5rem, 10vw, var(--bf-text-display))',
             fontWeight: 800,
             letterSpacing: '-0.04em',
             lineHeight: 0.9,
             color: 'var(--bf-text-primary)',
             display: 'block',
-            wordBreak: 'break-word',
+            whiteSpace: 'nowrap',
           }}>
             MOMENTUM.
           </span>
@@ -591,9 +583,6 @@ export function Capabilities() {
             ))}
           </motion.div>
         </div>
-
-        {/* Bottom breathing room — no divider */}
-        <div style={{ height: 'clamp(6rem, 12vw, 10rem)' }} />
       </div>
     </section>
   );

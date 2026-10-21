@@ -25,6 +25,7 @@ import { useRef, useLayoutEffect, useCallback } from 'react';
 import { useReducedMotion } from 'motion/react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { refreshPins } from './refreshPins';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -407,15 +408,24 @@ export function WorkGallery() {
       requestAnimationFrame(() => {
         buildGallery();
         // Second rAF lets sibling pin-spacers settle before refresh.
-        requestAnimationFrame(() => ScrollTrigger.refresh());
+        requestAnimationFrame(refreshPins);
       });
     });
 
     // Debounced ResizeObserver scoped to this section
+    // Only a width change needs a rebuild. Building or reverting a pin
+    // changes the section's height, so reacting to every resize made the
+    // observer rebuild the animation in an endless loop.
+    let lastWidth = window.innerWidth;
     const ro = new ResizeObserver(() => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        requestAnimationFrame(buildGallery);
+        requestAnimationFrame(() => {
+          buildGallery();
+          refreshPins();
+        });
       }, 140);
     });
     ro.observe(track);

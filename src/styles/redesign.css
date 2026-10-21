@@ -22,7 +22,7 @@
   /* Text */
   --bf-text-primary:   #F3F2EE; /* warm near-white */
   --bf-text-secondary: #96989F; /* muted mid-tone */
-  --bf-text-tertiary:  #5A5C63; /* faintest labels */
+  --bf-text-tertiary:  #7D7F87; /* faintest labels — still ≥ 4.5:1 on the dark backgrounds */
 
   /* Accents */
   --bf-accent:         #7357FF; /* electric violet — primary */
@@ -198,32 +198,17 @@
   gap: clamp(0.6rem, 1vw, 1rem);
 }
 
-/* Desktop (≥ 1024px) */
-@media (min-width: 1024px) {
-  .bf-card-strategy    { grid-column: 1 / 5;  grid-row: 1; min-height: 400px; }
-  .bf-card-design      { grid-column: 5 / 13; grid-row: 1; min-height: 340px; }
-  .bf-card-development { grid-column: 1 / 7;  grid-row: 2; min-height: 260px; }
-  .bf-card-performance { grid-column: 7 / 13; grid-row: 2; min-height: 260px; }
-}
+/* Even 2 × 2 on tablet and desktop so every card edge lines up. */
+.bf-card-strategy    { grid-column: span 6; }
+.bf-card-design      { grid-column: span 6; }
+.bf-card-development { grid-column: span 6; }
+.bf-card-performance { grid-column: span 6; }
 
-/* Tablet (640px – 1023px) */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .bf-bento-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .bf-card-strategy    { grid-column: 1; grid-row: 1; min-height: 320px; }
-  .bf-card-design      { grid-column: 2; grid-row: 1; min-height: 320px; }
-  .bf-card-development { grid-column: 1 / 3; grid-row: 2; min-height: 240px; }
-  .bf-card-performance { grid-column: 1 / 3; grid-row: 3; min-height: 220px; }
-}
+.bf-bento-grid > * { min-height: 340px; }
 
-/* Mobile (< 640px) — stacked with intentional varied heights */
+/* Mobile (< 640px) — single column, in reading order */
 @media (max-width: 639px) {
-  .bf-bento-grid        { grid-template-columns: 1fr; }
-  .bf-card-design       { order: 1; min-height: 300px; }
-  .bf-card-strategy     { order: 2; min-height: 260px; }
-  .bf-card-development  { order: 3; min-height: 230px; }
-  .bf-card-performance  { order: 4; min-height: 200px; }
+  .bf-bento-grid > * { grid-column: 1 / -1; min-height: 0; }
 }
 
 /* ─── Bento Card Base ────────────────────────────────────────────── */
@@ -280,12 +265,11 @@
 
 .bf-card-index {
   font-family: var(--bf-font-body);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--bf-text-tertiary);
-  margin-bottom: auto;
+  letter-spacing: 0.08em;
+  color: var(--bf-text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
 .bf-card-title {
@@ -295,7 +279,6 @@
   letter-spacing: -0.03em;
   line-height: 1;
   color: var(--bf-text-primary);
-  margin-top: auto;
 }
 
 .bf-card-meta {
@@ -317,13 +300,13 @@
   max-width: 38ch;
 }
 
+/* Fixed height so every card's title starts at the same line. */
 .bf-card-visual-area {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-block: 1.25rem;
-  min-height: 100px;
+  height: 130px;
+  margin-block: 0.75rem 1.5rem;
 }
 
 .bf-card-visual {
@@ -464,350 +447,264 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   JOURNEY — Scroll-drawn process narrative
-   GSAP-pinned responsive panel with a short, explicit scroll distance.
-   SVG z-index 1 | Typography z-index 2 | Checkpoints z-index 3
+   JOURNEY — Process path, drawn once on entry
+   Desktop: wavy track with five nodes over a 5-column step grid
+   Mobile:  vertical line with the steps stacked beside it
    ═══════════════════════════════════════════════════════════════════ */
 
-.bf-journey-section {
+.bf-jr {
   position: relative;
-  min-height: 100vh;
-  overflow: clip;
   background-color: var(--bf-bg-primary);
 }
 
-.bf-journey-sticky {
-  position: relative;
-  top: 0;
-  height: 100vh;
-  width: 100%;
-  overflow: clip;
-}
-
-/* SVG overlay — always fills the sticky container */
-.bf-journey-svgwrap {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.bf-journey-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.bf-journey-desktop { display: block; }
-.bf-journey-mobile  { display: none; }
-
-/* Section metadata — top-left, always visible */
-.bf-journey-meta {
-  position: absolute;
-  top: 5.5%;
-  left: 7%;
-  z-index: 3;
+.bf-jr-meta {
   display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  pointer-events: none;
-}
-
-.bf-journey-meta-label {
+  gap: 0.75rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   font-family: var(--bf-font-body);
   font-size: var(--bf-text-micro);
   font-weight: 500;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--bf-text-tertiary);
+  color: var(--bf-text-secondary);
 }
 
-.bf-journey-meta-range {
-  font-family: var(--bf-font-body);
-  font-size: var(--bf-text-micro);
-  font-weight: 500;
-  letter-spacing: 0.1em;
+.bf-jr-meta-range {
   color: var(--bf-accent);
 }
 
-/* Typography blocks — each is an absolute inset-0 container.
-   Children are positioned absolutely within it.
-   The Framer Motion y-transform slides the whole block together. */
-.bf-journey-rough-block,
-.bf-journey-sharp-block,
-.bf-journey-final-block {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
+.bf-jr-title {
+  margin: 0;
+  font-family: var(--bf-font-display);
+  font-size: var(--bf-text-4xl);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
 }
 
-/* FROM ROUGH IDEA */
-.bf-journey-from {
+.bf-jr-title span {
+  display: block;
+}
+
+.bf-jr-title-from {
+  color: var(--bf-text-secondary);
+}
+
+.bf-jr-title-to {
+  margin-left: clamp(1.5rem, 8vw, 9rem);
+  color: var(--bf-text-primary);
+}
+
+/* ─── Track ─── */
+
+.bf-jr-track {
+  --bf-jr-track-h: 120px;
+  position: relative;
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+/* Path + nodes share this box, so node percentages map onto the path. */
+.bf-jr-line {
+  position: relative;
+}
+
+.bf-jr-path {
+  display: block;
+  width: 100%;
+  height: var(--bf-jr-track-h);
+  overflow: visible;
+}
+
+.bf-jr-path path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.bf-jr-path-base {
+  stroke: var(--bf-border-mid);
+  stroke-width: 2;
+}
+
+.bf-jr-path-line {
+  stroke: var(--bf-accent);
+  stroke-width: 4;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition-property: stroke-dashoffset;
+  transition-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  transition-delay: 0.25s;
+}
+
+.bf-jr-track.is-drawn .bf-jr-path-line {
+  stroke-dashoffset: 0;
+}
+
+.bf-jr-node {
   position: absolute;
-  left: 7%;
-  top: 12%;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border: 2px solid var(--bf-border-strong);
+  border-radius: 50%;
+  background: var(--bf-bg-primary);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.bf-jr-track.is-drawn .bf-jr-node {
+  border-color: var(--bf-accent);
+  background: var(--bf-accent);
+  box-shadow: 0 0 0 6px var(--bf-accent-dim);
+}
+
+/* ─── Steps ─── */
+
+.bf-jr-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bf-jr-step {
+  text-align: center;
+}
+
+.bf-jr-step-id {
   font-family: var(--bf-font-body);
   font-size: var(--bf-text-micro);
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--bf-text-tertiary);
+  letter-spacing: 0.14em;
+  color: var(--bf-accent);
 }
 
-.bf-journey-rough-idea {
-  position: absolute;
-  left: 7%;
-  top: 19%;
+.bf-jr-step-title {
+  margin: 0.5rem 0 0;
   font-family: var(--bf-font-display);
-  font-size: clamp(2.8rem, 7vw, 7.5rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.92;
-  color: var(--bf-text-primary);
-  white-space: nowrap;
-}
-
-/* SHARP EXPERIENCE */
-.bf-journey-sharp-label {
-  position: absolute;
-  right: auto;
-  left: calc(7% + 24px);
-  top: calc(46% - 72px);
-  font-family: var(--bf-font-display);
-  font-size: clamp(1.5rem, 3vw, 3rem);
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  color: var(--bf-text-secondary);
-}
-
-.bf-journey-experience {
-  position: absolute;
-  left: calc(7% + 24px);
-  top: calc(53% - 72px);
-  font-family: var(--bf-font-display);
-  font-size: clamp(2.4rem, 5.5vw, 6rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.92;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   color: var(--bf-text-primary);
-  white-space: nowrap;
 }
 
-/* THE RESULT / Final statement */
-.bf-journey-result-label {
-  position: absolute;
-  right: auto;
-  left: 7%;
-  top: 70%;
+.bf-jr-step-copy {
+  max-width: 22ch;
+  margin: 0.625rem auto 0;
   font-family: var(--bf-font-body);
   font-size: var(--bf-text-sm);
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--bf-text-tertiary);
-}
-
-.bf-journey-final-text {
-  position: absolute;
-  left: 7%;
-  top: 78%;
-  display: flex;
-  flex-direction: column;
-}
-
-.bf-jf-line-a {
-  font-family: var(--bf-font-display);
-  font-size: clamp(1rem, 2.2vw, 2.2rem);
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  line-height: 1.6;
   color: var(--bf-text-secondary);
-  display: block;
-  line-height: 1.15;
 }
 
-.bf-jf-line-b {
-  font-family: var(--bf-font-display);
-  font-size: clamp(1.8rem, 4vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--bf-text-primary);
-  display: block;
-  line-height: 1;
-  margin-top: 0.08em;
+/* ─── Closing beat ─── */
+
+.bf-jr-result {
+  margin-top: clamp(5rem, 10vw, 9rem);
+  margin-left: auto;
+  max-width: 52rem;
 }
 
-.bf-jf-line-c {
+.bf-jr-result-label {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--bf-accent);
+}
+
+.bf-jr-result-text {
+  margin: 0;
   font-family: var(--bf-font-display);
-  font-size: clamp(2.2rem, 5.5vw, 6rem);
+  font-size: var(--bf-text-3xl);
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
   color: var(--bf-text-primary);
+}
+
+.bf-jr-result-text span {
   display: block;
-  line-height: 0.92;
-  white-space: nowrap;
-  margin-top: 0.04em;
 }
 
-/* ─── Checkpoint annotations ─────────────────────────────────── */
-
-.bf-cp {
-  pointer-events: none;
-  will-change: opacity, transform;
-  padding-left: 0.75rem;
-  border-left: 1px solid rgba(115, 87, 255, 0.32);
-}
-
-.bf-cp-header {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 5px;
-}
-
-.bf-cp-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--bf-accent);
-  opacity: 0.35;
-  flex-shrink: 0;
-  transition: opacity 0.25s ease;
-}
-
-.bf-cp-dot.bf-cp-activated {
-  opacity: 1;
-  animation: bf-cp-pulse 0.65s ease-out forwards;
-}
-
-@keyframes bf-cp-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(115, 87, 255, 0.65); }
-  55%  { box-shadow: 0 0 0 8px rgba(115, 87, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(115, 87, 255, 0); }
-}
-
-.bf-cp-index {
-  font-family: var(--bf-font-body);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--bf-text-tertiary);
-}
-
-.bf-cp-title {
-  font-family: var(--bf-font-display);
-  font-size: clamp(0.65rem, 1vw, 0.875rem);
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--bf-text-primary);
-  margin-bottom: 4px;
-}
-
-.bf-cp-copy {
-  font-family: var(--bf-font-body);
-  font-size: clamp(0.65rem, 0.9vw, 0.75rem);
-  line-height: 1.55;
+.bf-jr-result-lead {
+  margin-bottom: 0.15em;
+  font-size: 0.55em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--bf-text-secondary);
 }
 
-/* ─── Journey mobile overrides ───────────────────────────────── */
+/* ─── Narrow screens: vertical line ─── */
 
-@media (max-width: 767px) {
-  .bf-journey-section  { min-height: 100vh; }
-  .bf-journey-desktop  { display: none; }
-  .bf-journey-mobile   { display: block; }
-
-  .bf-journey-rough-idea {
-    font-size: clamp(2rem, 9vw, 3.2rem);
-    white-space: normal;
-    max-width: 52%;
+@media (max-width: 899px) {
+  .bf-jr-line {
+    display: none;
   }
 
-  .bf-journey-sharp-label {
-    right: auto;
-    left: calc(7% + 22px);
-    top: calc(43% - 64px);
-    font-size: clamp(1.3rem, 6vw, 2rem);
+  .bf-jr-steps {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+    margin-top: 0;
+    padding-left: 2.25rem;
   }
 
-  .bf-journey-experience {
-    left: calc(7% + 22px);
-    top: calc(50% - 64px);
-    font-size: clamp(1.6rem, 7.5vw, 2.8rem);
-    white-space: normal;
-    max-width: 52%;
+  /* The line, drawn top to bottom */
+  .bf-jr-steps::before,
+  .bf-jr-steps::after {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: 2px;
+    content: '';
   }
 
-  .bf-journey-result-label {
-    right: auto;
-    left: 7%;
-    top: 69%;
+  .bf-jr-steps::before {
+    background: var(--bf-border-mid);
   }
 
-  .bf-journey-final-text {
-    left: 7%;
-    top: 74%;
-    max-width: 62%;
+  .bf-jr-steps::after {
+    background: var(--bf-accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 2s cubic-bezier(0.45, 0, 0.25, 1) 0.25s;
   }
 
-  .bf-jf-line-a { font-size: clamp(0.8rem, 3.5vw, 1.2rem); }
-  .bf-jf-line-b { font-size: clamp(1.3rem, 5.5vw, 2rem); }
-  .bf-jf-line-c { font-size: clamp(1.6rem, 6.5vw, 2.5rem); white-space: normal; }
-
-  .bf-cp { max-width: 145px !important; }
-  .bf-cp-copy { display: none; }
-}
-
-/* Reduced motion: collapse sticky, show all content statically */
-@media (prefers-reduced-motion: reduce) {
-  .bf-journey-section {
-    height: auto;
-    overflow: visible;
+  .bf-jr-track.is-drawn .bf-jr-steps::after {
+    transform: scaleY(1);
   }
 
-  .bf-journey-sticky {
-    position: static;
-    height: auto;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding: clamp(4rem, 8vw, 7rem) var(--bf-section-px);
+  .bf-jr-step {
+    position: relative;
+    text-align: left;
   }
 
-  .bf-journey-svgwrap { display: none; }
-  .bf-journey-rough-block,
-  .bf-journey-sharp-block,
-  .bf-journey-final-block {
-    position: static;
-    display: block;
-    margin-bottom: 3rem;
+  /* Node dot on the line */
+  .bf-jr-step::before {
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    left: calc(-2.25rem + 1px);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bf-accent);
+    box-shadow: 0 0 0 5px var(--bf-accent-dim);
+    content: '';
   }
 
-  .bf-journey-from,
-  .bf-journey-rough-idea,
-  .bf-journey-sharp-label,
-  .bf-journey-experience,
-  .bf-journey-result-label,
-  .bf-journey-final-text {
-    position: static;
-    display: block;
-    margin-bottom: 0.5rem;
+  .bf-jr-step-copy {
+    max-width: 36ch;
+    margin-left: 0;
   }
 
-  .bf-journey-rough-idea,
-  .bf-journey-experience,
-  .bf-jf-line-c { white-space: normal; }
-
-  .bf-cp {
-    position: static !important;
-    display: inline-block;
-    margin: 0.5rem 1.5rem 0.5rem 0;
-    opacity: 1 !important;
-    transform: none !important;
+  .bf-jr-result {
+    margin-left: 0;
   }
 }
 
@@ -1142,16 +1039,15 @@
    Frame: 50vw framed object → 100vw×100vh immersive viewport.
    ═══════════════════════════════════════════════════════════════════ */
 
+/* The panel is pinned by GSAP; its pin-spacer provides the scroll distance. */
 .bf-fw-section {
   position: relative;
-  height: 200vh;
   background-color: var(--bf-bg-primary);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .bf-fw-sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100vh;
   width: 100%;
   overflow: hidden;
@@ -1516,8 +1412,6 @@
 /* ── Mobile adjustments ─────────────────────────────────────────── */
 
 @media (max-width: 767px) {
-  .bf-fw-section { height: 140vh; }
-
   .bf-fw-title-block {
     bottom: auto;
     top: clamp(3rem, 10vh, 5rem);
@@ -1549,10 +1443,9 @@
 
 .bf-gt-section {
   position: relative;
-  height: 72vh;
   display: flex;
   align-items: center;
-  padding: 0 clamp(1.25rem, 5vw, 5rem);
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 5rem) clamp(2rem, 4vw, 3rem);
   background: var(--bf-bg-primary);
   overflow: hidden;
 }
@@ -2479,9 +2372,9 @@
   overflow: hidden;
 }
 
+/* Pinned by GSAP (see BehindTheFrame.tsx), so not position: sticky. */
 .bf-btf-sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -2527,10 +2420,12 @@
 
 /* ── Counter (§16) ────────────────────────────────────────────────────────── */
 
+/* Right edge, vertically centred — clear of the floating contact button. */
 .bf-btf-counter {
   position: absolute;
-  bottom: clamp(1.5rem, 3vh, 2.5rem);
+  top: 50%;
   right: clamp(1.5rem, 3vw, 3rem);
+  transform: translateY(-50%);
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -2602,6 +2497,12 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+}
+
+/* These two drawings use very faint strokes; lift them so they read. */
+.bf-btf-card--motion-card .bf-btf-card-visual,
+.bf-btf-card--engineering .bf-btf-card-visual {
+  filter: brightness(1.9);
 }
 
 /* Upper-left: micro label */
@@ -3241,7 +3142,7 @@
     height: clamp(340px, 75vw, 500px);
     transform: none !important;
     opacity: 1 !important;
-    margin-bottom: -2.5rem;   /* cards overlap slightly */
+    margin-bottom: 1rem;      /* no overlap: the title sits at the bottom edge */
     will-change: auto;
   }
 
@@ -3254,7 +3155,16 @@
   .bf-btf-card:last-child { margin-bottom: 0; }
 
   .bf-btf-card-title-line       { font-size: clamp(2rem, 8vw, 3rem); }
-  .bf-btf-card-thought p        { font-size: 0.625rem; }
+  .bf-btf-card-thought p        { font-size: 0.75rem; }
+
+  /* Narrow cards: thought sits under the micro label instead of beside it */
+  .bf-btf-card-thought {
+    top: calc(clamp(1.25rem, 2.5vh, 2rem) + 1.25rem);
+    left: clamp(1.5rem, 2.5vw, 2.5rem);
+    right: clamp(1.5rem, 2.5vw, 2.5rem);
+    max-width: none;
+    text-align: left;
+  }
   .bf-btf-card--final-frame .bf-btf-card-title-line { font-size: clamp(1.8rem, 7.5vw, 2.75rem); }
 
   /* Simplify card visuals on mobile */
@@ -3321,4 +3231,149 @@
   .bf-motion-dot                 { transform: translateX(44px) translateY(-50%) !important; }
   .bf-eng-container              { transform: none !important; }
   .bf-ff-img                     { transform: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TESTIMONIALS — rotating client quotes + client name marquee
+   ═══════════════════════════════════════════════════════════════════ */
+
+.bf-tm {
+  background-color: var(--bf-bg-primary);
+}
+
+.bf-tm-head {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.bf-tm-title {
+  margin: 0;
+  font-family: var(--bf-font-display);
+  font-size: var(--bf-text-4xl);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--bf-text-secondary);
+}
+
+.bf-tm-title span {
+  color: var(--bf-text-primary);
+}
+
+/* All quotes share one grid cell, so the stage is as tall as the longest. */
+.bf-tm-stage {
+  display: grid;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  max-width: 56rem;
+}
+
+.bf-tm-quote {
+  grid-area: 1 / 1;
+  margin: 0;
+}
+
+.bf-tm-mark {
+  width: 2rem;
+  height: 2rem;
+  color: var(--bf-accent);
+}
+
+.bf-tm-quote blockquote {
+  margin: 1.25rem 0 0;
+  font-family: var(--bf-font-display);
+  font-size: clamp(1.375rem, 2.6vw, 2.125rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--bf-text-primary);
+}
+
+.bf-tm-quote figcaption {
+  margin-top: 1.5rem;
+  font-family: var(--bf-font-body);
+  font-size: var(--bf-text-sm);
+  color: var(--bf-text-secondary);
+}
+
+.bf-tm-dots {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  margin-left: -0.75rem;
+}
+
+.bf-tm-dots button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.bf-tm-dots span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bf-text-tertiary);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.bf-tm-dots span.is-active {
+  width: 32px;
+  background: var(--bf-accent);
+}
+
+.bf-tm-clients {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding-top: 2rem;
+  border-top: 1px solid var(--bf-border-subtle);
+}
+
+.bf-tm-clients .bf-micro {
+  flex-shrink: 0;
+}
+
+.bf-tm-marquee {
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.bf-tm-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.bf-tm-client {
+  flex-shrink: 0;
+  padding-right: clamp(2.5rem, 5vw, 4.5rem);
+  font-family: var(--bf-font-display);
+  font-size: clamp(1rem, 1.6vw, 1.375rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: var(--bf-text-secondary);
+}
+
+@media (max-width: 639px) {
+  .bf-tm-clients {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bf-tm-marquee {
+    width: 100%;
+  }
 }

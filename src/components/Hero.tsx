@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MagneticButton } from './MagneticButton';
 // Optional per-section SEO override (example):
 // import { Helmet } from 'react-helmet-async';
@@ -8,7 +8,12 @@ import { MagneticButton } from './MagneticButton';
 //   <title>Nikhil Webworks | Hero</title>
 //   <meta name="description" content="Hero section overview." />
 // </Helmet>
-import { TrendingUp, Users, Zap } from 'lucide-react';
+
+const HERO_PROJECTS = [
+  { title: 'Huuman', category: 'Brand experience redesign', image: '/p1.webp', url: 'huuman-responsive-updated.vercel.app' },
+  { title: 'Roseberry Massage Spa', category: 'Booking-focused landing page', image: '/p2.webp', url: 'spas-one.vercel.app' },
+  { title: 'HBL', category: 'Corporate website redesign', image: '/p3.webp', url: 'hbl-eight.vercel.app' },
+];
 
 export function Hero({ onContactClick }: { onContactClick: () => void }) {
   const ref = useRef<HTMLElement>(null);
@@ -20,6 +25,12 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setActive((i) => (i + 1) % HERO_PROJECTS.length), 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const scrollToWork = () => {
     const element = document.getElementById('work-gallery');
@@ -39,7 +50,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Desktop Video - Added poster for LCP optimization */}
         <video
-          className="absolute inset-0 w-full h-full object-cover hidden md:block"
+          className="absolute inset-0 w-full h-full object-cover hidden md:block hero-video"
           autoPlay
           loop
           muted
@@ -53,7 +64,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
 
         {/* Mobile Video - Added poster for LCP optimization */}
         <video
-          className="absolute inset-0 w-full h-full object-cover md:hidden"
+          className="absolute inset-0 w-full h-full object-cover md:hidden hero-video"
           autoPlay
           loop
           muted
@@ -65,8 +76,9 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
           <track kind="captions" src="" label="No dialogue" default />
         </video>
 
-        {/* Light Overlay for text readability */}
+        {/* Overlay for text readability — darker behind the copy on the left */}
         <div className="absolute inset-0 bg-black/30" />
+        <div className="hero-readability-overlay" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -110,7 +122,7 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.65, type: 'spring', damping: 20, stiffness: 150 }} // Reduced from 0.8s
-              className="text-[#98A3AA] tracking-[0.2em] mb-12 text-xs md:text-sm"
+              className="hero-tagline"
             >
               A frontend-focused studio building high-performance landing pages designed to convert.
             </motion.p>
@@ -158,122 +170,44 @@ export function Hero({ onContactClick }: { onContactClick: () => void }) {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#5B3CFF]/30 via-[#67E8F9]/20 to-[#5B3CFF]/30 blur-3xl" />
               </div>
 
-              {/* Main Device Container */}
-              <div className="relative glass rounded-2xl p-6 shadow-2xl">
-                {/* Top Layer - Realistic UI Snapshot */}
-                <div className="relative bg-[#0B0D0F] rounded-xl overflow-hidden border border-[#7C8A96]/20">
-                  {/* Header Bar */}
-                  <div className="flex items-center justify-between p-4 border-b border-[#7C8A96]/20">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-[#5B3CFF]" />
-                      <div className="w-3 h-3 rounded-full bg-[#67E8F9]" />
-                      <div className="w-3 h-3 rounded-full bg-[#7C8A96]" />
-                    </div>
-                    <div className="text-[#7C8A96] text-xs">Dashboard</div>
-                    <div className="w-6 h-6" />
+              {/* Main Device Container — rotates through real project screenshots */}
+              <div className="relative glass rounded-2xl hero-showcase">
+                <a
+                  href="#work-gallery"
+                  onClick={(e) => { e.preventDefault(); scrollToWork(); }}
+                  className="hero-showcase-window"
+                  aria-label="See selected work"
+                >
+                  <div className="hero-showcase-bar" aria-hidden="true">
+                    <span className="hero-showcase-dots"><i /><i /><i /></span>
+                    <span className="hero-showcase-url">{HERO_PROJECTS[active].url}</span>
                   </div>
 
-                  {/* Stats Cards */}
-                  <div className="p-4 grid grid-cols-2 gap-3">
-                    <motion.div
-                      className="glass rounded-lg p-3"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.9 }} // Reduced from 1.2s
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingUp className="w-4 h-4 text-[#67E8F9]" />
-                        <span className="text-[#7C8A96] text-xs">Revenue</span>
-                      </div>
-                      <div className="text-[#E6EEF3] text-lg" style={{ fontWeight: 600 }}>
-                        +152%
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      className="glass rounded-lg p-3"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.1 }} // Reduced from 1.4s
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <Users className="w-4 h-4 text-[#67E8F9]" />
-                        <span className="text-[#7C8A96] text-xs">Users</span>
-                      </div>
-                      <div className="text-[#E6EEF3] text-lg" style={{ fontWeight: 600 }}>
-                        12.4K
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  {/* Middle Layer - Animated Dashboard Graph */}
-                  <div className="p-4">
-                    <div className="glass rounded-lg p-4 h-32 relative overflow-hidden">
-                      {/* Animated line chart */}
-                      <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="none">
-                        <motion.path
-                          d="M0,80 Q75,20 150,40 T300,10"
-                          fill="none"
-                          stroke="url(#gradient)"
-                          strokeWidth="3"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 1.2, delay: 1.2, ease: 'easeInOut' }} // Reduced from 2s
-                        />
-                        <motion.path
-                          d="M0,80 Q75,20 150,40 T300,10 L300,100 L0,100 Z"
-                          fill="url(#gradientFill)"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 0.3 }}
-                          transition={{ duration: 0.8, delay: 1.4 }} // Reduced from 1s delay
-                        />
-                        <defs>
-                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#5B3CFF" />
-                            <stop offset="100%" stopColor="#67E8F9" />
-                          </linearGradient>
-                          <linearGradient id="gradientFill" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#5B3CFF" stopOpacity="0.3" />
-                            <stop offset="100%" stopColor="#5B3CFF" stopOpacity="0" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-
-                      {/* Animated dot on line */}
-                      <motion.div
-                        className="absolute w-2 h-2 bg-[#67E8F9] rounded-full shadow-lg shadow-[#67E8F9]/50"
-                        animate={{
-                          x: [0, 150, 300],
-                          y: [80, 40, 20],
-                        }}
-                        transition={{
-                          duration: 2, // Reduced from 3s
-                          delay: 1.4, // Reduced from 2s
-                          repeat: Infinity,
-                          ease: 'linear',
-                        }}
-                        style={{ top: '20%', left: 0 }}
+                  <div className="hero-showcase-screen">
+                    {HERO_PROJECTS.map((project, i) => (
+                      <img
+                        key={project.image}
+                        src={project.image}
+                        alt={i === active ? `${project.title} website` : ''}
+                        aria-hidden={i !== active}
+                        className={i === active ? 'is-active' : undefined}
+                        loading={i === 0 ? 'eager' : 'lazy'}
                       />
-                    </div>
+                    ))}
                   </div>
 
-                  {/* CTA Button */}
-                  <div className="p-4">
-                    <motion.div
-                      className="w-full py-3 bg-gradient-to-r from-[#5B3CFF] to-[#67E8F9] rounded-lg text-center text-[#E6EEF3] text-sm"
-                      style={{ fontWeight: 600 }}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1.3 }} // Reduced from 1.8s
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <Zap className="w-4 h-4" />
-                        <span>Optimize Now</span>
-                      </div>
-                    </motion.div>
+                  <div className="hero-showcase-caption">
+                    <div>
+                      <strong>{HERO_PROJECTS[active].title}</strong>
+                      <span>{HERO_PROJECTS[active].category}</span>
+                    </div>
+                    <span className="hero-showcase-pager" aria-hidden="true">
+                      {HERO_PROJECTS.map((project, i) => (
+                        <i key={project.title} className={i === active ? 'is-active' : undefined} />
+                      ))}
+                    </span>
                   </div>
-                </div>
+                </a>
               </div>
 
               {/* Floating elements around device - faster animation */}

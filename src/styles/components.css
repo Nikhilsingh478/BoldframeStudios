@@ -1,0 +1,160 @@
+/*
+ * Component styles that live outside the .boldframe-redesign scope
+ * (hero, header, footer, floating controls). Uses the same palette:
+ * violet #5B3CFF, cyan #67E8F9, text #E6EEF3 / #98A3AA, base #0B0D0F.
+ */
+
+/* ─── Hero ───────────────────────────────────────────────────────── */
+
+/* The background clip carries a generator watermark in its bottom-right
+   corner; scaling from the top-left pushes that corner out of view. */
+.hero-video {
+  transform: scale(1.12);
+  transform-origin: 0 0;
+}
+
+.hero-readability-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 13, 15, 0.82) 0%, rgba(11, 13, 15, 0.45) 45%, rgba(11, 13, 15, 0) 75%);
+}
+
+.hero-tagline {
+  max-width: 30rem;
+  margin-bottom: 2.5rem;
+  color: #C9D3D9;
+  font-size: clamp(1rem, 1.3vw, 1.125rem);
+  line-height: 1.65;
+}
+
+.hero-showcase {
+  padding: 12px;
+}
+
+.hero-showcase-window {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(124, 138, 150, 0.2);
+  border-radius: 12px;
+  background: #0B0D0F;
+  text-decoration: none;
+}
+
+.hero-showcase-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(124, 138, 150, 0.2);
+}
+
+.hero-showcase-dots {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.hero-showcase-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #7C8A96;
+}
+
+.hero-showcase-dots i:first-child { background: #5B3CFF; }
+.hero-showcase-dots i:nth-child(2) { background: #67E8F9; }
+
+.hero-showcase-url {
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #98A3AA;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-showcase-screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.hero-showcase-screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.hero-showcase-screen img.is-active {
+  opacity: 1;
+}
+
+.hero-showcase-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(124, 138, 150, 0.2);
+}
+
+.hero-showcase-caption strong {
+  display: block;
+  color: #E6EEF3;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hero-showcase-caption span {
+  color: #7C8A96;
+  font-size: 12px;
+}
+
+.hero-showcase-pager {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-showcase-pager i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(124, 138, 150, 0.4);
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.hero-showcase-pager i.is-active {
+  width: 18px;
+  background: #67E8F9;
+}
+
+/* ─── Floating controls ──────────────────────────────────────────── */
+
+/* Smaller and tucked into the corners on phones so they cover less content. */
+@media (max-width: 767px) {
+  .floating-contact {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .floating-contact-btn {
+    width: 52px;
+    height: 52px;
+  }
+
+  .back-to-top {
+    left: 16px;
+    bottom: 20px;
+    width: 44px;
+    height: 44px;
+  }
+}
