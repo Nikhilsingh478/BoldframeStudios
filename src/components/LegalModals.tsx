@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
+import { setScrollLocked } from '../lib/smoothScroll';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -18,9 +19,12 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
     } else {
       document.body.style.overflow = '';
     }
+    // Smooth scroll ignores body overflow, so pause it explicitly.
+    setScrollLocked(!!activeModal, 'legal');
 
     return () => {
       document.body.style.overflow = '';
+      setScrollLocked(false, 'legal');
     };
   }, [activeModal]);
 
@@ -55,7 +59,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/90 cursor-pointer"
+            className="fixed inset-0 bg-black/90 cursor-pointer bfx-modal-backdrop"
             style={{ zIndex: 2147483645 }}
           />
 
@@ -69,13 +73,13 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 400 }}
-              className="relative w-full max-w-2xl h-[70vh] flex flex-col rounded-2xl bg-[#0F1316] border border-[#7C8A96]/20 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-2xl h-[70vh] flex flex-col rounded-2xl bg-[#0F1316] border border-[#7C8A96]/20 shadow-2xl overflow-hidden bfx-modal bfx-modal--legal"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1A1F24] hover:bg-[#252b31] border border-[#7C8A96]/20 flex items-center justify-center transition-colors z-50 focus:outline-none focus:ring-2 focus:ring-[#67E8F9] cursor-pointer"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1A1F24] hover:bg-[#252b31] border border-[#7C8A96]/20 flex items-center justify-center transition-colors z-50 focus:outline-none focus:ring-2 focus:ring-[#67E8F9] cursor-pointer bfx-modal-close"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-[#E6EEF3]" />

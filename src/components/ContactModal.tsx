@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
+import { setScrollLocked } from '../lib/smoothScroll';
 import { useState, useEffect } from 'react';
 // Optional per-section SEO override (example):
 // import { Helmet } from 'react-helmet-async';
@@ -38,9 +39,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     } else {
       document.body.style.overflow = '';
     }
+    // Smooth scroll ignores body overflow, so pause it explicitly.
+    setScrollLocked(!!isOpen, 'contact');
 
     return () => {
       document.body.style.overflow = '';
+      setScrollLocked(false, 'contact');
     };
   }, [isOpen]);
 
@@ -136,7 +140,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 z-50"
+            className="fixed inset-0 bg-black/80 z-50 bfx-modal-backdrop"
             style={{ backdropFilter: 'blur(4px)' }}
           />
 
@@ -147,13 +151,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 400 }}
-              className="glass rounded-2xl p-8 max-w-lg w-full relative"
+              className="glass rounded-2xl p-8 max-w-lg w-full relative bfx-modal"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#0F1316] flex items-center justify-center hover:bg-[#1a1f24] transition-colors"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#0F1316] flex items-center justify-center hover:bg-[#1a1f24] transition-colors bfx-modal-close"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-[#98A3AA]" />
@@ -232,7 +236,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-[#5B3CFF] to-[#7055ff] text-[#E6EEF3] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#5B3CFF]/30 flex items-center justify-center"
+                  className="w-full py-4 bg-gradient-to-r from-[#5B3CFF] to-[#7055ff] text-[#E6EEF3] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#5B3CFF]/30 flex items-center justify-center bfx-modal-submit"
                   whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                   style={{ fontWeight: 600 }}
