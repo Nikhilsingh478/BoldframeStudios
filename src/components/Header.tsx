@@ -1,33 +1,35 @@
-import StaggeredMenu from './react-bits/StaggeredMenu';
+import { useState } from 'react';
 
 export function Header({ onContactClick }: { onContactClick: () => void }) {
-  const menuItems = [
-    { label: 'Home', ariaLabel: 'Go to home page', link: '#hero' },
-    { label: 'Services', ariaLabel: 'View our services', link: '#capabilities' },
-    { label: 'Work', ariaLabel: 'View selected work', link: '#work-gallery' },
-    { label: 'Contact', ariaLabel: 'Get in touch', link: '#contact' }
-  ];
-
-  const socialItems = [
-    { label: 'Twitter', link: 'https://twitter.com' },
-    { label: 'GitHub', link: 'https://github.com/Nikhilsingh478' },
-    { label: 'LinkedIn', link: 'https://www.linkedin.com/in/nikhilsingh14788' }
-  ];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <StaggeredMenu
-      position="right"
-      items={menuItems}
-      socialItems={socialItems}
-      displaySocials={true}
-      displayItemNumbering={true}
-      menuButtonColor="#E6EEF3"
-      openMenuButtonColor="#111111"
-      changeMenuColorOnOpen={true}
-      colors={['#B497CF', '#5227FF']}
-      accentColor="#5227FF"
-      isFixed={true}
-      onContactClick={onContactClick}
-    />
+    <header className="site-header">
+      <div className="site-header-inner">
+        <a className="site-brand" href="#hero" onClick={closeMenu} aria-label="BoldFrame Studios, home">
+          <span className="brand-mark" aria-hidden="true">B</span>
+          <span>BoldFrame<span className="brand-studios"> Studios</span></span>
+        </a>
+        <button
+          className="nav-toggle"
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span>{menuOpen ? 'Close' : 'Menu'}</span>
+          <span className={`menu-glyph${menuOpen ? ' is-open' : ''}`} aria-hidden="true"><i /><i /></span>
+        </button>
+        <nav id="primary-navigation" className={`site-nav${menuOpen ? ' is-open' : ''}`} aria-label="Main navigation">
+          <a href="#capabilities" onClick={closeMenu}>Services</a>
+          <a href="#journey" onClick={closeMenu}>Approach</a>
+          <a href="#work-gallery" onClick={closeMenu}>Selected work</a>
+          <button className="nav-contact" type="button" onClick={() => { closeMenu(); onContactClick(); }}>
+            Start a conversation <span aria-hidden="true">↗</span>
+          </button>
+        </nav>
+      </div>
+    </header>
   );
 }

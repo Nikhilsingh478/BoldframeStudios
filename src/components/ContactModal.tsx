@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // Optional per-section SEO override (example):
 // import { Helmet } from 'react-helmet-async';
 // Inside the rendered fragment when open, you may add:
@@ -23,6 +23,8 @@ const EMAILJS_SERVICE_ID = import.meta.env?.VITE_EMAILJS_SERVICE_ID || 'service_
 const EMAILJS_ADMIN_TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_ADMIN_TEMPLATE_ID || 'template_hl5a33o';
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -44,16 +46,40 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     };
   }, [isOpen]);
 
-  // Close on Escape key
+  // Keep keyboard focus within the modal and return focus to the opener.
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const focusFrame = window.requestAnimationFrame(() => {
+      modalRef.current?.querySelector<HTMLElement>('input, textarea, button:not(:disabled)')?.focus();
+    });
+    const handleModalKeys = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
         onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !modalRef.current) return;
+      const focusable = Array.from(modalRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+      ));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    window.addEventListener('keydown', handleModalKeys);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener('keydown', handleModalKeys);
+      previouslyFocused?.focus?.();
+    };
   }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,8 +92,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       if (!emailjs || typeof emailjs.send !== 'function') {
         throw new Error('EmailJS not loaded. Please refresh the page and try again.');
       }
-
-      console.log('📧 Sending admin email...');
 
       // Send only admin notification email
       const response = await emailjs.send(
@@ -84,39 +108,39 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         EMAILJS_PUBLIC_KEY
       );
 
-      console.log('✅ Admin email sent successfully:', response);
+      void response;
       
       // Show success message
       if ((window as any).Swal) {
         await (window as any).Swal.fire({
           icon: 'success',
-          title: '✅ Message Sent!',
-          html: '<p style="color: #E6EEF3;">We\'ve received your details and will get back to you within 24 hours.</p>',
-          background: '#0F1316',
-          color: '#E6EEF3',
-          confirmButtonColor: '#5B3CFF',
-          confirmButtonText: 'Great!',
+          title: 'Message sent',
+          html: '<p>Thanks for getting in touch. Your message has been received.</p>',
+          background: '#f2eee4',
+          color: '#292b25',
+          confirmButtonColor: '#b64e35',
+          confirmButtonText: 'Close',
           showConfirmButton: true,
         });
       } else {
-        alert('Message sent successfully! Check your email for confirmation.');
+        alert('Message sent successfully. Your message has been received.');
       }
 
       // Reset form and close modal
       setFormData({ name: '', email: '', phone: '', message: '' });
       onClose();
-    } catch (error: any) {
-      console.error('❌ Error submitting form:', error);
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
       
       // Show error message
       if ((window as any).Swal) {
         (window as any).Swal.fire({
           icon: 'error',
-          title: '⚠️ Oops...',
+          title: 'Message could not be sent',
           text: 'Something went wrong. Please try again or contact us directly at nikhilwebworks@gmail.com',
-          background: '#0F1316',
-          color: '#E6EEF3',
-          confirmButtonColor: '#5B3CFF',
+          background: '#f2eee4',
+          color: '#292b25',
+          confirmButtonColor: '#b64e35',
         });
       } else {
         alert('Failed to send message. Please email us at nikhilwebworks@gmail.com');
@@ -132,28 +156,33 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         <>
           {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={reduceMotion ? { duration: 0 } : undefined}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 z-50"
+            className="contact-backdrop fixed inset-0 bg-black/80 z-50"
             style={{ backdropFilter: 'blur(4px)' }}
           />
 
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              ref={modalRef}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 400 }}
-              className="glass rounded-2xl p-8 max-w-lg w-full relative"
+              transition={reduceMotion ? { duration: 0 } : { type: 'spring', damping: 25, stiffness: 400 }}
+              className="contact-shell glass rounded-2xl p-8 max-w-lg w-full relative"
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="contact-title"
             >
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#0F1316] flex items-center justify-center hover:bg-[#1a1f24] transition-colors"
+                className="contact-close absolute top-4 right-4 w-10 h-10 rounded-full bg-[#0F1316] flex items-center justify-center hover:bg-[#1a1f24] transition-colors"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-[#98A3AA]" />
@@ -161,11 +190,11 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
               {/* Header */}
               <div className="mb-8">
-                <h2 className="text-3xl text-[#E6EEF3] mb-2" style={{ fontWeight: 600 }}>
-                  Start a Project
+                <h2 id="contact-title" className="text-3xl text-[#E6EEF3] mb-2" style={{ fontWeight: 600 }}>
+                  Tell us what you&rsquo;re building
                 </h2>
                 <p className="text-[#98A3AA]">
-                  Tell us about your project and we'll get back to you within 24 hours.
+                  A few details about your project are a good place to start.
                 </p>
               </div>
 
@@ -232,7 +261,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-[#5B3CFF] to-[#7055ff] text-[#E6EEF3] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#5B3CFF]/30 flex items-center justify-center"
+                  className="contact-submit w-full py-4 bg-gradient-to-r from-[#5B3CFF] to-[#7055ff] text-[#E6EEF3] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#5B3CFF]/30 flex items-center justify-center"
                   whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                   style={{ fontWeight: 600 }}

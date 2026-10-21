@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -10,6 +10,8 @@ interface LegalModalsProps {
 
 export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   // Trap focus inside modal
   useEffect(() => {
@@ -24,16 +26,40 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
     };
   }, [activeModal]);
 
-  // Close on Escape key
+  // Keep keyboard focus inside legal content and return focus to its opener.
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && activeModal) {
+    if (!activeModal) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const focusFrame = window.requestAnimationFrame(() => {
+      dialogRef.current?.querySelector<HTMLElement>('button, a[href]')?.focus();
+    });
+    const handleModalKeys = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
         onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not(:disabled), [tabindex]:not([tabindex="-1"])',
+      ));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    window.addEventListener('keydown', handleModalKeys);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener('keydown', handleModalKeys);
+      previouslyFocused?.focus?.();
+    };
   }, [activeModal, onClose]);
 
   // Scroll to top when modal content changes
@@ -51,11 +77,12 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
         <>
           {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={reduceMotion ? { duration: 0 } : undefined}
             onClick={onClose}
-            className="fixed inset-0 bg-black/90 cursor-pointer"
+            className="legal-backdrop fixed inset-0 bg-black/90 cursor-pointer"
             style={{ zIndex: 2147483645 }}
           />
 
@@ -65,12 +92,16 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
             style={{ zIndex: 2147483646 }}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              ref={dialogRef}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 400 }}
-              className="relative w-full max-w-2xl h-[70vh] flex flex-col rounded-2xl bg-[#0F1316] border border-[#7C8A96]/20 shadow-2xl overflow-hidden"
+              transition={reduceMotion ? { duration: 0 } : { type: 'spring', damping: 25, stiffness: 400 }}
+              className="legal-shell relative w-full max-w-2xl h-[70vh] flex flex-col rounded-2xl bg-[#0F1316] border border-[#7C8A96]/20 shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="legal-title"
             >
               {/* Close button */}
               <button
@@ -83,7 +114,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
 
               {/* Header */}
               <div className="p-8 pb-4 border-b border-[#7C8A96]/20 flex-shrink-0 bg-[#0F1316]">
-                <h2 className="text-2xl md:text-3xl text-[#E6EEF3] font-semibold pr-12">
+                <h2 id="legal-title" className="text-2xl md:text-3xl text-[#E6EEF3] font-semibold pr-12">
                   {activeModal === 'privacy' ? 'Privacy Policy' : 'Terms of Service'}
                 </h2>
                 <p className="text-[#98A3AA] text-sm mt-1">
@@ -93,7 +124,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
 
               {/* Scrollable Content */}
               <div 
-                className="overflow-y-auto p-8 pt-6 custom-scrollbar flex-grow bg-[#0F1316]" 
+                className="legal-content overflow-y-auto p-8 pt-6 custom-scrollbar flex-grow bg-[#0F1316]" 
                 ref={contentRef}
                 style={{ overscrollBehavior: 'contain' }}
               >

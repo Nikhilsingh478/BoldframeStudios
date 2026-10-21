@@ -1,28 +1,16 @@
 /// <reference types="vite/client" />
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Loader } from './components/Loader';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-
-// Lazy load non-critical components for better performance
-const Capabilities = lazy(() => import('./components/redesign/Capabilities').then(m => ({ default: m.Capabilities })));
-const Journey = lazy(() => import('./components/redesign/Journey').then(m => ({ default: m.Journey })));
-const WorkIntro = lazy(() => import('./components/redesign/WorkIntro').then(m => ({ default: m.WorkIntro })));
-const FeaturedWork = lazy(() => import('./components/redesign/FeaturedWork').then(m => ({ default: m.FeaturedWork })));
-const WorkGalleryTransition = lazy(() => import('./components/redesign/WorkGalleryTransition').then(m => ({ default: m.WorkGalleryTransition })));
-const WorkGallery = lazy(() => import('./components/redesign/WorkGallery').then(m => ({ default: m.WorkGallery })));
-const BehindTheFrame = lazy(() => import('./components/redesign/BehindTheFrame').then(m => ({ default: m.BehindTheFrame })));
-const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({ default: m.Testimonials })));
-const ContactModal = lazy(() => import('./components/ContactModal').then(m => ({ default: m.ContactModal })));
-const FloatingContact = lazy(() => import('./components/FloatingContact').then(m => ({ default: m.FloatingContact })));
-const BackToTop = lazy(() => import('./components/BackToTop').then(m => ({ default: m.BackToTop })));
-const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
-const CustomCursor = lazy(() => import('./components/ui/CustomCursor'));
-const LegalModals = lazy(() => import('./components/LegalModals').then(m => ({ default: m.LegalModals })));
+import { Capabilities } from './components/redesign/Capabilities';
+import { Journey } from './components/redesign/Journey';
+import { WorkGallery } from './components/redesign/WorkGallery';
+import { ContactModal } from './components/ContactModal';
+import { LegalModals } from './components/LegalModals';
+import { Footer } from './components/Footer';
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
@@ -43,7 +31,6 @@ export default function App() {
       document.body.appendChild(script);
     };
 
-    loadScript('https://cdn.jsdelivr.net/npm/sweetalert2@11');
     loadScript(
       'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
       () => {
@@ -63,21 +50,21 @@ export default function App() {
     <>
       <Helmet>
         <title>BoldFrame Studios</title>
-        <meta name="description" content="We build lightning-fast, elegant, SEO-ready websites and web apps tailored for modern businesses." />
+        <meta name="description" content="BoldFrame Studios brings strategy, design and frontend development together to make distinctive websites." />
         <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
         <meta name="author" content="Nikhil Webworks" />
         <link rel="canonical" href="https://boldframestudios.in/" />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="BoldFrame Studios" />
-        <meta property="og:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
+        <meta property="og:description" content="Strategy, design and frontend development for distinctive websites." />
         <meta property="og:url" content="https://boldframestudios.in/" />
         <meta property="og:image" content="/preview.png" />
         <meta property="og:site_name" content="BoldFrame Studios" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="BoldFrame Studios" />
-        <meta name="twitter:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
+        <meta name="twitter:description" content="Strategy, design and frontend development for distinctive websites." />
         <meta name="twitter:image" content="/preview.png" />
         {/* Viewport & Fallbacks */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -111,55 +98,29 @@ export default function App() {
 }
         `}</script>
       </Helmet>
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
-      
-      {!isLoading && (
-        <div className="min-h-screen bg-[#0B0D0F]">
-          <Suspense fallback={null}>
-            <CustomCursor />
-          </Suspense>
-          <Header onContactClick={openContactModal} />
-          <main>
-            {/* LOCKED — do not modify the hero */}
-            <Hero onContactClick={openContactModal} />
-
-            {/* Post-hero redesign — all new sections live inside this wrapper.
-                Design tokens, typography and motion utilities are scoped here. */}
-            <div className="boldframe-redesign">
-              <Suspense fallback={<div className="min-h-screen" />}>
-                <Capabilities />
-                <Journey />
-                <WorkIntro />
-                <FeaturedWork />
-                <WorkGalleryTransition />
-                <WorkGallery />
-                <BehindTheFrame />
-                <Testimonials />
-              </Suspense>
-            </div>
-          </main>
-          <Suspense fallback={null}>
-            <Footer 
-              onContactClick={openContactModal} 
-              onPrivacyClick={() => setActiveLegalModal('privacy')}
-              onTermsClick={() => setActiveLegalModal('terms')}
-            />
-            
-            <ContactModal
-              isOpen={isContactModalOpen}
-              onClose={() => setIsContactModalOpen(false)}
-            />
-
-            <LegalModals
-              activeModal={activeLegalModal}
-              onClose={() => setActiveLegalModal(null)}
-            />
-            
-            <FloatingContact onContactClick={openContactModal} />
-            <BackToTop />
-          </Suspense>
-        </div>
-      )}
+      <div className="studio-site">
+        <a className="skip-link" href="#main-content">Skip to content</a>
+        <Header onContactClick={openContactModal} />
+        <main id="main-content">
+          <Hero onContactClick={openContactModal} />
+          <Capabilities />
+          <Journey />
+          <WorkGallery />
+        </main>
+        <Footer
+          onContactClick={openContactModal}
+          onPrivacyClick={() => setActiveLegalModal('privacy')}
+          onTermsClick={() => setActiveLegalModal('terms')}
+        />
+        <ContactModal
+          isOpen={isContactModalOpen}
+          onClose={() => setIsContactModalOpen(false)}
+        />
+        <LegalModals
+          activeModal={activeLegalModal}
+          onClose={() => setActiveLegalModal(null)}
+        />
+      </div>
     </>
   );
 }
