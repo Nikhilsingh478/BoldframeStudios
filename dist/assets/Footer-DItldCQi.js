@@ -1,4 +1,4 @@
-import{j as e}from"./radix-D4tmaoiR.js";import{m as n}from"./index-B3Hr2DcX.js";import"./react-D3F3s8fL.js";import"./motion-B42wbOFf.js";function x({onContactClick:s,onPrivacyClick:i,onTermsClick:t}){const r=(o,l)=>{o.preventDefault();const a=document.getElementById(l);a&&a.scrollIntoView({behavior:"smooth"})};return e.jsxs("footer",{className:"footer-section",children:[e.jsx("style",{children:`
+import{j as e}from"./radix-D4tmaoiR.js";import{m as n}from"./index-CivoSL-W.js";import"./react-D3F3s8fL.js";import"./motion-B42wbOFf.js";function x({onContactClick:s,onPrivacyClick:i,onTermsClick:t}){const r=(o,l)=>{o.preventDefault();const a=document.getElementById(l);a&&a.scrollIntoView({behavior:"smooth"})};return e.jsxs("footer",{className:"footer-section",children:[e.jsx("style",{children:`
         .footer-section {
           background: #0B0D0F;
           border-top: 1px solid rgba(255, 255, 255, 0.03);

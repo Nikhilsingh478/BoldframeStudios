@@ -524,18 +524,22 @@
   stroke-width: 2;
 }
 
+/* Drawn with a left-to-right clip rather than stroke-dashoffset: the SVG
+   stretches to the container (preserveAspectRatio="none"), and Chrome
+   measures dashes on a non-scaling stroke in screen space, so a dash-based
+   draw stopped short of the last node on wide screens. Linear timing keeps
+   the line's tip in step with the nodes, which light up by x position. */
 .bf-jr-path-line {
   stroke: var(--bf-accent);
   stroke-width: 4;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition-property: stroke-dashoffset;
-  transition-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  clip-path: inset(-20px 100% -20px -20px);
+  transition-property: clip-path;
+  transition-timing-function: linear;
   transition-delay: 0.25s;
 }
 
 .bf-jr-track.is-drawn .bf-jr-path-line {
-  stroke-dashoffset: 0;
+  clip-path: inset(-20px -20px -20px -20px);
 }
 
 .bf-jr-node {

@@ -81,7 +81,6 @@ export function Journey() {
               <path
                 className="bf-jr-path-line"
                 d={TRACK_PATH}
-                pathLength={1}
                 vectorEffect="non-scaling-stroke"
                 style={{ transitionDuration: reduceMotion ? '0s' : `${DRAW_SECONDS}s` }}
               />
