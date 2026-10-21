@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FloatingContactProps {
   onContactClick: () => void;
@@ -8,6 +8,20 @@ interface FloatingContactProps {
 
 export function FloatingContact({ onContactClick }: FloatingContactProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  // The hero and the closing section have their own calls to action;
+  // show this button only in between.
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const closing = document.getElementById('contact');
+      const atClosing = !!closing && closing.getBoundingClientRect().top < window.innerHeight * 0.85;
+      setVisible(window.scrollY > window.innerHeight * 0.6 && !atClosing);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const quickLinks = [
     { label: 'Email Us', action: () => window.location.href = 'mailto:nikhilwebworks@gmail.com' },
@@ -15,7 +29,7 @@ export function FloatingContact({ onContactClick }: FloatingContactProps) {
   ];
 
   return (
-    <div className="fixed bottom-8 right-8 z-50 floating-contact">
+    <div className={`fixed bottom-8 right-8 z-50 floating-contact${visible || isExpanded ? '' : ' is-hidden'}`}>
       <AnimatePresence>
         {isExpanded && (
           <motion.div

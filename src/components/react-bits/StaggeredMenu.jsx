@@ -1,5 +1,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { scrollToId, setScrollLocked } from '../../lib/smoothScroll';
 
 /**
  * @typedef {Object} MenuItem
@@ -380,9 +381,8 @@ export const StaggeredMenu = ({
         onContactClick?.();
       } else {
         const targetId = it.link.startsWith('#') ? it.link.slice(1) : it.link;
-        const el = document.getElementById(targetId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+        if (document.getElementById(targetId)) {
+          scrollToId(targetId);
         } else {
           window.location.href = it.link;
         }
@@ -417,8 +417,11 @@ export const StaggeredMenu = ({
     } else {
       document.body.style.overflow = '';
     }
+    // Smooth scroll ignores body overflow, so pause it explicitly.
+    setScrollLocked(!!open);
     return () => {
       document.body.style.overflow = '';
+      setScrollLocked(false);
     };
   }, [open]);
 
@@ -467,8 +470,7 @@ export const StaggeredMenu = ({
             onClick={() => {
               closeMenu();
               setTimeout(() => {
-                const el = document.getElementById('hero');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                scrollToId('hero');
               }, 400);
             }}
           >

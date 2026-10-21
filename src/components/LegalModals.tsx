@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
+import { setScrollLocked } from '../lib/smoothScroll';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -18,9 +19,12 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
     } else {
       document.body.style.overflow = '';
     }
+    // Smooth scroll ignores body overflow, so pause it explicitly.
+    setScrollLocked(!!activeModal);
 
     return () => {
       document.body.style.overflow = '';
+      setScrollLocked(false);
     };
   }, [activeModal]);
 

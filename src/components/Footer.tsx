@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { scrollToId } from '../lib/smoothScroll';
 
 interface FooterProps {
   onContactClick: () => void;
@@ -10,10 +11,7 @@ interface FooterProps {
 export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterProps) {
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToId(id);
   };
 
   return (
@@ -44,7 +42,7 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
         /* Top Grid: Brand Identity & Subscribe Block */
         .footer-top-grid {
           display: grid;
-          grid-template-columns: 1.2fr 1fr;
+          grid-template-columns: 1fr;
           gap: 48px;
           align-items: flex-start;
           width: 100%;
@@ -124,78 +122,15 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           color: white;
         }
 
-        .footer-subscribe-section {
-          background: rgba(255, 255, 255, 0.01);
-          border: 1px solid rgba(255, 255, 255, 0.03);
-          border-radius: 20px;
-          padding: 32px;
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          box-sizing: border-box;
-          width: 100%;
-        }
-
-        .footer-subscribe-title {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 20px;
-          font-weight: 700;
-          color: #E6EEF3;
-          letter-spacing: -0.01em;
-        }
-
-        .footer-subscribe-desc {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 14px;
-          color: #9ca3af;
-          line-height: 1.5;
-        }
-
-        .footer-subscribe-form {
-          display: flex;
-          gap: 12px;
-          width: 100%;
-          position: relative;
-        }
 
 
-        .footer-subscribe-btn {
-          background: #E6EEF3;
-          color: #0B0D0F;
-          border: none;
-          border-radius: 10px;
-          padding: 12px 24px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.2s, transform 0.15s;
-          white-space: nowrap;
-        }
 
-        .footer-subscribe-form {
-          align-items: center;
-          flex-wrap: wrap;
-        }
 
-        .footer-email {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 14px;
-          color: #E6EEF3;
-          text-decoration: underline;
-          text-decoration-color: rgba(230, 238, 243, 0.25);
-          text-underline-offset: 4px;
-          transition: text-decoration-color 0.2s;
-        }
 
-        .footer-email:hover {
-          text-decoration-color: #67E8F9;
-        }
 
-        .footer-subscribe-btn:hover {
-          background: white;
-          transform: translateY(-1px);
-        }
+
+
+
 
         /* Middle Grid: Dynamic Navigation Columns */
         .footer-nav-grid {
@@ -314,17 +249,6 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
           .footer-section {
             padding: 60px 16px 32px;
           }
-          .footer-subscribe-section {
-            padding: 24px 20px;
-          }
-          .footer-subscribe-form {
-            flex-direction: column;
-            gap: 8px;
-          }
-          .footer-subscribe-btn {
-            width: 100%;
-            text-align: center;
-          }
           .footer-nav-grid {
             grid-template-columns: 1fr;
             gap: 28px;
@@ -378,24 +302,6 @@ export function Footer({ onContactClick, onPrivacyClick, onTermsClick }: FooterP
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="footer-subscribe-section"
-          >
-            <h3 className="footer-subscribe-title">Have a project in mind?</h3>
-            <p className="footer-subscribe-desc">
-              Tell us what you&rsquo;re building and we&rsquo;ll reply with next steps.
-            </p>
-            <div className="footer-subscribe-form">
-              <button type="button" className="footer-subscribe-btn" onClick={onContactClick}>
-                Start a Project
-              </button>
-              <a className="footer-email" href="mailto:nikhilwebworks@gmail.com">nikhilwebworks@gmail.com</a>
-            </div>
-          </motion.div>
         </div>
 
         {/* Navigation Grid */}

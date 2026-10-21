@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
+import { setScrollLocked } from '../lib/smoothScroll';
 import { useState, useEffect } from 'react';
 // Optional per-section SEO override (example):
 // import { Helmet } from 'react-helmet-async';
@@ -38,9 +39,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     } else {
       document.body.style.overflow = '';
     }
+    // Smooth scroll ignores body overflow, so pause it explicitly.
+    setScrollLocked(!!isOpen);
 
     return () => {
       document.body.style.overflow = '';
+      setScrollLocked(false);
     };
   }, [isOpen]);
 

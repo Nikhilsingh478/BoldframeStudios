@@ -1,7 +1,8 @@
 /// <reference types="vite/client" />
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Loader } from './components/Loader';
+import { Intro } from './components/Intro';
+import { initSmoothScroll } from './lib/smoothScroll';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 
@@ -10,8 +11,9 @@ const Capabilities = lazy(() => import('./components/redesign/Capabilities').the
 const Journey = lazy(() => import('./components/redesign/Journey').then(m => ({ default: m.Journey })));
 const WorkIntro = lazy(() => import('./components/redesign/WorkIntro').then(m => ({ default: m.WorkIntro })));
 const FeaturedWork = lazy(() => import('./components/redesign/FeaturedWork').then(m => ({ default: m.FeaturedWork })));
-const WorkGalleryTransition = lazy(() => import('./components/redesign/WorkGalleryTransition').then(m => ({ default: m.WorkGalleryTransition })));
 const WorkGallery = lazy(() => import('./components/redesign/WorkGallery').then(m => ({ default: m.WorkGallery })));
+const Outcomes = lazy(() => import('./components/redesign/Outcomes').then(m => ({ default: m.Outcomes })));
+const ClosingCTA = lazy(() => import('./components/redesign/ClosingCTA').then(m => ({ default: m.ClosingCTA })));
 const BehindTheFrame = lazy(() => import('./components/redesign/BehindTheFrame').then(m => ({ default: m.BehindTheFrame })));
 const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({ default: m.Testimonials })));
 const ContactModal = lazy(() => import('./components/ContactModal').then(m => ({ default: m.ContactModal })));
@@ -22,7 +24,6 @@ const CustomCursor = lazy(() => import('./components/ui/CustomCursor'));
 const LegalModals = lazy(() => import('./components/LegalModals').then(m => ({ default: m.LegalModals })));
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
@@ -53,6 +54,8 @@ export default function App() {
       }
     );
   };
+
+  useEffect(() => initSmoothScroll(), []);
 
   const openContactModal = () => {
     loadContactScripts();
@@ -111,16 +114,14 @@ export default function App() {
 }
         `}</script>
       </Helmet>
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
-      
-      {!isLoading && (
-        <div className="min-h-screen bg-[#0B0D0F]">
+      <Intro />
+
+      <div className="min-h-screen bg-[#0B0D0F]">
           <Suspense fallback={null}>
             <CustomCursor />
           </Suspense>
           <Header onContactClick={openContactModal} />
           <main>
-            {/* LOCKED — do not modify the hero */}
             <Hero onContactClick={openContactModal} />
 
             {/* Post-hero redesign — all new sections live inside this wrapper.
@@ -131,10 +132,11 @@ export default function App() {
                 <Journey />
                 <WorkIntro />
                 <FeaturedWork />
-                <WorkGalleryTransition />
                 <WorkGallery />
+                <Outcomes />
                 <BehindTheFrame />
                 <Testimonials />
+                <ClosingCTA onContactClick={openContactModal} />
               </Suspense>
             </div>
           </main>
@@ -159,7 +161,6 @@ export default function App() {
             <BackToTop />
           </Suspense>
         </div>
-      )}
     </>
   );
 }
