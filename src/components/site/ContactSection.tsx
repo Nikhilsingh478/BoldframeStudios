@@ -26,6 +26,7 @@ export function ContactSection({ onContactClick }: { onContactClick: () => void 
     const el = root.current;
     if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const q = gsap.utils.selector(el);
+    const mm = gsap.matchMedia();
     const ctx = gsap.context(() => {
       gsap.from(q('.bfx-contact-copy .bfx-reveal-inner'), {
         yPercent: 110,
@@ -43,16 +44,22 @@ export function ContactSection({ onContactClick }: { onContactClick: () => void 
         ease: 'expo.out',
         scrollTrigger: { trigger: el, start: 'top 70%' },
       });
-      const travel = [-14, 10, -18];
-      q<HTMLElement>('.bfx-mosaic-col').forEach((col, i) => {
-        gsap.fromTo(col, { yPercent: -travel[i] }, {
-          yPercent: travel[i],
-          ease: 'none',
-          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+      // Columns drift on desktop only; phones keep the mosaic still.
+      mm.add('(min-width: 768px)', () => {
+        const travel = [-14, 10, -18];
+        q<HTMLElement>('.bfx-mosaic-col').forEach((col, i) => {
+          gsap.fromTo(col, { yPercent: -travel[i] }, {
+            yPercent: travel[i],
+            ease: 'none',
+            scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+          });
         });
       });
     }, el);
-    return () => ctx.revert();
+    return () => {
+      mm.revert();
+      ctx.revert();
+    };
   }, []);
 
   const copy = async () => {

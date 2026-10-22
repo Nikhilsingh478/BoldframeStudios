@@ -2,23 +2,24 @@
  * Hero — a layered composition from Nikhil's design:
  * background → giant "BOLDFRAME STUDIOS" → cut-out portrait → glass cards.
  *
- * Entrance (after the loader collapses into the "O"): the background
- * settles, the letters rise one by one, the portrait rises in, then the
- * cards glide up. On scroll the layers drift at different speeds, so the
- * portrait separates from the type. Transforms and opacity only.
+ * Entrance (as the loader's curtain lifts): the background settles, the
+ * letters rise one by one, the portrait rises in, then the cards glide up.
+ * It's pure CSS (transform/opacity), so it stays smooth on phones even
+ * while the rest of the page is still loading. On desktop, scrolling
+ * drifts the layers at different speeds so the portrait separates from
+ * the type.
  */
 
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { onReveal, setRevealTarget } from './reveal';
+import { onReveal } from './reveal';
 import { scrollToId } from '../../lib/smoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const LINE_ONE = 'BOLDFRAME';
 const LINE_TWO = 'STUDIOS';
-const O_INDEX = 1; // the "O" of BOLD, where the loader lands
 
 const STATS = [
   { label: 'Lighthouse Score', value: 90, suffix: '+' },
@@ -34,11 +35,7 @@ function Letters({ text, offset }: { text: string; offset: number }) {
   return (
     <>
       {text.split('').map((ch, i) => (
-        <span
-          key={i}
-          className="bfx-ch"
-          data-o={offset + i === O_INDEX ? '' : undefined}
-        >
+        <span key={i} className="bfx-ch" style={{ '--ci': offset + i } as CSSProperties}>
           <span className="bfx-ch-inner">{ch}</span>
         </span>
       ))}
@@ -48,84 +45,74 @@ function Letters({ text, offset }: { text: string; offset: number }) {
 
 export function HeroSection() {
   const root = useRef<HTMLElement>(null);
-  const oRef = useRef<HTMLElement | null>(null);
-
-  // Let the loader know where the "O" is.
-  useLayoutEffect(() => {
-    oRef.current = root.current?.querySelector<HTMLElement>('[data-o]') ?? null;
-    setRevealTarget(oRef.current);
-    return () => setRevealTarget(null);
-  }, []);
+  // Entrance is CSS (compositor-only): armed on mount, played on reveal.
+  const [armed] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [revealed, setRevealed] = useState(!armed);
 
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const q = gsap.utils.selector(el);
+    const counters = Array.from(el.querySelectorAll<HTMLElement>('[data-count]'));
 
-    const ctx = gsap.context(() => {
-      const letters = q('.bfx-ch:not([data-o]) .bfx-ch-inner');
-      const oLetter = q('.bfx-ch[data-o] .bfx-ch-inner');
-      const counters = q<HTMLElement>('[data-count]');
+    if (!armed) {
+      counters.forEach((c) => { c.textContent = c.dataset.final ?? ''; });
+      return;
+    }
 
-      if (reduce) {
-        counters.forEach((c) => { c.textContent = c.dataset.final ?? ''; });
-        return;
-      }
+    // Counters tick once the cards have landed.
+    let counterTimer = 0;
+    const tweens: gsap.core.Tween[] = [];
+    const stop = onReveal(() => {
+      setRevealed(true);
+      counterTimer = window.setTimeout(() => {
+        counters.forEach((c) => {
+          const final = Number(c.dataset.value);
+          const pad = Number(c.dataset.pad || 0);
+          const obj = { v: 0 };
+          tweens.push(gsap.to(obj, {
+            v: final,
+            duration: 1.4,
+            ease: 'power3.out',
+            onUpdate: () => {
+              c.textContent = String(Math.round(obj.v)).padStart(pad, '0') + (c.dataset.suffix ?? '');
+            },
+          }));
+        });
+      }, 1150);
+    });
 
-      // Hidden until the reveal.
-      gsap.set(q('.bfx-hero-bg'), { scale: 1.12, opacity: 0 });
-      gsap.set(letters, { yPercent: 110 });
-      gsap.set(oLetter, { opacity: 0 });
-      gsap.set(q('.bfx-hero-person'), { yPercent: 9, opacity: 0, scale: 1.04 });
-      gsap.set(q('.bfx-card'), { y: 36, opacity: 0 });
-
-      const entrance = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
-      entrance
-        .to(q('.bfx-hero-bg'), { scale: 1, opacity: 1, duration: 1.8, ease: 'power3.out' }, 0)
-        .to(letters, { yPercent: 0, duration: 1.3, stagger: { each: 0.045, from: 'start' } }, 0.15)
-        .to(oLetter, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.55)
-        .to(q('.bfx-hero-person'), { yPercent: 0, opacity: 1, scale: 1, duration: 1.6 }, 0.45)
-        .to(q('.bfx-card'), { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, 1.05)
-        .add(() => {
-          counters.forEach((c) => {
-            const final = Number(c.dataset.value);
-            const pad = Number(c.dataset.pad || 0);
-            const obj = { v: 0 };
-            gsap.to(obj, {
-              v: final,
-              duration: 1.4,
-              ease: 'power3.out',
-              onUpdate: () => {
-                c.textContent = String(Math.round(obj.v)).padStart(pad, '0') + (c.dataset.suffix ?? '');
-              },
-            });
-          });
-        }, 1.15);
-
-      const stop = onReveal(() => entrance.play());
-
-      // Scroll: the layers part as the hero leaves.
-      const scroll = gsap.timeline({
+    // Scroll depth (desktop only — phones keep the hero still, which is
+    // cheaper and avoids re-blurring the glass cards every frame).
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => {
+      const q = gsap.utils.selector(el);
+      gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true },
-      });
-      scroll
+      })
         .to(q('.bfx-hero-bg-wrap'), { yPercent: 18, scale: 1.06 }, 0)
         .to(q('.bfx-hero-word'), { yPercent: 55, opacity: 0.15 }, 0)
         // Portrait stays anchored to the hero's bottom edge: it only grows
         // from its base, so its cut-off edge is never exposed.
         .to(q('.bfx-hero-person-wrap'), { scale: 1.06 }, 0)
         .to(q('.bfx-hero-ui'), { y: -80, opacity: 0 }, 0);
+    });
 
-      return () => stop();
-    }, el);
-
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      stop();
+      window.clearTimeout(counterTimer);
+      tweens.forEach((t) => t.kill());
+      mm.revert();
+    };
+  }, [armed]);
 
   return (
-    <section ref={root} id="hero" className="bfx-hero" aria-labelledby="bfx-hero-title">
+    <section
+      ref={root}
+      id="hero"
+      className={`bfx-hero${armed ? ' is-armed' : ''}${revealed ? ' is-revealed' : ''}`}
+      aria-labelledby="bfx-hero-title"
+    >
       <div className="bfx-hero-bg-wrap" aria-hidden="true">
         <picture>
           <source media="(max-width: 767px)" srcSet="/hero/mobile_background.webp" />
@@ -147,10 +134,10 @@ export function HeroSection() {
 
       <div className="bfx-hero-ui">
         <div className="bfx-stats">
-          {STATS.map((s) => {
+          {STATS.map((s, i) => {
             const final = String(s.value).padStart(s.pad ?? 0, '0') + (s.suffix ?? '');
             return (
-              <div key={s.label} className="bfx-card bfx-stat">
+              <div key={s.label} className="bfx-card bfx-stat" style={{ '--k': i } as CSSProperties}>
                 <span className="bfx-stat-label"><i aria-hidden="true" />{s.label}</span>
                 <span
                   className="bfx-stat-value"
@@ -170,6 +157,7 @@ export function HeroSection() {
         <a
           href="#work"
           className="bfx-card bfx-partner"
+          style={{ '--k': 2 } as CSSProperties}
           onClick={(e) => { e.preventDefault(); scrollToId('work'); }}
         >
           <span className="bfx-partner-row">

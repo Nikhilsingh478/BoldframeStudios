@@ -1,9 +1,9 @@
 /**
  * Tiny handshake between the loader and the hero.
  *
- * The loader calls `startReveal()` the moment its curtain starts collapsing
- * into the hero's "O"; the hero waits on `onReveal()` before playing its
- * entrance. If there is no loader (reduced motion), the hero reveals at once.
+ * The loader calls `startReveal()` as its curtain starts to lift; the hero
+ * and header wait on `onReveal()` before playing their entrances. With no
+ * loader (reduced motion) the reveal happens at once.
  */
 
 let revealed = false;
@@ -24,8 +24,3 @@ export function onReveal(fn: () => void): () => void {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
-
-/** The hero registers the element the loader should collapse into. */
-let target: HTMLElement | null = null;
-export const setRevealTarget = (el: HTMLElement | null) => { target = el; };
-export const getRevealTarget = () => target;

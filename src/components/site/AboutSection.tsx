@@ -43,6 +43,7 @@ export function AboutSection() {
     const el = root.current;
     if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const q = gsap.utils.selector(el);
+    const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
       // Giant wordmark drifts left as the section scrolls by.
@@ -54,18 +55,30 @@ export function AboutSection() {
         });
       }
 
-      // Statement fills word by word.
-      gsap.fromTo(q('.bfx-word'), { opacity: 0.16 }, {
-        opacity: 1,
-        stagger: 0.12,
-        ease: 'none',
-        scrollTrigger: { trigger: q('.bfx-statement')[0], start: 'top 78%', end: 'bottom 42%', scrub: true },
+      // Statement: word-by-word fill on desktop; on phones a single reveal
+      // (scrubbing ~40 words' opacity and colour repaints text every frame).
+      mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(q('.bfx-word'), { opacity: 0.16 }, {
+          opacity: 1,
+          stagger: 0.12,
+          ease: 'none',
+          scrollTrigger: { trigger: q('.bfx-statement')[0], start: 'top 78%', end: 'bottom 42%', scrub: true },
+        });
+        gsap.fromTo(q('.bfx-word[data-accent]'), { color: '#0A1633' }, {
+          color: '#0B5CFF',
+          stagger: 0.12,
+          ease: 'none',
+          scrollTrigger: { trigger: q('.bfx-statement')[0], start: 'top 60%', end: 'bottom 40%', scrub: true },
+        });
       });
-      gsap.fromTo(q('.bfx-word[data-accent]'), { color: '#0A1633' }, {
-        color: '#0B5CFF',
-        stagger: 0.12,
-        ease: 'none',
-        scrollTrigger: { trigger: q('.bfx-statement')[0], start: 'top 60%', end: 'bottom 40%', scrub: true },
+      mm.add('(max-width: 767px)', () => {
+        gsap.from(q('.bfx-statement'), {
+          y: 40,
+          opacity: 0,
+          duration: 1.1,
+          ease: 'expo.out',
+          scrollTrigger: { trigger: q('.bfx-statement')[0], start: 'top 85%' },
+        });
       });
 
       // Pills start scattered and click together.
@@ -91,7 +104,10 @@ export function AboutSection() {
       });
     }, el);
 
-    return () => ctx.revert();
+    return () => {
+      mm.revert();
+      ctx.revert();
+    };
   }, []);
 
   return (

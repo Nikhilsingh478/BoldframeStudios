@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { LogoMark } from './Logo';
 import { ConnectButton } from './ConnectButton';
+import { CONTACT_EMAIL, SOCIALS } from './data';
 import { scrollToId, setScrollLocked } from '../../lib/smoothScroll';
 import { onReveal } from './reveal';
 
@@ -19,19 +20,32 @@ export function SiteHeader({ onContactClick }: { onContactClick: () => void }) {
 
   useEffect(() => onReveal(() => window.setTimeout(() => setShown(true), 650)), []);
 
-  // Hide on scroll down, return on scroll up.
+  // Hide on scroll down, return on scroll up. Read once per frame and only
+  // touch React state when a value actually flips.
   useEffect(() => {
     let last = window.scrollY;
-    const onScroll = () => {
+    let frame = 0;
+    let wasScrolled = false;
+    let wasHidden = false;
+    const update = () => {
+      frame = 0;
       const y = window.scrollY;
-      setScrolled(y > 24);
+      const scrolledNow = y > 24;
+      if (scrolledNow !== wasScrolled) setScrolled((wasScrolled = scrolledNow));
       if (Math.abs(y - last) > 6) {
-        setHidden(y > last && y > 160);
+        const hiddenNow = y > last && y > 160;
+        if (hiddenNow !== wasHidden) setHidden((wasHidden = hiddenNow));
         last = y;
       }
     };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
   }, []);
 
   useEffect(() => {
@@ -99,22 +113,32 @@ export function SiteHeader({ onContactClick }: { onContactClick: () => void }) {
       </div>
 
       <div id="bfx-mobile-menu" className="bfx-menu" aria-hidden={!menuOpen}>
-        <nav aria-label="Mobile">
-          {[...LINKS, { label: 'Contact', id: 'contact' }].map((l, i) => (
-            <a
-              key={l.id}
-              href={`#${l.id}`}
-              tabIndex={menuOpen ? 0 : -1}
-              style={{ transitionDelay: menuOpen ? `${0.08 + i * 0.06}s` : '0s' }}
-              onClick={(e) => { e.preventDefault(); if (l.id === 'contact') contact(); else go(l.id); }}
-            >
-              <span className="bfx-menu-index">0{i + 1}</span>
-              {l.label}
-            </a>
-          ))}
-        </nav>
-        <div className="bfx-menu-foot">
-          <a href="mailto:nikhilwebworks@gmail.com" tabIndex={menuOpen ? 0 : -1}>nikhilwebworks@gmail.com</a>
+        <span className="bfx-menu-layer" aria-hidden="true" />
+        <div className="bfx-menu-panel">
+          <nav aria-label="Mobile">
+            {[...LINKS, { label: 'Contact', id: 'contact' }].map((l, i) => (
+              <a
+                key={l.id}
+                href={`#${l.id}`}
+                tabIndex={menuOpen ? 0 : -1}
+                style={{ '--mi': i } as CSSProperties}
+                onClick={(e) => { e.preventDefault(); if (l.id === 'contact') contact(); else go(l.id); }}
+              >
+                <span className="bfx-menu-index">0{i + 1}</span>
+                <span className="bfx-menu-mask"><span className="bfx-menu-text">{l.label}</span></span>
+                <span className="bfx-menu-go" aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </nav>
+          <div className="bfx-menu-foot">
+            <p className="bfx-menu-tag">Let&rsquo;s build something bold.</p>
+            <div className="bfx-menu-links">
+              <a href={`mailto:${CONTACT_EMAIL}`} tabIndex={menuOpen ? 0 : -1}>{CONTACT_EMAIL}</a>
+              {SOCIALS.map((so) => (
+                <a key={so.href} href={so.href} target="_blank" rel="noopener noreferrer" tabIndex={menuOpen ? 0 : -1}>{so.label}</a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </header>
