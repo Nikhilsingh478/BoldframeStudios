@@ -92,35 +92,35 @@ export const PROJECTS: Project[] = [
 
 export const SERVICES = [
   {
-    title: 'Strategy',
-    tagline: 'Positioning · UX · Structure',
+    title: 'Discovery & Strategy',
+    tagline: 'Problem · Competitors · Workflow',
     description:
-      'We find the sharpest way to frame the idea before a pixel gets polished: who the site is for, what it must say and the path a visitor takes to act.',
-    deliverables: ['Positioning & messaging', 'Sitemap & page structure', 'Conversion path'],
+      'We start by understanding your problem end to end, study your competitors, and map a rough workflow and solution before anything is designed or built.',
+    deliverables: ['End-to-end problem mapping', 'Competitor research', 'Workflow & solution outline'],
     image: '/p3.webp',
   },
   {
-    title: 'UI / UX Design',
-    tagline: 'Art direction · Interface · Motion',
+    title: 'Brand & UI/UX Design',
+    tagline: 'Brand · Interface · Motion',
     description:
-      'Distinct visual systems designed around the brand, not around a template, with interaction and motion that guide rather than decorate.',
-    deliverables: ['Art direction', 'Desktop & mobile UI', 'Interaction & motion design'],
+      'We study your brand (colour palette, typography, tone) and what you want people to feel and do, then design an interface that belongs to it, not to a template.',
+    deliverables: ['Brand study: palette & typography', 'Desktop & mobile UI', 'Interaction & motion design'],
     image: '/p2.webp',
   },
   {
-    title: 'Frontend Development',
-    tagline: 'React · Next.js · GSAP',
+    title: 'Product Development',
+    tagline: 'PRD · Tech stack · Build',
     description:
-      'Production-ready builds where motion, responsiveness and performance are part of the architecture, tested on real devices.',
-    deliverables: ['React / Next.js builds', 'Responsive layouts', 'GSAP & scroll animation'],
+      'Everything is planned in a written product requirements document, with the tech stack and functionality decided up front, then built in focused, tested iterations.',
+    deliverables: ['Product requirements (PRD)', 'Tech stack & architecture', 'Websites, web apps & e-commerce'],
     image: '/p1.webp',
   },
   {
-    title: 'Performance & SEO',
-    tagline: 'Speed · SEO · Core Web Vitals',
+    title: 'Security & Performance',
+    tagline: 'Security · Speed · SEO',
     description:
-      'Fast loads and the technical groundwork search engines reward: the final 10% that separates functional from finished.',
-    deliverables: ['90+ Lighthouse scores', 'SEO-ready structure', 'Core Web Vitals focus'],
+      'Before launch we review security and optimise performance: fast loads, stable layouts and the technical groundwork search engines reward.',
+    deliverables: ['Security review', 'Core Web Vitals & 90+ Lighthouse', 'SEO-ready structure'],
     image: '/p4.webp',
   },
 ];

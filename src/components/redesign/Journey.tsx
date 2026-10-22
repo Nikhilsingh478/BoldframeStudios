@@ -11,11 +11,11 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 
 const CHECKPOINTS = [
-  { id: '01', title: 'DISCOVER', copy: 'Understand what deserves attention.' },
-  { id: '02', title: 'FRAME', copy: 'Give the idea structure and direction.' },
-  { id: '03', title: 'DESIGN', copy: 'Turn strategy into something unmistakable.' },
-  { id: '04', title: 'BUILD', copy: 'Engineer the experience for the real browser.' },
-  { id: '05', title: 'REFINE', copy: 'Remove friction until everything feels inevitable.' },
+  { id: '01', title: 'UNDERSTAND', copy: 'Map your problem end to end and the outcome you need.' },
+  { id: '02', title: 'RESEARCH', copy: 'Study your competitors, your brand, palette and type.' },
+  { id: '03', title: 'DEFINE', copy: 'Write the PRD: workflow, features and tech stack.' },
+  { id: '04', title: 'BUILD', copy: 'Develop in focused iterations, each one tested.' },
+  { id: '05', title: 'HARDEN', copy: 'Security review and performance tuning before launch.' },
 ];
 
 // Node positions on the desktop track, in the SVG's 1000 × 120 space.
@@ -126,7 +126,7 @@ export function Journey() {
         >
           <span className="bf-jr-result-label">THE RESULT?</span>
           <p className="bf-jr-result-text">
-            <span className="bf-jr-result-lead">A WEBSITE THAT</span>
+            <span className="bf-jr-result-lead">A PRODUCT THAT</span>
             <span>DOESN&rsquo;T FEEL</span>
             <span>INTERCHANGEABLE.</span>
           </p>

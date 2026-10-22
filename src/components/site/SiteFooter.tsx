@@ -161,8 +161,8 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
           <div className="bfx-fstudio-card">
             <LogoMark size={34} />
             <p>
-              A design-led frontend studio building websites that look bold, load fast and
-              convert.
+              A design and development studio. We understand the problem, plan the product,
+              then build it secure and fast.
             </p>
             <p className="bfx-fclock">
               <i aria-hidden="true" />

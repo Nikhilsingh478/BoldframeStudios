@@ -75,21 +75,21 @@ export default function App() {
     <>
       <Helmet>
         <title>BoldFrame Studios</title>
-        <meta name="description" content="BoldFrame Studios designs and builds fast, conversion-focused websites and landing pages for forward-thinking brands." />
-        <meta name="keywords" content="web development, frontend, react, nextjs, freelance, portfolio, india, spa, design" />
+        <meta name="description" content="BoldFrame Studios is a design and development studio. We understand your problem end to end, research your market and brand, plan the product, and build secure, fast websites and web apps." />
+        <meta name="keywords" content="web design, web development, web apps, e-commerce, UI UX design, product development, React, Next.js, India, BoldFrame Studios" />
         <meta name="author" content="Nikhil Webworks" />
         <link rel="canonical" href="https://boldframestudios.in/" />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="BoldFrame Studios" />
-        <meta property="og:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
+        <meta property="og:description" content="BoldFrame Studios: research, design and development for secure, fast websites and web apps." />
         <meta property="og:url" content="https://boldframestudios.in/" />
         <meta property="og:image" content="/preview.png" />
         <meta property="og:site_name" content="BoldFrame Studios" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="BoldFrame Studios" />
-        <meta name="twitter:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
+        <meta name="twitter:description" content="BoldFrame Studios: research, design and development for secure, fast websites and web apps." />
         <meta name="twitter:image" content="/preview.png" />
         {/* Viewport & Fallbacks */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />

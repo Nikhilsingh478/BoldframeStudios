@@ -186,7 +186,7 @@ export function HeroSection() {
           </span>
           <span className="bfx-partner-row bfx-partner-row--bottom">
             <span className="bfx-partner-copy">
-              Strategic design, fast frontends and measurable results for forward-thinking brands.
+              Research, design and development, planned around the outcome you need.
             </span>
             <span className="bfx-partner-proof">
               <span className="bfx-thumbs" aria-hidden="true">

@@ -33,9 +33,9 @@ const EMAILJS_TO_EMAIL = 'nikhilwebworks@gmail.com';
 const PROJECT_TYPES = ['Landing page', 'Business website', 'E-commerce', 'Redesign', 'Something else'];
 
 const NEXT_STEPS = [
-  'We read your brief and look at what you have today.',
-  'We reply with questions, next steps and a rough scope.',
-  'Once it’s a fit, we plan, design and build it with you.',
+  'We read your brief to understand the problem and the outcome you want.',
+  'We reply with questions, a rough workflow and next steps.',
+  'Then research, a written plan (PRD), and the build itself.',
 ];
 
 const EXIT_MS = 380;

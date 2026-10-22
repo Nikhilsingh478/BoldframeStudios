@@ -16,13 +16,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 // [text, accent?] — accent words turn blue as they fill.
 const STATEMENT: [string, boolean?][] = [
-  ['We’re a design-led frontend studio.'],
-  ['We plan, design and build websites that'],
-  ['look bold,', true],
-  ['load fast', true],
+  ['We’re a design and development studio.'],
+  ['We start by'],
+  ['understanding your problem end to end,', true],
+  ['study your market and your brand, plan the product properly, then build it'],
+  ['secure, fast', true],
   ['and'],
-  ['turn visitors into customers', true],
-  ['— for brands that refuse to blend in.'],
+  ['made to convert.', true],
 ];
 
 // The giant drifting "BOLDFRAME STUDIOS" wordmark behind this section.
@@ -123,7 +123,7 @@ export function AboutSection() {
             <img src="/hero/mobile_nikhil_portrait_vertical_4x5.webp" alt="Nikhil Singh" />
             <div>
               <strong>Nikhil Singh</strong>
-              <span>Founder · Designer &amp; frontend developer</span>
+              <span>Founder · Product designer &amp; developer</span>
             </div>
           </div>
           <div className="bfx-socials">

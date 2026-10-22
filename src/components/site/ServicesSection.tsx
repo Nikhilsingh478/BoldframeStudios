@@ -66,8 +66,8 @@ export function ServicesSection() {
         <div className="bfx-svc-head">
           <SectionLabel index="02">What we do</SectionLabel>
           <h2 id="bfx-svc-title" className="bfx-h2">
-            <span className="bfx-reveal"><span className="bfx-reveal-inner">Everything your brand</span></span>
-            <span className="bfx-reveal"><span className="bfx-reveal-inner bfx-muted">needs to convert online.</span></span>
+            <span className="bfx-reveal"><span className="bfx-reveal-inner">From the first problem</span></span>
+            <span className="bfx-reveal"><span className="bfx-reveal-inner bfx-muted">to a secure launch.</span></span>
           </h2>
         </div>
 
