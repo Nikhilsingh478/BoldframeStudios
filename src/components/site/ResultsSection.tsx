@@ -8,6 +8,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { PROJECTS } from './data';
+import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -78,7 +79,7 @@ export function ResultsSection() {
     <section ref={root} id="outcomes" className="bfx-section bfx-results" aria-labelledby="bfx-res-title">
       <div className="bfx-wrap">
         <div className="bfx-res-head">
-          <span className="bfx-tag"><i aria-hidden="true" />Results</span>
+          <SectionLabel index="05">Results</SectionLabel>
           <h2 id="bfx-res-title" className="bfx-h2">
             <span className="bfx-reveal"><span className="bfx-reveal-inner">Measured,</span></span>
             <span className="bfx-reveal"><span className="bfx-reveal-inner bfx-muted">not promised.</span></span>

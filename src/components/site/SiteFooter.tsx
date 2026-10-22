@@ -1,5 +1,5 @@
 /**
- * Footer — links up top; the giant BOLDFRAME wordmark (the hero's type,
+ * Footer — links up top; the giant BOLDFRAME STUDIOS wordmark (the hero's type,
  * same blue gradient) rises letter by letter as the page ends.
  */
 
@@ -80,9 +80,11 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
       </div>
 
       <div className="bfx-foot-mark" aria-hidden="true">
-        {'BOLDFRAME'.split('').map((c, i) => (
-          <span key={i} className="bfx-ch"><span className="bfx-ch-inner">{c}</span></span>
-        ))}
+        {'BOLDFRAME STUDIOS'.split('').map((c, i) =>
+          c === ' '
+            ? <span key={i} className="bfx-foot-gap" />
+            : <span key={i} className="bfx-ch"><span className="bfx-ch-inner">{c}</span></span>,
+        )}
       </div>
 
       <div className="bfx-wrap bfx-foot-bottom">

@@ -21,7 +21,7 @@ export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
-  // Load EmailJS and SweetAlert only when needed
+  // Load EmailJS only when the contact form is opened
   const loadContactScripts = () => {
     const emailJsPublicKey = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
     
@@ -38,7 +38,6 @@ export default function App() {
       document.body.appendChild(script);
     };
 
-    loadScript('https://cdn.jsdelivr.net/npm/sweetalert2@11');
     loadScript(
       'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js',
       () => {

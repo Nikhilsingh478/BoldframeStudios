@@ -43,8 +43,9 @@
 
     <!-- Favicon -->
     <link rel="icon" href="./favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
 
     <!-- Fonts: preconnect + preload stylesheet for faster first paint -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -66,13 +67,17 @@
         href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
       />
     </noscript>
-    <script type="module" crossorigin src="./assets/index-BiHNTWb_.js"></script>
+    <!-- Hero images (largest paint) -->
+    <link rel="preload" as="image" href="./hero/desktop_background.webp" media="(min-width: 768px)" />
+    <link rel="preload" as="image" href="./hero/desktop_nikhil.webp" media="(min-width: 768px)" />
+    <link rel="preload" as="image" href="./hero/mobile_background.webp" media="(max-width: 767px)" />
+    <link rel="preload" as="image" href="./hero/mobile_nikhil_portrait_vertical_4x5.webp" media="(max-width: 767px)" />
+    <script type="module" crossorigin src="./assets/index-BHxmAl0i.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/react-D3F3s8fL.js">
-    <link rel="modulepreload" crossorigin href="./assets/radix-D4tmaoiR.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-wP4Jwsi8.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-DYd3-Qxg.css">
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>

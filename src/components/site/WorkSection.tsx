@@ -9,6 +9,8 @@ import { useEffect, useRef, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { PROJECTS } from './data';
+import { scrollToId } from '../../lib/smoothScroll';
+import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -89,18 +91,29 @@ export function WorkSection() {
       <div className="bfx-wrap">
         <div className="bfx-work-head">
           <div>
-            <span className="bfx-tag"><i aria-hidden="true" />Selected work</span>
+            <SectionLabel index="03">Selected work</SectionLabel>
             <h2 id="bfx-work-title" className="bfx-h2">
               <span className="bfx-reveal"><span className="bfx-reveal-inner">Six live projects.</span></span>
               <span className="bfx-reveal"><span className="bfx-reveal-inner bfx-muted">Every one measured.</span></span>
             </h2>
           </div>
-          <span className="bfx-work-count" aria-hidden="true">06</span>
+          <div className="bfx-work-index">
+            <span className="bfx-work-count" aria-hidden="true">06</span>
+            <ol className="bfx-work-toc" aria-label="Projects">
+              {PROJECTS.map((p, i) => (
+                <li key={p.title}>
+                  <a href={`#proj-${i + 1}`} onClick={(e) => { e.preventDefault(); scrollToId(`proj-${i + 1}`); }}>
+                    <span>0{i + 1}</span>{p.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
 
         <div className="bfx-stack">
           {PROJECTS.map((p, i) => (
-            <article key={p.title} className="bfx-proj" style={{ '--i': i } as CSSProperties}>
+            <article key={p.title} id={`proj-${i + 1}`} className="bfx-proj" style={{ '--i': i } as CSSProperties}>
               <div className="bfx-proj-inner">
                 <div className="bfx-proj-info">
                   <div className="bfx-proj-top">
@@ -110,16 +123,17 @@ export function WorkSection() {
                   <h3>{p.title}</h3>
                   <p className="bfx-proj-cat">{p.category}</p>
                   <p className="bfx-proj-desc">{p.description}</p>
-                  <ul className="bfx-proj-tags">
-                    {p.tech.map((t) => <li key={t}>{t}</li>)}
-                  </ul>
+                  <p className="bfx-proj-tech">
+                    <span>Built with</span>
+                    {p.tech.join(' / ')}
+                  </p>
                   <dl className="bfx-proj-metrics">
                     <div><dt>Largest paint</dt><dd>{p.lcp.toFixed(2)}s</dd></div>
                     <div><dt>Layout shift</dt><dd>{p.cls}</dd></div>
                     <div><dt>Interaction</dt><dd>{p.inp > 0 ? `${p.inp}ms` : '—'}</dd></div>
                   </dl>
-                  <a className="bfx-btn bfx-btn--dark" href={p.url} target="_blank" rel="noopener noreferrer">
-                    Visit live site <span aria-hidden="true">↗</span>
+                  <a className="bfx-link" href={p.url} target="_blank" rel="noopener noreferrer">
+                    Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>
                   </a>
                 </div>
 

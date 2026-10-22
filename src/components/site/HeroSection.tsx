@@ -113,7 +113,9 @@ export function HeroSection() {
       scroll
         .to(q('.bfx-hero-bg-wrap'), { yPercent: 18, scale: 1.06 }, 0)
         .to(q('.bfx-hero-word'), { yPercent: 55, opacity: 0.15 }, 0)
-        .to(q('.bfx-hero-person-wrap'), { yPercent: -6, scale: 1.05 }, 0)
+        // Portrait stays anchored to the hero's bottom edge: it only grows
+        // from its base, so its cut-off edge is never exposed.
+        .to(q('.bfx-hero-person-wrap'), { scale: 1.06 }, 0)
         .to(q('.bfx-hero-ui'), { y: -80, opacity: 0 }, 0);
 
       return () => stop();

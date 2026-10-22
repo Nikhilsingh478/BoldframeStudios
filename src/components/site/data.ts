@@ -5,6 +5,7 @@ export const CONTACT_EMAIL = 'nikhilwebworks@gmail.com';
 export const SOCIALS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nikhilsingh14788' },
   { label: 'GitHub', href: 'https://github.com/Nikhilsingh478' },
+  { label: 'Portfolio', href: 'https://nikhilsinghcv.vercel.app' },
 ];
 
 export interface Project {

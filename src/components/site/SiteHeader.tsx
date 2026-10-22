@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { LogoMark } from './Logo';
+import { ConnectButton } from './ConnectButton';
 import { scrollToId, setScrollLocked } from '../../lib/smoothScroll';
 import { onReveal } from './reveal';
 
@@ -9,13 +10,6 @@ const LINKS = [
   { label: 'About', id: 'about' },
 ];
 
-function Arrow() {
-  return (
-    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-      <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 export function SiteHeader({ onContactClick }: { onContactClick: () => void }) {
   const [shown, setShown] = useState(false);       // after the loader
@@ -81,19 +75,16 @@ export function SiteHeader({ onContactClick }: { onContactClick: () => void }) {
         <nav className="bfx-nav" aria-label="Main">
           {LINKS.map((l) => (
             <a key={l.id} href={`#${l.id}`} onClick={(e) => { e.preventDefault(); go(l.id); }}>
-              <span data-text={l.label}>{l.label}</span>
+              {l.label}
             </a>
           ))}
           <a href="#contact" onClick={(e) => { e.preventDefault(); contact(); }}>
-            <span data-text="Contact">Contact</span>
+            Contact
           </a>
         </nav>
 
         <div className="bfx-header-actions">
-          <button type="button" className="bfx-connect" onClick={contact}>
-            <span>Let&rsquo;s Connect</span>
-            <span className="bfx-connect-icon"><Arrow /></span>
-          </button>
+          <ConnectButton label="Let’s Connect" onClick={contact} className="bfx-connect" />
           <button
             type="button"
             className="bfx-burger"

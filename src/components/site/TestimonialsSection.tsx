@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { TESTIMONIALS } from './data';
+import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,7 +75,7 @@ export function TestimonialsSection() {
       <div className="bfx-wrap">
         <div className="bfx-testi-head">
           <div>
-            <span className="bfx-tag bfx-tag--dark"><i aria-hidden="true" />Clients</span>
+            <SectionLabel index="06" dark>Clients</SectionLabel>
             <h2 id="bfx-testi-title" className="bfx-h2">
               <span className="bfx-reveal"><span className="bfx-reveal-inner">In their words.</span></span>
             </h2>

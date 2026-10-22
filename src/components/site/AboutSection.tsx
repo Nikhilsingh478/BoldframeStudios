@@ -10,6 +10,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { SOCIALS } from './data';
+import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,6 +24,10 @@ const STATEMENT: [string, boolean?][] = [
   ['turn visitors into customers', true],
   ['— for brands that refuse to blend in.'],
 ];
+
+// The giant drifting "BOLDFRAME STUDIOS" wordmark behind this section.
+// Switched off for now; set to true to bring it (and its scroll drift) back.
+const SHOW_BG_WORDMARK = false;
 
 const PILLS = [
   { label: 'We', tone: 'white' },
@@ -41,11 +46,13 @@ export function AboutSection() {
 
     const ctx = gsap.context(() => {
       // Giant wordmark drifts left as the section scrolls by.
-      gsap.fromTo(q('.bfx-about-bgword'), { xPercent: 4 }, {
-        xPercent: -28,
-        ease: 'none',
-        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
-      });
+      if (SHOW_BG_WORDMARK) {
+        gsap.fromTo(q('.bfx-about-bgword'), { xPercent: 4 }, {
+          xPercent: -28,
+          ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+        });
+      }
 
       // Statement fills word by word.
       gsap.fromTo(q('.bfx-word'), { opacity: 0.16 }, {
@@ -89,11 +96,13 @@ export function AboutSection() {
 
   return (
     <section ref={root} id="about" className="bfx-section bfx-about" aria-labelledby="bfx-about-title">
-      <div className="bfx-about-bgword" aria-hidden="true">BOLDFRAME STUDIOS · BOLDFRAME</div>
+      {SHOW_BG_WORDMARK && (
+        <div className="bfx-about-bgword" aria-hidden="true">BOLDFRAME STUDIOS · BOLDFRAME</div>
+      )}
 
       <div className="bfx-wrap bfx-about-grid">
         <div className="bfx-about-side">
-          <span className="bfx-tag"><i aria-hidden="true" />About us</span>
+          <SectionLabel index="01">About us</SectionLabel>
           <div className="bfx-founder">
             <img src="/hero/mobile_nikhil_portrait_vertical_4x5.webp" alt="Nikhil Singh" />
             <div>

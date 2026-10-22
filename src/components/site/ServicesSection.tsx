@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { SERVICES } from './data';
+import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -63,7 +64,7 @@ export function ServicesSection() {
     <section ref={root} id="services" className="bfx-section bfx-services" aria-labelledby="bfx-svc-title">
       <div className="bfx-wrap">
         <div className="bfx-svc-head">
-          <span className="bfx-tag"><i aria-hidden="true" />What we do</span>
+          <SectionLabel index="02">What we do</SectionLabel>
           <h2 id="bfx-svc-title" className="bfx-h2">
             <span className="bfx-reveal"><span className="bfx-reveal-inner">Everything your brand</span></span>
             <span className="bfx-reveal"><span className="bfx-reveal-inner bfx-muted">needs to convert online.</span></span>

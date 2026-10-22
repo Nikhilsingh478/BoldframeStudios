@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { CONTACT_EMAIL, PROJECTS } from './data';
+import { SectionLabel } from './SectionLabel';
+import { ConnectButton } from './ConnectButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,7 +69,7 @@ export function ContactSection({ onContactClick }: { onContactClick: () => void 
     <section ref={root} id="contact" className="bfx-section bfx-contact" aria-labelledby="bfx-contact-title">
       <div className="bfx-wrap bfx-contact-grid">
         <div className="bfx-contact-copy">
-          <span className="bfx-tag bfx-fade"><i aria-hidden="true" />Start a project</span>
+          <div className="bfx-fade"><SectionLabel index="07">Start a project</SectionLabel></div>
           <h2 id="bfx-contact-title" className="bfx-h2 bfx-h2--xl">
             <span className="bfx-reveal"><span className="bfx-reveal-inner">Have a project</span></span>
             <span className="bfx-reveal"><span className="bfx-reveal-inner">in mind? Let&rsquo;s</span></span>
@@ -78,9 +80,7 @@ export function ContactSection({ onContactClick }: { onContactClick: () => void 
             on scope, timeline and what it takes to make it convert.
           </p>
           <div className="bfx-contact-actions bfx-fade">
-            <button type="button" className="bfx-btn bfx-btn--blue" onClick={onContactClick}>
-              Let&rsquo;s Connect <span className="bfx-btn-icon" aria-hidden="true">→</span>
-            </button>
+            <ConnectButton label="Let’s Connect" onClick={onContactClick} />
             <div className="bfx-email">
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
               <button type="button" onClick={copy} aria-live="polite">{copied ? 'Copied' : 'Copy'}</button>
