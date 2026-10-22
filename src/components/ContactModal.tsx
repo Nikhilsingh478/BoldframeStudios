@@ -23,6 +23,9 @@ interface ContactModalProps {
 const EMAILJS_PUBLIC_KEY = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
 const EMAILJS_SERVICE_ID = import.meta.env?.VITE_EMAILJS_SERVICE_ID || 'service_7ys7xff';
 const EMAILJS_ADMIN_TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_ADMIN_TEMPLATE_ID || 'template_hl5a33o';
+// Where EmailJS delivers form submissions. Unchanged on purpose; the address
+// shown to visitors is CONTACT_EMAIL.
+const EMAILJS_TO_EMAIL = 'nikhilwebworks@gmail.com';
 
 const PROJECT_TYPES = ['Landing page', 'Business website', 'E-commerce', 'Redesign', 'Something else'];
 
@@ -166,7 +169,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         EMAILJS_SERVICE_ID,
         EMAILJS_ADMIN_TEMPLATE_ID,
         {
-          to_email: CONTACT_EMAIL,
+          to_email: EMAILJS_TO_EMAIL,
           from_name: form.name,
           from_email: form.email,
           phone: form.phone || 'Not provided',

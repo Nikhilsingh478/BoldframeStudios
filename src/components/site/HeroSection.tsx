@@ -2,8 +2,9 @@
  * Hero — a layered composition from Nikhil's design:
  * background → giant "BOLDFRAME STUDIOS" → cut-out portrait → glass cards.
  *
- * Entrance (as the loader's curtain lifts): the background settles, the
- * letters rise one by one, the portrait rises in, then the cards glide up.
+ * Intro (see SiteLoader): the giant word is outlined on a light canvas and
+ * fills with blue; then the canvas opens like a shutter, the background
+ * settles, the portrait rises in from the bottom edge and the cards glide up.
  * It's pure CSS (transform/opacity), so it stays smooth on phones even
  * while the rest of the page is still loading. On desktop, scrolling
  * drifts the layers at different speeds so the portrait separates from
@@ -45,8 +46,9 @@ function Letters({ text, offset }: { text: string; offset: number }) {
 
 export function HeroSection() {
   const root = useRef<HTMLElement>(null);
-  // Entrance is CSS (compositor-only): armed on mount, played on reveal.
-  const [armed] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  // Entrance is CSS (compositor-only), keyed off the intro mode set in
+  // index.html; it plays when the loader calls startReveal().
+  const [armed] = useState(() => document.documentElement.getAttribute('data-intro') !== 'none');
   const [revealed, setRevealed] = useState(!armed);
 
   useEffect(() => {
@@ -78,7 +80,7 @@ export function HeroSection() {
             },
           }));
         });
-      }, 1150);
+      }, 1000);
     });
 
     // Scroll depth (desktop only — phones keep the hero still, which is
@@ -120,9 +122,25 @@ export function HeroSection() {
         </picture>
       </div>
 
+      {/* Intro canvas: two halves that open like a shutter around the word. */}
+      <div className="bfx-shutter" aria-hidden="true">
+        <span className="bfx-shutter-half bfx-shutter-half--t" />
+        <span className="bfx-shutter-half bfx-shutter-half--b" />
+      </div>
+
+      {/* The word is drawn twice: a thin outline, and the solid blue fill on
+          top of it, which the intro wipes up from the bottom. */}
       <h1 id="bfx-hero-title" className="bfx-hero-word" aria-label="BoldFrame Studios">
-        <span className="bfx-line bfx-line--one" aria-hidden="true"><Letters text={LINE_ONE} offset={0} /></span>
-        <span className="bfx-line bfx-line--two" aria-hidden="true"><Letters text={LINE_TWO} offset={LINE_ONE.length} /></span>
+        <span className="bfx-word-outline" aria-hidden="true">
+          <span className="bfx-line bfx-line--one"><Letters text={LINE_ONE} offset={0} /></span>
+          <span className="bfx-line bfx-line--two"><Letters text={LINE_TWO} offset={LINE_ONE.length} /></span>
+        </span>
+        <span className="bfx-word-fill" aria-hidden="true">
+          <span className="bfx-word-fill-inner">
+            <span className="bfx-line bfx-line--one"><Letters text={LINE_ONE} offset={0} /></span>
+            <span className="bfx-line bfx-line--two"><Letters text={LINE_TWO} offset={LINE_ONE.length} /></span>
+          </span>
+        </span>
       </h1>
 
       <div className="bfx-hero-person-wrap" aria-hidden="true">
