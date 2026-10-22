@@ -116,10 +116,12 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
       </div>
 
       <div className="bfx-wrap bfx-foot-bottom">
-        <span>© {new Date().getFullYear()} BoldFrame Studios</span>
-        <span className="bfx-foot-time">
-          <i aria-hidden="true" />Based in India · {istTime} IST
-        </span>
+        <div className="bfx-foot-meta">
+          <span>© {new Date().getFullYear()} BoldFrame Studios</span>
+          <span className="bfx-foot-time">
+            <i aria-hidden="true" />Based in India · {istTime} IST
+          </span>
+        </div>
         <a href="#hero" className="bfx-totop" onClick={(e) => go(e, 'hero')} aria-label="Back to top">
           <svg className="bfx-totop-ring" viewBox="0 0 100 100" aria-hidden="true">
             <defs>

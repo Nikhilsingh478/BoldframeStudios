@@ -105,22 +105,29 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       target?.focus({ preventScroll: true });
     }, 450);
 
-    // Mobile keyboards: size the backdrop to the visible area (above the
-    // keyboard) and bring the focused field into the middle of it.
+    // Mobile keyboards: don't react to every step of the keyboard sliding
+    // up (that's what jittered). Once it has settled, give the dialog room
+    // below the fields for the keyboard, then scroll the focused field to the
+    // middle of what's visible, once, smoothly.
     const vv = window.visualViewport;
     const backdrop = panelRef.current?.parentElement;
-    const fitViewport = () => {
-      if (vv && backdrop) backdrop.style.height = `${vv.height}px`;
+    let settleTimer = 0;
+    const settle = () => {
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        if (!backdrop) return;
+        const keyboard = vv ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop) : 0;
+        backdrop.style.paddingBottom = keyboard > 80 ? `${keyboard + 24}px` : '';
+        const el = document.activeElement as HTMLElement | null;
+        if (touch && el && panelRef.current?.contains(el) && el.matches('input, textarea')) {
+          el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+      }, 180);
     };
-    let fieldTimer = 0;
     const onFocusIn = (e: FocusEvent) => {
-      const el = e.target as HTMLElement;
-      if (!touch || !el.matches('input, textarea')) return;
-      window.clearTimeout(fieldTimer);
-      // Wait for the keyboard to finish opening before scrolling.
-      fieldTimer = window.setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 320);
+      if (touch && (e.target as HTMLElement).matches('input, textarea')) settle();
     };
-    vv?.addEventListener('resize', fitViewport);
+    vv?.addEventListener('resize', settle);
     panelRef.current?.addEventListener('focusin', onFocusIn);
 
     const onKey = (e: KeyboardEvent) => {
@@ -148,8 +155,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const panel = panelRef.current;
     return () => {
       window.clearTimeout(focusTimer);
-      window.clearTimeout(fieldTimer);
-      vv?.removeEventListener('resize', fitViewport);
+      window.clearTimeout(settleTimer);
+      vv?.removeEventListener('resize', settle);
       panel?.removeEventListener('focusin', onFocusIn);
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';

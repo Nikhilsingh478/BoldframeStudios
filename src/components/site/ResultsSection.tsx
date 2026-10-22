@@ -109,6 +109,10 @@ export function ResultsSection() {
             <h3>Largest Contentful Paint, per project</h3>
             <p>Seconds until the main content is visible. Lower is better. The dashed line marks Google&rsquo;s &ldquo;good&rdquo; limit of 2.5s.</p>
           </div>
+          {/* Phones: threshold label above the bars */}
+          <div className="bfx-res-goodlabel" aria-hidden="true">
+            <span style={{ left: `${(GOOD_LCP / SCALE_MAX) * 100}%` }}>Good ≤ 2.5s</span>
+          </div>
           <table className="bfx-res-table">
             <thead>
               <tr>
@@ -121,7 +125,7 @@ export function ResultsSection() {
             <tbody>
               {BY_SPEED.map((p, i) => (
                 <tr key={p.title} style={{ '--i': i } as CSSProperties}>
-                  <th scope="row">{p.title}</th>
+                  <th scope="row"><span className="bfx-res-rank" aria-hidden="true">0{i + 1}</span>{p.title}</th>
                   <td>
                     <span className="bfx-res-track" style={{ '--good': `${(GOOD_LCP / SCALE_MAX) * 100}%` } as CSSProperties}>
                       <span className="bfx-res-bar" style={{ width: `${(p.lcp / SCALE_MAX) * 100}%` }} />
@@ -136,6 +140,12 @@ export function ResultsSection() {
               ))}
             </tbody>
           </table>
+          {/* Phones: seconds scale under the bars */}
+          <div className="bfx-res-axis" aria-hidden="true">
+            {[0, 1, 2, 3].map((t) => (
+              <span key={t} style={{ left: `${(t / SCALE_MAX) * 100}%` }}>{t}s</span>
+            ))}
+          </div>
         </div>
       </div>
     </section>

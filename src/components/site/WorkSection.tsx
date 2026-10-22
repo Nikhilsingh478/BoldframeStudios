@@ -1,9 +1,9 @@
 /**
  * Work — the six live projects as a stack of sticky cards. Each card pins
  * near the top while the next one slides over it; the card underneath eases
- * back (scale + dim). Phones and small tablets get a swipeable strip
- * instead (native scroll-snap), with a counter, progress line and arrows;
- * the centred card is in focus while its neighbours sit back.
+ * back (scale + dim). Phones and small tablets get a swipeable strip of
+ * compact image tiles instead (native scroll-snap); a single details panel
+ * below shows the centred project, with a counter, progress line and arrows.
  */
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
@@ -197,6 +197,11 @@ export function WorkSection() {
                 <a className="bfx-proj-shot" href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${p.title} in a new tab`}>
                   <span className="bfx-proj-bar" aria-hidden="true"><i /><i /><i /><span>{host(p.url)}</span></span>
                   <span className="bfx-proj-img"><img src={p.image} alt={`${p.title} website`} loading="lazy" /></span>
+                  {/* Strip only: the title sits on the image */}
+                  <span className="bfx-proj-caption" aria-hidden="true">
+                    <span>0{i + 1}</span>
+                    <strong>{p.title}</strong>
+                  </span>
                 </a>
                 <span className="bfx-proj-shade" aria-hidden="true" />
               </div>
@@ -220,6 +225,25 @@ export function WorkSection() {
               <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </span>
+        </div>
+
+        {/* Strip details (phones): the centred project's info, one at a time */}
+        <div className="bfx-strip-detail" aria-live="polite">
+          <div key={active} className="bfx-strip-detail-inner">
+            <p className="bfx-strip-meta">
+              <span>{PROJECTS[active].category}</span>
+              <span>{PROJECTS[active].timeline}</span>
+            </p>
+            <p className="bfx-strip-desc">{PROJECTS[active].description}</p>
+            <dl className="bfx-strip-vitals">
+              <div><dt>LCP</dt><dd>{PROJECTS[active].lcp.toFixed(2)}s</dd></div>
+              <div><dt>CLS</dt><dd>{PROJECTS[active].cls}</dd></div>
+              <div><dt>INP</dt><dd>{PROJECTS[active].inp > 0 ? `${PROJECTS[active].inp}ms` : '—'}</dd></div>
+            </dl>
+            <a className="bfx-link" href={PROJECTS[active].url} target="_blank" rel="noopener noreferrer">
+              Visit {PROJECTS[active].title} <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

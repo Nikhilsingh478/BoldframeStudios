@@ -2036,11 +2036,18 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
   transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.4s var(--bfx-ease);
 }
 
-.bfx-testi-nav button:hover {
-  border-color: #fff;
-  background: #fff;
-  color: var(--bfx-blue-deep);
-  transform: scale(1.06);
+@media (hover: hover) {
+  .bfx-testi-nav button:hover {
+    border-color: #fff;
+    background: #fff;
+    color: var(--bfx-blue-deep);
+    transform: scale(1.06);
+  }
+}
+
+/* Touch: brief press feedback only (no sticky hover state). */
+.bfx-testi-nav button:active {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .bfx-testi-body {
@@ -2487,7 +2494,9 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
   .bfx-res-table tbody th { font-size: 13.5px; }
 
   .bfx-foot-top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bfx-foot-bottom { flex-direction: column; }
+  /* Name + time stacked on the left, back-to-top on the right. */
+  .bfx-foot-bottom { flex-direction: row; align-items: center; }
+  .bfx-foot-meta { flex-direction: column; align-items: flex-start; gap: 8px; }
   .bfx-work-head { align-items: flex-start; flex-direction: column; }
 }
 
@@ -3546,5 +3555,267 @@ body:has(.bfx-modal) .bfx-header {
 @media (prefers-reduced-motion: reduce) {
   .bfx-totop-ring {
     animation: none;
+  }
+}
+
+.bfx-foot-meta {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+/* ─── Work strip, compact (phones) ───────────────────────────────── */
+/* Tiles are just the screenshot with its title on it; everything else
+   lives once, in the details panel under the strip. */
+
+.bfx-proj-caption,
+.bfx-strip-detail {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .bfx-proj {
+    flex-basis: min(80vw, 440px);
+  }
+
+  .bfx-proj-inner {
+    display: block;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .bfx-proj-info,
+  .bfx-proj-shade,
+  .bfx-proj-bar {
+    display: none;
+  }
+
+  .bfx-proj-shot {
+    position: relative;
+    border: 0;
+    border-radius: 20px;
+    box-shadow: 0 18px 40px -26px rgba(10, 50, 140, 0.55);
+  }
+
+  .bfx-proj-img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .bfx-proj-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 40px 16px 14px;
+    background: linear-gradient(180deg, transparent, rgba(6, 18, 46, 0.78));
+    color: #fff;
+  }
+
+  .bfx-proj-caption span {
+    font-family: var(--bfx-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    opacity: 0.75;
+  }
+
+  .bfx-proj-caption strong {
+    font-family: var(--bfx-head);
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  .bfx-strip-detail {
+    display: block;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--bfx-line);
+  }
+
+  .bfx-strip-detail-inner {
+    animation: bfx-detail-in 0.55s var(--bfx-ease);
+  }
+
+  @keyframes bfx-detail-in {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+
+  .bfx-strip-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    font-family: var(--bfx-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bfx-ink-3);
+  }
+
+  .bfx-strip-meta span:first-child {
+    color: var(--bfx-blue);
+  }
+
+  .bfx-strip-desc {
+    display: -webkit-box;
+    margin: 12px 0 0;
+    overflow: hidden;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--bfx-ink-2);
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .bfx-strip-vitals {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 18px 0 16px;
+  }
+
+  .bfx-strip-vitals div {
+    padding: 2px 0 2px 14px;
+    border-left: 1px solid var(--bfx-line);
+  }
+
+  .bfx-strip-vitals div:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .bfx-strip-vitals dt {
+    font-family: var(--bfx-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--bfx-ink-3);
+  }
+
+  .bfx-strip-vitals dd {
+    margin: 4px 0 0;
+    font-family: var(--bfx-head);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+}
+
+/* ─── Results chart, phones: ranked rows, thin bars, scale + threshold ─ */
+
+.bfx-res-rank,
+.bfx-res-goodlabel,
+.bfx-res-axis {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .bfx-res-chart-head p {
+    font-size: 13.5px;
+  }
+
+  .bfx-res-goodlabel,
+  .bfx-res-axis {
+    position: relative;
+    display: block;
+    height: 16px;
+  }
+
+  .bfx-res-goodlabel {
+    margin-top: 18px;
+  }
+
+  .bfx-res-goodlabel span,
+  .bfx-res-axis span {
+    position: absolute;
+    top: 0;
+    font-family: var(--bfx-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    color: var(--bfx-ink-3);
+    transform: translateX(-50%);
+  }
+
+  .bfx-res-goodlabel span {
+    color: var(--bfx-blue);
+    transform: translateX(-70%);
+  }
+
+  .bfx-res-axis {
+    margin-top: 10px;
+  }
+
+  .bfx-res-axis span:first-child { transform: none; }
+  .bfx-res-axis span:last-child { transform: translateX(-100%); }
+
+  .bfx-res-table {
+    margin-top: 4px;
+  }
+
+  .bfx-res-table tbody tr {
+    position: relative;
+    gap: 12px;
+    padding: 16px 0 14px;
+  }
+
+  .bfx-res-table tbody tr:hover {
+    background: none;
+  }
+
+  .bfx-res-table tbody th {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-right: 4.5rem;
+    font-size: 14px;
+  }
+
+  .bfx-res-rank {
+    display: inline;
+    font-family: var(--bfx-mono);
+    font-size: 11px;
+    color: var(--bfx-ink-3);
+  }
+
+  /* Value sits top-right, level with the name (positioned from the bar
+     track, which is the nearest positioned box); the fastest is blue. */
+  .bfx-res-bar-value {
+    position: absolute;
+    bottom: calc(100% + 11px);
+    right: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    font-family: var(--bfx-mono);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .bfx-res-table tbody tr:first-child .bfx-res-bar-value {
+    color: var(--bfx-blue);
+  }
+
+  .bfx-res-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(10, 22, 51, 0.06);
+  }
+
+  .bfx-res-track::after {
+    top: -5px;
+    bottom: -5px;
+    border-left-color: rgba(11, 92, 255, 0.45);
+  }
+
+  .bfx-res-bar {
+    border-radius: 999px;
   }
 }
