@@ -120,7 +120,24 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
         <span className="bfx-foot-time">
           <i aria-hidden="true" />Based in India · {istTime} IST
         </span>
-        <a href="#hero" onClick={(e) => go(e, 'hero')}>Back to top ↑</a>
+        <a href="#hero" className="bfx-totop" onClick={(e) => go(e, 'hero')} aria-label="Back to top">
+          <svg className="bfx-totop-ring" viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <path id="bfx-totop-path" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+            </defs>
+            <text>
+              {/* textLength = the circle's circumference (2π·38), so the
+                  three repeats meet evenly. */}
+              <textPath href="#bfx-totop-path" textLength="238" lengthAdjust="spacing">
+                BACK TO TOP · BACK TO TOP · BACK TO TOP ·
+              </textPath>
+            </text>
+          </svg>
+          <span className="bfx-totop-core" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </span>
+        </a>
       </div>
     </footer>
   );

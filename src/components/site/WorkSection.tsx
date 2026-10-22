@@ -1,11 +1,12 @@
 /**
  * Work — the six live projects as a stack of sticky cards. Each card pins
  * near the top while the next one slides over it; the card underneath eases
- * back (scale + dim). Phones get a plain list with reveal-on-scroll, since
- * the cards are taller than the screen there.
+ * back (scale + dim). Phones and small tablets get a swipeable strip
+ * instead (native scroll-snap), with a counter, progress line and arrows;
+ * the centred card is in focus while its neighbours sit back.
  */
 
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { PROJECTS } from './data';
@@ -16,8 +17,58 @@ gsap.registerPlugin(ScrollTrigger);
 
 const host = (url: string) => new URL(url).host;
 
+const STRIP_MQ = '(max-width: 899px)';
+
 export function WorkSection() {
   const root = useRef<HTMLElement>(null);
+  const stack = useRef<HTMLDivElement>(null);
+  // Phones and small tablets show the projects as a swipeable strip.
+  const [active, setActive] = useState(0);
+
+  // Strip: track which card is centred.
+  useEffect(() => {
+    const track = stack.current;
+    if (!track) return;
+    const mq = window.matchMedia(STRIP_MQ);
+    let observer: IntersectionObserver | null = null;
+    const setup = () => {
+      observer?.disconnect();
+      observer = null;
+      if (!mq.matches) return;
+      observer = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
+        }),
+        { root: track, threshold: 0.6 },
+      );
+      track.querySelectorAll('.bfx-proj').forEach((c) => observer!.observe(c));
+    };
+    setup();
+    mq.addEventListener('change', setup);
+    return () => {
+      mq.removeEventListener('change', setup);
+      observer?.disconnect();
+    };
+  }, []);
+
+  // Strip: centre card i (smoothly) in the track.
+  const goTo = useCallback((i: number) => {
+    const track = stack.current;
+    const card = track?.querySelectorAll<HTMLElement>('.bfx-proj')[i];
+    if (!track || !card) return;
+    track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' });
+  }, []);
+
+  // Project index links: on the strip, bring the section in and slide to the
+  // card; on desktop, scroll to the card in the stack.
+  const openProject = (i: number) => {
+    if (window.matchMedia(STRIP_MQ).matches) {
+      scrollToId('work');
+      goTo(i);
+    } else {
+      scrollToId(`proj-${i + 1}`);
+    }
+  };
 
   useEffect(() => {
     const el = root.current;
@@ -67,15 +118,15 @@ export function WorkSection() {
         });
       });
 
-      mm.add('(max-width: 899px)', () => {
-        q<HTMLElement>('.bfx-proj').forEach((card) => {
-          gsap.from(card, {
-            y: 60,
-            opacity: 0,
-            duration: 1.1,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: card, start: 'top 90%' },
-          });
+      mm.add(STRIP_MQ, () => {
+        // The strip slides in from the right once.
+        gsap.from(q('.bfx-proj'), {
+          x: 80,
+          opacity: 0,
+          duration: 1.1,
+          stagger: 0.08,
+          ease: 'expo.out',
+          scrollTrigger: { trigger: q('.bfx-stack')[0], start: 'top 85%' },
         });
       });
     }, el);
@@ -102,7 +153,7 @@ export function WorkSection() {
             <ol className="bfx-work-toc" aria-label="Projects">
               {PROJECTS.map((p, i) => (
                 <li key={p.title}>
-                  <a href={`#proj-${i + 1}`} onClick={(e) => { e.preventDefault(); scrollToId(`proj-${i + 1}`); }}>
+                  <a href={`#proj-${i + 1}`} onClick={(e) => { e.preventDefault(); openProject(i); }}>
                     <span>0{i + 1}</span>{p.title}
                   </a>
                 </li>
@@ -111,9 +162,15 @@ export function WorkSection() {
           </div>
         </div>
 
-        <div className="bfx-stack">
+        <div ref={stack} className="bfx-stack">
           {PROJECTS.map((p, i) => (
-            <article key={p.title} id={`proj-${i + 1}`} className="bfx-proj" style={{ '--i': i } as CSSProperties}>
+            <article
+              key={p.title}
+              id={`proj-${i + 1}`}
+              data-index={i}
+              className={`bfx-proj${i === active ? ' is-active' : ''}`}
+              style={{ '--i': i } as CSSProperties}
+            >
               <div className="bfx-proj-inner">
                 <div className="bfx-proj-info">
                   <div className="bfx-proj-top">
@@ -145,6 +202,24 @@ export function WorkSection() {
               </div>
             </article>
           ))}
+        </div>
+
+        {/* Strip controls (phones): counter, progress, prev / next */}
+        <div className="bfx-strip-ui">
+          <span className="bfx-strip-count" aria-live="polite">
+            <strong>0{active + 1}</strong> / 0{PROJECTS.length}
+          </span>
+          <span className="bfx-strip-bar" aria-hidden="true">
+            <i style={{ transform: `scaleX(${(active + 1) / PROJECTS.length})` }} />
+          </span>
+          <span className="bfx-strip-nav">
+            <button type="button" onClick={() => goTo(Math.max(0, active - 1))} disabled={active === 0} aria-label="Previous project">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            <button type="button" onClick={() => goTo(Math.min(PROJECTS.length - 1, active + 1))} disabled={active === PROJECTS.length - 1} aria-label="Next project">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+          </span>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 /**
  * Testimonials — a deep navy band for contrast. Each quote sits beside the
- * project it's about; quotes rise in word by word, auto-advance every 6s
+ * project it's about; quotes rise in word by word, auto-advance every 3.8s
  * (paused on hover/focus) and can be stepped with the arrows.
  */
 
@@ -12,7 +12,7 @@ import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const INTERVAL = 6000;
+const INTERVAL = 3800;
 
 export function TestimonialsSection() {
   const root = useRef<HTMLElement>(null);

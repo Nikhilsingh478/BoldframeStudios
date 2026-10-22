@@ -3349,3 +3349,202 @@ body:has(.bfx-modal) .bfx-header {
 .bfx-svc-tagline {
   font-size: 11px;
 }
+
+/* ─── Work: swipeable strip on phones / small tablets ────────────── */
+
+.bfx-strip-ui {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .bfx-stack {
+    position: relative;
+    display: flex;
+    gap: 14px;
+    margin-inline: calc(-1 * var(--bfx-gutter));
+    padding: 6px var(--bfx-gutter) 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--bfx-gutter);
+    scrollbar-width: none;
+  }
+
+  .bfx-stack::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bfx-proj {
+    flex: 0 0 min(84vw, 460px);
+    margin-bottom: 0;
+    scroll-snap-align: center;
+  }
+
+  /* The centred card is in focus; its neighbours sit back. */
+  .bfx-proj-inner {
+    height: 100%;
+    opacity: 0.5;
+    transform: scale(0.93);
+    transition: transform 0.6s var(--bfx-ease), opacity 0.5s ease;
+  }
+
+  .bfx-proj.is-active .bfx-proj-inner {
+    opacity: 1;
+    transform: none;
+  }
+
+  .bfx-proj-metrics dt {
+    font-size: 9.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .bfx-proj-desc {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .bfx-strip-ui {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .bfx-strip-count {
+    font-family: var(--bfx-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--bfx-ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bfx-strip-count strong {
+    font-weight: 600;
+    color: var(--bfx-blue);
+  }
+
+  .bfx-strip-bar {
+    flex: 1;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--bfx-line);
+  }
+
+  .bfx-strip-bar i {
+    display: block;
+    height: 100%;
+    background: var(--bfx-blue);
+    transform-origin: left;
+    transition: transform 0.6s var(--bfx-ease);
+  }
+
+  .bfx-strip-nav {
+    display: flex;
+    gap: 8px;
+  }
+
+  .bfx-strip-nav button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--bfx-line);
+    border-radius: 50%;
+    background: var(--bfx-surface);
+    color: var(--bfx-ink);
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  }
+
+  .bfx-strip-nav button:not(:disabled):active {
+    background: var(--bfx-blue);
+    color: #fff;
+  }
+
+  .bfx-strip-nav button:disabled {
+    opacity: 0.35;
+  }
+}
+
+/* ─── Back to top: rotating text ring around an arrow ────────────── */
+
+.bfx-totop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 92px;
+  height: 92px;
+  color: var(--bfx-ink);
+  text-decoration: none;
+}
+
+.bfx-totop-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: bfx-spin 14s linear infinite;
+}
+
+.bfx-totop-ring text {
+  font-family: var(--bfx-mono);
+  font-size: 9.6px;
+  font-weight: 500;
+  fill: currentColor;
+}
+
+@keyframes bfx-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Core: blue disc; the arrow shoots up and a fresh one rises in on hover. */
+.bfx-totop-core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--bfx-blue-deep);
+  color: #fff;
+  box-shadow: 0 12px 26px -12px rgba(10, 71, 214, 0.7);
+  transition: transform 0.5s var(--bfx-ease), background-color 0.3s ease;
+}
+
+.bfx-totop-core svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -9px 0 0 -9px;
+  transition: transform 0.5s var(--bfx-ease);
+}
+
+.bfx-totop-core svg:first-child {
+  transform: translateY(36px);
+}
+
+@media (hover: hover) {
+  .bfx-totop:hover .bfx-totop-core {
+    transform: scale(1.08);
+    background: var(--bfx-blue);
+  }
+
+  .bfx-totop:hover .bfx-totop-core svg:first-child {
+    transform: none;
+  }
+
+  .bfx-totop:hover .bfx-totop-core svg:last-child {
+    transform: translateY(-36px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bfx-totop-ring {
+    animation: none;
+  }
+}

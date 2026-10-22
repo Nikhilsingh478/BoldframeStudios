@@ -44,14 +44,15 @@ export function ContactSection({ onContactClick }: { onContactClick: () => void 
         ease: 'expo.out',
         scrollTrigger: { trigger: el, start: 'top 70%' },
       });
-      // Columns drift on desktop only; phones keep the mosaic still.
-      mm.add('(min-width: 768px)', () => {
-        const travel = [-14, 10, -18];
+      // Columns drift in opposite directions; gentler on phones. Three
+      // transformed columns, so it's cheap enough everywhere.
+      mm.add({ wide: '(min-width: 768px)', narrow: '(max-width: 767px)' }, (c) => {
+        const travel = c.conditions?.wide ? [-14, 10, -18] : [-8, 6, -10];
         q<HTMLElement>('.bfx-mosaic-col').forEach((col, i) => {
           gsap.fromTo(col, { yPercent: -travel[i] }, {
             yPercent: travel[i],
             ease: 'none',
-            scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+            scrollTrigger: { trigger: q('.bfx-mosaic')[0], start: 'top bottom', end: 'bottom top', scrub: true },
           });
         });
       });
