@@ -23,6 +23,8 @@ export function initSmoothScroll(): () => void {
   const fine = window.matchMedia('(pointer: fine)').matches;
   if (reduced || !fine || lenis) return () => {};
 
+  // Elements marked data-lenis-prevent (modal scroll areas) keep native
+  // wheel/touch scrolling; Lenis would otherwise swallow it while paused.
   lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, anchors: true });
   lenis.on('scroll', ScrollTrigger.update);
   if (locks.size) lenis.stop();

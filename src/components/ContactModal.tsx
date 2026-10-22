@@ -229,6 +229,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   return (
     <div
       className={`cm-backdrop${isOpen ? '' : ' is-closing'}`}
+      data-lenis-prevent
       onMouseDown={(e) => e.target === e.currentTarget && close()}
     >
       <div

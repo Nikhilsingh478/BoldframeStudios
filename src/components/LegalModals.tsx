@@ -98,6 +98,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
               {/* Scrollable Content */}
               <div 
                 className="overflow-y-auto p-8 pt-6 custom-scrollbar flex-grow bg-[#0F1316]" 
+                data-lenis-prevent
                 ref={contentRef}
                 style={{ overscrollBehavior: 'contain' }}
               >
