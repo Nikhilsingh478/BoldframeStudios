@@ -30,10 +30,10 @@ const STATEMENT: [string, boolean?][] = [
 const SHOW_BG_WORDMARK = false;
 
 const PILLS = [
-  { label: 'We', tone: 'white' },
-  { label: 'Build', tone: 'blue' },
+  { label: 'Problem', tone: 'white' },
+  { label: 'Plan', tone: 'blue' },
   { label: '→', tone: 'navy' },
-  { label: 'Bold', tone: 'sky' },
+  { label: 'Product', tone: 'sky' },
 ];
 
 export function AboutSection() {

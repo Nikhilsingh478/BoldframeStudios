@@ -15,14 +15,22 @@ gsap.registerPlugin(ScrollTrigger);
 const SCALE_MAX = 3;
 const GOOD_LCP = 2.5;
 
-const STATS = [
-  { value: 0.42, decimals: 2, suffix: 's', label: 'Fastest Largest Contentful Paint', note: 'Organic Green Tea Store' },
-  { value: 0, decimals: 0, suffix: '', label: 'Layout shift (CLS)', note: 'On all six live builds' },
-  { value: 4, decimals: 0, suffix: '/6', label: 'Builds under one second', note: 'Main content painted in < 1s' },
-  { value: 48, decimals: 0, prefix: '≤', suffix: 'ms', label: 'Slowest interaction (INP)', note: 'Google’s “good” limit is 200ms' },
-];
+// Only builds measured with Core Web Vitals; sorted fastest first.
+const MEASURED = PROJECTS.flatMap((p) => (p.vitals ? [{ title: p.title, ...p.vitals }] : []));
+const BY_SPEED = [...MEASURED].sort((a, b) => a.lcp - b.lcp);
+const UNDER_ONE = MEASURED.filter((p) => p.lcp < 1).length;
+const ALL_ZERO_CLS = MEASURED.every((p) => Number(p.cls) === 0);
+const MAX_INP = Math.max(...MEASURED.map((p) => p.inp));
+const COUNT_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 
-const BY_SPEED = [...PROJECTS].sort((a, b) => a.lcp - b.lcp);
+const STATS = [
+  { value: BY_SPEED[0].lcp, decimals: 2, suffix: 's', label: 'Fastest Largest Contentful Paint', note: BY_SPEED[0].title },
+  ...(ALL_ZERO_CLS
+    ? [{ value: 0, decimals: 0, suffix: '', label: 'Layout shift (CLS)', note: `On all ${COUNT_WORDS[MEASURED.length] ?? MEASURED.length} measured builds` }]
+    : []),
+  { value: UNDER_ONE, decimals: 0, suffix: `/${MEASURED.length}`, label: 'Builds under one second', note: 'Main content painted in < 1s' },
+  { value: MAX_INP, decimals: 0, prefix: '≤', suffix: 'ms', label: 'Slowest interaction (INP)', note: 'Google’s “good” limit is 200ms' },
+];
 
 export function ResultsSection() {
   const root = useRef<HTMLElement>(null);

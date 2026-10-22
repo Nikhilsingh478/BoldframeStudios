@@ -8,20 +8,66 @@ export const SOCIALS = [
   { label: 'Portfolio', href: 'https://nikhilsinghcv.vercel.app' },
 ];
 
+/** Field-style Core Web Vitals, measured per build (the Results chart uses these). */
+export interface Vitals {
+  lcp: number;
+  cls: string;
+  inp: number;
+}
+
 export interface Project {
   title: string;
   category: string;
   description: string;
   tech: string[];
   timeline: string;
-  lcp: number;
-  cls: string;
-  inp: number;
+  /** Core Web Vitals, for the projects measured that way. */
+  vitals?: Vitals;
+  /** Lighthouse category scores, for projects measured with a Lighthouse run. */
+  lighthouse?: { seo: number; bestPractices: number; accessibility: number; cls: string };
   image: string;
   url: string;
 }
 
+export interface Metric {
+  label: string; // long form, e.g. "Largest paint"
+  short: string; // compact form, e.g. "LCP"
+  value: string;
+}
+
+/** The three figures shown for a project, whichever way it was measured. */
+export function projectMetrics(p: Project): Metric[] {
+  if (p.vitals) {
+    const { lcp, cls, inp } = p.vitals;
+    return [
+      { label: 'Largest paint', short: 'LCP', value: `${lcp.toFixed(2)}s` },
+      { label: 'Layout shift', short: 'CLS', value: cls },
+      { label: 'Interaction', short: 'INP', value: inp > 0 ? `${inp}ms` : '—' },
+    ];
+  }
+  if (p.lighthouse) {
+    const { seo, bestPractices, cls } = p.lighthouse;
+    return [
+      { label: 'SEO score', short: 'SEO', value: String(seo) },
+      { label: 'Best practices', short: 'BP', value: String(bestPractices) },
+      { label: 'Layout shift', short: 'CLS', value: cls },
+    ];
+  }
+  return [];
+}
+
 export const PROJECTS: Project[] = [
+  {
+    title: 'Thunderbold',
+    category: 'D2C fashion e-commerce platform',
+    description:
+      'An ongoing fashion commerce platform built beyond the storefront: product discovery, cart and checkout, customer accounts, inventory and a custom admin panel for orders, returns and reporting.',
+    tech: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Firebase'],
+    timeline: 'Ongoing',
+    lighthouse: { seo: 100, bestPractices: 100, accessibility: 93, cls: '0' },
+    image: '/thunderbold.webp',
+    url: 'https://www.thunderbold.shop/',
+  },
   {
     title: 'Huuman',
     category: 'Brand experience redesign',
@@ -29,7 +75,7 @@ export const PROJECTS: Project[] = [
       'A redesigned concept for the streetwear brand Huuman: GSAP and Shery.js creative motion, responsive behaviour across viewports and an optimised hero.',
     tech: ['GSAP', 'Shery.js', 'Tailwind CSS', 'JavaScript'],
     timeline: '2–3 months',
-    lcp: 2.24, cls: '0.00', inp: 24,
+    vitals: { lcp: 2.24, cls: '0.00', inp: 24 },
     image: '/p1.webp',
     url: 'https://huuman-responsive-updated.vercel.app/',
   },
@@ -40,20 +86,9 @@ export const PROJECTS: Project[] = [
       'A landing page for a London spa built around bookings: contact form, WhatsApp call-to-action, service pages and session booking flows.',
     tech: ['GSAP', 'Tailwind CSS', 'JavaScript'],
     timeline: '1 month',
-    lcp: 2.33, cls: '0', inp: 40,
+    vitals: { lcp: 2.33, cls: '0', inp: 40 },
     image: '/p2.webp',
     url: 'https://spas-one.vercel.app/',
-  },
-  {
-    title: 'HBL',
-    category: 'Corporate website redesign',
-    description:
-      'A clean, minimal redesign that communicates the company’s core offerings with clarity, with smooth scrolling and considered micro-interactions.',
-    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Locomotive Scroll'],
-    timeline: '2 weeks',
-    lcp: 0.98, cls: '0', inp: 40,
-    image: '/p3.webp',
-    url: 'https://hbl-eight.vercel.app/',
   },
   {
     title: 'Organic Green Tea Store',
@@ -62,7 +97,7 @@ export const PROJECTS: Project[] = [
       'A sales-driven storefront for an organic tea brand, plus an admin dashboard with detailed tracking and graphs. Frontend complete for both.',
     tech: ['React', 'TypeScript', 'shadcn/ui', 'Tailwind CSS'],
     timeline: 'Frontend complete',
-    lcp: 0.42, cls: '0', inp: 8,
+    vitals: { lcp: 0.42, cls: '0', inp: 8 },
     image: '/p4.webp',
     url: 'https://organic-india-clone-garden.vercel.app/',
   },
@@ -73,7 +108,7 @@ export const PROJECTS: Project[] = [
       'A playful seasonal landing page with spooky micro-interactions and custom GSAP motion, kept light so it loads fast and plays smoothly.',
     tech: ['GSAP', 'JavaScript', 'CSS'],
     timeline: '2 weeks',
-    lcp: 0.88, cls: '0.00', inp: 48,
+    vitals: { lcp: 0.88, cls: '0.00', inp: 48 },
     image: '/p5.webp',
     url: 'https://halloween-two-rho.vercel.app/',
   },
@@ -84,7 +119,7 @@ export const PROJECTS: Project[] = [
       'A festive page with layered parallax (Rellax.js) and polished seasonal visuals, with parallax intensity tuned down on small screens.',
     tech: ['GSAP', 'Rellax.js', 'JavaScript'],
     timeline: '2 weeks',
-    lcp: 0.53, cls: '0', inp: 0,
+    vitals: { lcp: 0.53, cls: '0', inp: 0 },
     image: '/p6.webp',
     url: 'https://christmas-webpage.vercel.app/',
   },
@@ -97,7 +132,7 @@ export const SERVICES = [
     description:
       'We start by understanding your problem end to end, study your competitors, and map a rough workflow and solution before anything is designed or built.',
     deliverables: ['End-to-end problem mapping', 'Competitor research', 'Workflow & solution outline'],
-    image: '/p3.webp',
+    image: '/thunderbold.webp',
   },
   {
     title: 'Brand & UI/UX Design',
@@ -139,13 +174,6 @@ export const TESTIMONIALS = [
     role: 'Owner',
     company: 'Roseberry Massage Spa',
     image: '/p2.webp',
-  },
-  {
-    quote:
-      'The redesign for HBL modernized our entire digital presence. It’s sleek, minimal, and loads under a second — a major credibility boost for our brand.',
-    role: 'Marketing Head',
-    company: 'HBL Industries',
-    image: '/p3.webp',
   },
   {
     quote:

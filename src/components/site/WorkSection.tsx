@@ -15,7 +15,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { PROJECTS } from './data';
+import { PROJECTS, projectMetrics } from './data';
 import { scrollToId } from '../../lib/smoothScroll';
 import { SectionLabel } from './SectionLabel';
 
@@ -89,9 +89,7 @@ function MobileIndex() {
               <div className="bfx-mindex-more">
                 <div>
                   <p className="bfx-mindex-stats">
-                    <span>LCP {p.lcp.toFixed(2)}s</span>
-                    <span>CLS {p.cls}</span>
-                    <span>INP {p.inp > 0 ? `${p.inp}ms` : '—'}</span>
+                    {projectMetrics(p).map((m) => <span key={m.short}>{m.short} {m.value}</span>)}
                   </p>
                   <a
                     className="bfx-link"
@@ -225,9 +223,9 @@ export function WorkSection() {
                     {p.tech.join(' / ')}
                   </p>
                   <dl className="bfx-proj-metrics">
-                    <div><dt>Largest paint</dt><dd>{p.lcp.toFixed(2)}s</dd></div>
-                    <div><dt>Layout shift</dt><dd>{p.cls}</dd></div>
-                    <div><dt>Interaction</dt><dd>{p.inp > 0 ? `${p.inp}ms` : '—'}</dd></div>
+                    {projectMetrics(p).map((m) => (
+                      <div key={m.label}><dt>{m.label}</dt><dd>{m.value}</dd></div>
+                    ))}
                   </dl>
                   <a className="bfx-link" href={p.url} target="_blank" rel="noopener noreferrer">
                     Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>

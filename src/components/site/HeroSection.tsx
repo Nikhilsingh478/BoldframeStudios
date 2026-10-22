@@ -27,7 +27,7 @@ const STATS = [
   { label: 'Live Projects', value: 6, pad: 2 },
 ];
 
-const THUMBS = ['/p1.webp', '/p2.webp', '/p3.webp'];
+const THUMBS = ['/thunderbold.webp', '/p1.webp', '/p2.webp'];
 
 // React 18 doesn't know `fetchPriority`; pass the HTML attribute directly.
 const HIGH_PRIORITY = { fetchpriority: 'high' } as Record<string, string>;
