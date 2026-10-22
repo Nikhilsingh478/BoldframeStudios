@@ -3,10 +3,11 @@
  * same blue gradient) rises letter by letter as the page ends.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { LogoMark } from './Logo';
+import { ConnectButton } from './ConnectButton';
 import { CONTACT_EMAIL, SOCIALS } from './data';
 import { scrollToId } from '../../lib/smoothScroll';
 
@@ -19,6 +20,18 @@ const NAV = [
   { label: 'Process', id: 'journey' },
   { label: 'Results', id: 'outcomes' },
 ];
+
+/** Current time in India (HH:MM), refreshed every 20 seconds. */
+function useIndiaTime() {
+  const format = () =>
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' }).format(new Date());
+  const [time, setTime] = useState(format);
+  useEffect(() => {
+    const timer = window.setInterval(() => setTime(format()), 20000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return time;
+}
 
 interface FooterProps {
   onContactClick: () => void;
@@ -44,6 +57,8 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
     return () => ctx.revert();
   }, []);
 
+  const istTime = useIndiaTime();
+
   const go = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     scrollToId(id);
@@ -51,6 +66,19 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
 
   return (
     <footer ref={root} className="bfx-footer">
+      <div className="bfx-wrap bfx-foot-cta">
+        <p className="bfx-foot-cta-text">
+          Ready when you are.
+          <span> Tell us about your project, we&rsquo;ll take it from there.</span>
+        </p>
+        <div className="bfx-foot-cta-actions">
+          <ConnectButton label="Start a project" onClick={onContactClick} />
+          <a className="bfx-link" href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
+          </a>
+        </div>
+      </div>
+
       <div className="bfx-wrap bfx-foot-top">
         <div className="bfx-foot-brand">
           <LogoMark size={40} />
@@ -89,6 +117,9 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
 
       <div className="bfx-wrap bfx-foot-bottom">
         <span>© {new Date().getFullYear()} BoldFrame Studios</span>
+        <span className="bfx-foot-time">
+          <i aria-hidden="true" />Based in India · {istTime} IST
+        </span>
         <a href="#hero" onClick={(e) => go(e, 'hero')}>Back to top ↑</a>
       </div>
     </footer>

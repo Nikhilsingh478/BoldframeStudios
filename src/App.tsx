@@ -76,7 +76,7 @@ export default function App() {
         <meta name="twitter:description" content="BoldFrame Studios — building fast, modern, SEO-optimized websites." />
         <meta name="twitter:image" content="/preview.png" />
         {/* Viewport & Fallbacks */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="robots" content="index, follow" />
         {/* Structured Data (JSON-LD) */}

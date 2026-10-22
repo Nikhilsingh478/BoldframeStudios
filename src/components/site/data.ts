@@ -1,7 +1,7 @@
 // Real BoldFrame content: projects, measured results, services, testimonials.
 // Figures come from the original case studies; nothing here is invented.
 
-export const CONTACT_EMAIL = 'nikhilwebworks@gmail.com';
+export const CONTACT_EMAIL = 'boldframestudios4@gmail.com';
 export const SOCIALS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nikhilsingh14788' },
   { label: 'GitHub', href: 'https://github.com/Nikhilsingh478' },

@@ -1,31 +1,33 @@
 /**
- * SiteLoader — "framing the shot".
+ * SiteLoader — "The Aperture".
  *
- * A camera viewfinder: four corner brackets snap open around the BoldFrame
- * mark, a counter runs 000 → 100 while DESIGN · BUILD · GROW light up in
- * turn, then the brackets fly out to frame the whole screen and the blue
- * curtain lifts to reveal the hero.
+ * BoldFrame frames brands, so the loader is a frame. A blue screen splits
+ * open into a small window onto the real hero (Nikhil's portrait) behind
+ * it. The window widens in three steps, like a camera zooming out, while a
+ * placard on the frame reads DESIGN → BUILD → GROW with a 01/03 index and a
+ * counter runs 000 → 100. Then the four blue panels fly apart and the hero
+ * is simply there: the loader becomes the page instead of covering it.
  *
- * Performance: every moving part is a CSS animation of transform or
- * opacity (the counter is three digit strips stepping with steps()), so the
- * GPU runs it smoothly even while the main thread is busy loading the page.
- * JS only mounts it, tells the hero when to start, and unmounts it.
+ * Performance: the "hole" is four solid panels moved apart with transforms,
+ * the counter and captions are stepped strips, and every animation is
+ * transform/opacity in CSS, so it all runs on the compositor and stays
+ * smooth on phones while the page is still loading. JS only mounts it,
+ * starts the hero at the right moment and unmounts it.
  *
- * First visit in a session: ~2.9s. Later visits: ~1.3s, no counter.
- * Reduced motion: no loader.
+ * First visit in a session: ~2.9s. Later visits: ~1.4s (open, then fly
+ * apart). Reduced motion: no loader.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { startReveal } from './reveal';
 import { setScrollLocked } from '../../lib/smoothScroll';
 import { LogoMark } from './Logo';
 
 const SESSION_KEY = 'bf-loader-seen';
-const WORDS = ['Design', 'Build', 'Grow'];
+const STEPS = ['Design', 'Build', 'Grow'];
 
-// ms from mount: hero starts as the curtain lifts; unmount after it's gone.
 const TIMING = {
-  full: { reveal: 2100, done: 3000 },
+  full: { reveal: 2250, done: 3000 },
   short: { reveal: 700, done: 1450 },
 };
 
@@ -38,16 +40,18 @@ function readMode(): 'full' | 'short' | 'none' {
   }
 }
 
-/** One odometer column: a vertical strip of digits stepped by CSS. */
-function Digits({ strip, className }: { strip: string; className: string }) {
+/** A clipped vertical strip, stepped through by CSS. */
+function Strip({ items, className }: { items: string[]; className: string }) {
   return (
-    <span className="bfl-digit">
-      <span className={`bfl-strip ${className}`}>
-        {strip.split('').map((d, i) => <span key={i}>{d}</span>)}
+    <span className="bfa-slot">
+      <span className={`bfa-strip ${className}`} style={{ '--n': items.length } as CSSProperties}>
+        {items.map((d, i) => <span key={i}>{d}</span>)}
       </span>
     </span>
   );
 }
+
+const DIGITS = '01234567890'.split('');
 
 export function SiteLoader() {
   const [mode] = useState(readMode);
@@ -86,37 +90,38 @@ export function SiteLoader() {
   if (done) return null;
 
   return (
-    <div className={`bfl bfl--${mode}`} aria-hidden="true">
-      <div className="bfl-curtain" />
-
-      {/* Viewfinder corners: open around the mark, then fly to the screen edges */}
-      <span className="bfl-corner bfl-corner--tl" />
-      <span className="bfl-corner bfl-corner--tr" />
-      <span className="bfl-corner bfl-corner--bl" />
-      <span className="bfl-corner bfl-corner--br" />
-
-      <div className="bfl-center">
-        <span className="bfl-mark"><span><LogoMark size={56} frame="#FFFFFF" letter="#FFFFFF" /></span></span>
+    <div className={`bfa bfa--${mode}`} aria-hidden="true">
+      <span className="bfa-panel bfa-panel--t">
         {mode === 'full' && (
-          <p className="bfl-words">
-            {WORDS.map((w, i) => (
-              <span key={w} style={{ '--w': i } as React.CSSProperties}>{w}</span>
-            ))}
-          </p>
-        )}
-      </div>
-
-      {mode === 'full' && (
-        <div className="bfl-foot">
-          <span className="bfl-count">
-            <Digits strip="01" className="bfl-strip--h" />
-            <Digits strip="01234567890" className="bfl-strip--t" />
-            <Digits strip="01234567890" className="bfl-strip--o" />
+          <span className="bfa-edge bfa-edge--t">
+            <span>BoldFrame Studios</span>
+            <span className="bfa-index">
+              <Strip items={['01', '02', '03']} className="bfa-strip--steps" /> / 03
+            </span>
           </span>
-          <span className="bfl-line"><i /></span>
-          <span className="bfl-brand">BoldFrame Studios</span>
-        </div>
-      )}
+        )}
+      </span>
+      <span className="bfa-panel bfa-panel--b">
+        {mode === 'full' && (
+          <span className="bfa-edge bfa-edge--b">
+            <Strip items={STEPS} className="bfa-strip--steps" />
+            <span className="bfa-count">
+              <Strip items={['0', '1']} className="bfa-strip--h" />
+              <Strip items={DIGITS} className="bfa-strip--t" />
+              <Strip items={DIGITS} className="bfa-strip--o" />
+            </span>
+          </span>
+        )}
+      </span>
+      <span className="bfa-panel bfa-panel--l" />
+      <span className="bfa-panel bfa-panel--r" />
+
+      <span className="bfa-corner bfa-corner--tl" />
+      <span className="bfa-corner bfa-corner--tr" />
+      <span className="bfa-corner bfa-corner--bl" />
+      <span className="bfa-corner bfa-corner--br" />
+
+      <span className="bfa-mark"><LogoMark size={52} frame="#FFFFFF" letter="#FFFFFF" /></span>
     </div>
   );
 }

@@ -3,8 +3,9 @@
  *
  * Hover (fine pointers): a white fill grows out of the point where the
  * cursor entered and shrinks back toward where it left, the label rolls to
- * a copy of itself, the arrow slides out and a fresh one slides in, and the
- * whole button leans a few pixels toward the cursor.
+ * a copy of itself, the diagonal arrow exits to the top right while a fresh
+ * one arrives from the bottom left, and the whole button leans a few pixels
+ * toward the cursor.
  */
 
 import { useRef, type ReactNode } from 'react';
@@ -22,7 +23,7 @@ interface ConnectButtonProps {
 function Arrow() {
   return (
     <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-      <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

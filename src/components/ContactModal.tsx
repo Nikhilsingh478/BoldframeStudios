@@ -92,9 +92,33 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     document.body.style.overflow = 'hidden';
     setScrollLocked(true, 'contact');
 
+    // Desktop: focus the first field. Touch: focus the dialog itself, so
+    // the keyboard doesn't jump up before the visitor has read anything.
+    const touch = window.matchMedia('(pointer: coarse)').matches;
     const focusTimer = window.setTimeout(() => {
-      panelRef.current?.querySelector<HTMLElement>('input, textarea')?.focus({ preventScroll: true });
+      const target = touch
+        ? panelRef.current
+        : panelRef.current?.querySelector<HTMLElement>('input, textarea');
+      target?.focus({ preventScroll: true });
     }, 450);
+
+    // Mobile keyboards: size the backdrop to the visible area (above the
+    // keyboard) and bring the focused field into the middle of it.
+    const vv = window.visualViewport;
+    const backdrop = panelRef.current?.parentElement;
+    const fitViewport = () => {
+      if (vv && backdrop) backdrop.style.height = `${vv.height}px`;
+    };
+    let fieldTimer = 0;
+    const onFocusIn = (e: FocusEvent) => {
+      const el = e.target as HTMLElement;
+      if (!touch || !el.matches('input, textarea')) return;
+      window.clearTimeout(fieldTimer);
+      // Wait for the keyboard to finish opening before scrolling.
+      fieldTimer = window.setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 320);
+    };
+    vv?.addEventListener('resize', fitViewport);
+    panelRef.current?.addEventListener('focusin', onFocusIn);
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -118,8 +142,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     };
     window.addEventListener('keydown', onKey);
 
+    const panel = panelRef.current;
     return () => {
       window.clearTimeout(focusTimer);
+      window.clearTimeout(fieldTimer);
+      vv?.removeEventListener('resize', fitViewport);
+      panel?.removeEventListener('focusin', onFocusIn);
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
       setScrollLocked(false, 'contact');
@@ -188,6 +216,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="cm-title"
+            tabIndex={-1}
             initial={reduce ? false : { opacity: 0, y: 40, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98, transition: { duration: 0.3, ease: [0.4, 0, 1, 1] } }}

@@ -155,8 +155,8 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                       <div>
                         <h3 className="text-[#E6EEF3] text-lg font-medium mb-2">6. Contact Us</h3>
                         <p className="mb-2">If you have any questions about this Privacy Policy, please contact us at:</p>
-                        <a href="mailto:hello@boldframestudios.com" className="text-[#67E8F9] hover:underline inline-flex items-center gap-1">
-                          hello@boldframestudios.com
+                        <a href="mailto:boldframestudios4@gmail.com" className="text-[#67E8F9] hover:underline inline-flex items-center gap-1">
+                          boldframestudios4@gmail.com
                         </a>
                       </div>
                     </>
@@ -206,8 +206,8 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                       <div>
                         <h3 className="text-[#E6EEF3] text-lg font-medium mb-2">6. Contact Information</h3>
                         <p className="mb-2">For questions regarding these Terms of Service, please contact:</p>
-                        <a href="mailto:hello@boldframestudios.com" className="text-[#67E8F9] hover:underline inline-flex items-center gap-1">
-                          hello@boldframestudios.com
+                        <a href="mailto:boldframestudios4@gmail.com" className="text-[#67E8F9] hover:underline inline-flex items-center gap-1">
+                          boldframestudios4@gmail.com
                         </a>
                       </div>
                     </>
