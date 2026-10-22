@@ -2861,10 +2861,17 @@ body:has(.bfx-modal) .bfx-header {
   place-items: center;
   padding: clamp(12px, 3vw, 32px);
   overflow-y: auto;
-  background: rgba(6, 18, 46, 0.42);
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  background: rgba(6, 18, 46, 0.55);
+  animation: cm-fade-in 0.35s ease both;
 }
+
+.cm-backdrop.is-closing {
+  animation: cm-fade-out 0.38s ease 0.05s both;
+  pointer-events: none;
+}
+
+@keyframes cm-fade-in { from { opacity: 0; } }
+@keyframes cm-fade-out { to { opacity: 0; } }
 
 .cm-panel {
   position: relative;
@@ -2875,8 +2882,31 @@ body:has(.bfx-modal) .bfx-header {
   overflow: hidden;
   border-radius: clamp(22px, 2.4vw, 32px);
   background: var(--bfx-surface);
-  box-shadow: 0 50px 120px -40px rgba(6, 18, 46, 0.6);
+  box-shadow: 0 24px 48px -24px rgba(6, 18, 46, 0.5);
+  animation: cm-panel-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform;
 }
+
+.is-closing .cm-panel {
+  animation: cm-panel-out 0.32s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes cm-panel-in { from { opacity: 0; transform: translateY(36px) scale(0.98); } }
+@keyframes cm-panel-out { to { opacity: 0; transform: translateY(20px) scale(0.985); } }
+
+/* Content enters as two groups (blue side, then form), not item by item:
+   every separately animated element is another layer to paint while the
+   panel is still moving, which is what dropped frames on phones. */
+.cm-aside,
+.cm-form {
+  animation: cm-item-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.12s backwards;
+}
+
+.cm-form {
+  animation-delay: 0.2s;
+}
+
+@keyframes cm-item-in { from { opacity: 0; transform: translateY(16px); } }
 
 .cm-close {
   position: absolute;
@@ -3174,20 +3204,49 @@ body:has(.bfx-modal) .bfx-header {
   color: var(--bfx-ink-3);
 }
 
-/* Success */
+/* Confirmation */
 .cm-sent {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  height: 100%;
-  min-height: 380px;
+  min-height: 420px;
+}
+
+.cm-rise {
+  animation: cm-item-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(0.1s + var(--d, 0) * 0.08s) backwards;
+}
+
+.cm-sent-badge {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  animation: cm-badge-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes cm-badge-in { from { opacity: 0; transform: scale(0.6); } }
+
+/* One soft ring expanding out once the tick lands. */
+.cm-sent-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(11, 92, 255, 0.18);
+  transform: scale(0.9);
+  opacity: 0;
+  animation: cm-ring 1.1s ease-out 0.85s forwards;
+}
+
+@keyframes cm-ring {
+  0% { opacity: 1; transform: scale(0.9); }
+  100% { opacity: 0; transform: scale(1.9); }
 }
 
 .cm-check {
-  width: 64px;
-  height: 64px;
-  fill: none;
+  position: relative;
+  width: 60px;
+  height: 60px;
+  fill: var(--bfx-surface);
   stroke: var(--bfx-blue);
   stroke-width: 2.5;
   stroke-linecap: round;
@@ -3197,27 +3256,100 @@ body:has(.bfx-modal) .bfx-header {
 .cm-check circle {
   stroke-dasharray: 189;
   stroke-dashoffset: 189;
-  animation: bfx-draw 0.9s var(--bfx-ease) 0.1s forwards;
+  animation: bfx-draw 0.8s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
 }
 
 .cm-check path {
   stroke-dasharray: 40;
   stroke-dashoffset: 40;
-  animation: bfx-draw 0.6s var(--bfx-ease) 0.6s forwards;
+  animation: bfx-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.75s forwards;
+}
+
+.cm-sent-label {
+  margin: 1.75rem 0 0;
+  font-family: var(--bfx-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bfx-blue);
 }
 
 .cm-sent h3 {
-  margin: 1.5rem 0 0;
+  margin: 0.5rem 0 0;
   font-family: var(--bfx-head);
-  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
   font-weight: 500;
+  line-height: 1.05;
   letter-spacing: -0.04em;
 }
 
-.cm-sent p {
-  margin: 0.75rem 0 2rem;
+.cm-sent-copy {
+  max-width: 30rem;
+  margin: 0.9rem 0 0;
   line-height: 1.6;
   color: var(--bfx-ink-2);
+}
+
+.cm-sent-copy strong {
+  font-weight: 500;
+  color: var(--bfx-ink);
+}
+
+/* Receipt: what was sent, as a quiet record. */
+.cm-receipt {
+  width: 100%;
+  margin: 1.75rem 0 0;
+  border-top: 1px solid var(--bfx-line);
+}
+
+.cm-receipt div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--bfx-line);
+}
+
+.cm-receipt dt {
+  font-family: var(--bfx-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bfx-ink-3);
+}
+
+.cm-receipt dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 14.5px;
+  color: var(--bfx-ink);
+}
+
+.cm-sent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+  margin-top: 2rem;
+}
+
+/* Aside: the first "next step" is ticked once the message is in. */
+.cm-steps li.is-done span {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--bfx-blue);
+  font-size: 0;
+}
+
+.cm-steps li.is-done span::before {
+  content: '✓';
+  font-size: 12px;
+  font-weight: 700;
 }
 
 @media (max-width: 799px) {
@@ -3359,124 +3491,6 @@ body:has(.bfx-modal) .bfx-header {
   font-size: 11px;
 }
 
-/* ─── Work: swipeable strip on phones / small tablets ────────────── */
-
-.bfx-strip-ui {
-  display: none;
-}
-
-@media (max-width: 899px) {
-  .bfx-stack {
-    position: relative;
-    display: flex;
-    gap: 14px;
-    margin-inline: calc(-1 * var(--bfx-gutter));
-    padding: 6px var(--bfx-gutter) 10px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--bfx-gutter);
-    scrollbar-width: none;
-  }
-
-  .bfx-stack::-webkit-scrollbar {
-    display: none;
-  }
-
-  .bfx-proj {
-    flex: 0 0 min(84vw, 460px);
-    margin-bottom: 0;
-    scroll-snap-align: center;
-  }
-
-  /* The centred card is in focus; its neighbours sit back. */
-  .bfx-proj-inner {
-    height: 100%;
-    opacity: 0.5;
-    transform: scale(0.93);
-    transition: transform 0.6s var(--bfx-ease), opacity 0.5s ease;
-  }
-
-  .bfx-proj.is-active .bfx-proj-inner {
-    opacity: 1;
-    transform: none;
-  }
-
-  .bfx-proj-metrics dt {
-    font-size: 9.5px;
-    letter-spacing: 0.02em;
-  }
-
-  .bfx-proj-desc {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-
-  .bfx-strip-ui {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-top: 18px;
-  }
-
-  .bfx-strip-count {
-    font-family: var(--bfx-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: var(--bfx-ink-3);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .bfx-strip-count strong {
-    font-weight: 600;
-    color: var(--bfx-blue);
-  }
-
-  .bfx-strip-bar {
-    flex: 1;
-    height: 2px;
-    overflow: hidden;
-    border-radius: 2px;
-    background: var(--bfx-line);
-  }
-
-  .bfx-strip-bar i {
-    display: block;
-    height: 100%;
-    background: var(--bfx-blue);
-    transform-origin: left;
-    transition: transform 0.6s var(--bfx-ease);
-  }
-
-  .bfx-strip-nav {
-    display: flex;
-    gap: 8px;
-  }
-
-  .bfx-strip-nav button {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--bfx-line);
-    border-radius: 50%;
-    background: var(--bfx-surface);
-    color: var(--bfx-ink);
-    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
-  }
-
-  .bfx-strip-nav button:not(:disabled):active {
-    background: var(--bfx-blue);
-    color: #fff;
-  }
-
-  .bfx-strip-nav button:disabled {
-    opacity: 0.35;
-  }
-}
-
 /* ─── Back to top: rotating text ring around an arrow ────────────── */
 
 .bfx-totop {
@@ -3565,147 +3579,6 @@ body:has(.bfx-modal) .bfx-header {
   align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
-}
-
-/* ─── Work strip, compact (phones) ───────────────────────────────── */
-/* Tiles are just the screenshot with its title on it; everything else
-   lives once, in the details panel under the strip. */
-
-.bfx-proj-caption,
-.bfx-strip-detail {
-  display: none;
-}
-
-@media (max-width: 899px) {
-  .bfx-proj {
-    flex-basis: min(80vw, 440px);
-  }
-
-  .bfx-proj-inner {
-    display: block;
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    box-shadow: none;
-  }
-
-  .bfx-proj-info,
-  .bfx-proj-shade,
-  .bfx-proj-bar {
-    display: none;
-  }
-
-  .bfx-proj-shot {
-    position: relative;
-    border: 0;
-    border-radius: 20px;
-    box-shadow: 0 18px 40px -26px rgba(10, 50, 140, 0.55);
-  }
-
-  .bfx-proj-img {
-    aspect-ratio: 4 / 3;
-  }
-
-  .bfx-proj-caption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    padding: 40px 16px 14px;
-    background: linear-gradient(180deg, transparent, rgba(6, 18, 46, 0.78));
-    color: #fff;
-  }
-
-  .bfx-proj-caption span {
-    font-family: var(--bfx-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    opacity: 0.75;
-  }
-
-  .bfx-proj-caption strong {
-    font-family: var(--bfx-head);
-    font-size: 21px;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-  }
-
-  .bfx-strip-detail {
-    display: block;
-    margin-top: 22px;
-    padding-top: 20px;
-    border-top: 1px solid var(--bfx-line);
-  }
-
-  .bfx-strip-detail-inner {
-    animation: bfx-detail-in 0.55s var(--bfx-ease);
-  }
-
-  @keyframes bfx-detail-in {
-    from { opacity: 0; transform: translateY(10px); }
-  }
-
-  .bfx-strip-meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 0;
-    font-family: var(--bfx-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--bfx-ink-3);
-  }
-
-  .bfx-strip-meta span:first-child {
-    color: var(--bfx-blue);
-  }
-
-  .bfx-strip-desc {
-    display: -webkit-box;
-    margin: 12px 0 0;
-    overflow: hidden;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--bfx-ink-2);
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-
-  .bfx-strip-vitals {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin: 18px 0 16px;
-  }
-
-  .bfx-strip-vitals div {
-    padding: 2px 0 2px 14px;
-    border-left: 1px solid var(--bfx-line);
-  }
-
-  .bfx-strip-vitals div:first-child {
-    padding-left: 0;
-    border-left: 0;
-  }
-
-  .bfx-strip-vitals dt {
-    font-family: var(--bfx-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    color: var(--bfx-ink-3);
-  }
-
-  .bfx-strip-vitals dd {
-    margin: 4px 0 0;
-    font-family: var(--bfx-head);
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-  }
 }
 
 /* ─── Results chart, phones: ranked rows, thin bars, scale + threshold ─ */
@@ -3817,5 +3690,510 @@ body:has(.bfx-modal) .bfx-header {
 
   .bfx-res-bar {
     border-radius: 999px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-backdrop,
+  .cm-panel,
+  .cm-aside,
+  .cm-form,
+  .cm-rise,
+  .cm-sent-badge,
+  .cm-sent-ring {
+    animation: none !important;
+  }
+
+  .cm-check circle,
+  .cm-check path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ─── Work: mobile scroll index ──────────────────────────────────── */
+
+.bfx-mindex {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .bfx-stack,
+  .bfx-work-index {
+    display: none;
+  }
+
+  .bfx-work-head {
+    margin-bottom: 1.75rem;
+  }
+
+  .bfx-mindex {
+    display: block;
+  }
+
+  /* Sticky preview, framed by the BoldFrame corners. */
+  .bfx-mindex-stage {
+    position: sticky;
+    z-index: 2;
+    top: 12px;
+    padding: 12px 12px 18px;
+    margin: 0 -12px;
+    background: linear-gradient(180deg, var(--bfx-surface) 86%, rgba(255, 255, 255, 0));
+  }
+
+  .bfx-mindex-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border-radius: 14px;
+    background: var(--bfx-sky);
+    box-shadow: 0 20px 44px -28px rgba(10, 50, 140, 0.6);
+  }
+
+  /* Each screenshot waits below the frame; when its row is reached it
+     slides up over the previous one (later rows stack on top). */
+  .bfx-mindex-frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transform: translateY(101%);
+    transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+    will-change: transform;
+  }
+
+  .bfx-mindex-frame img.is-in {
+    transform: none;
+  }
+
+  .bfx-mindex-shade {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 42%;
+    background: linear-gradient(180deg, transparent, rgba(6, 18, 46, 0.55));
+    pointer-events: none;
+  }
+
+  .bfx-mindex-count,
+  .bfx-mindex-host {
+    position: absolute;
+    z-index: 11;
+    bottom: 10px;
+    font-family: var(--bfx-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: #fff;
+  }
+
+  .bfx-mindex-count { left: 12px; font-weight: 600; }
+  .bfx-mindex-host { right: 12px; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.8; text-transform: lowercase; }
+
+  .bfx-mindex-c {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 0 solid var(--bfx-blue);
+  }
+
+  .bfx-mindex-c--tl { top: 5px; left: 5px; border-top-width: 2px; border-left-width: 2px; }
+  .bfx-mindex-c--tr { top: 5px; right: 5px; border-top-width: 2px; border-right-width: 2px; }
+  .bfx-mindex-c--bl { bottom: 11px; left: 5px; border-bottom-width: 2px; border-left-width: 2px; }
+  .bfx-mindex-c--br { bottom: 11px; right: 5px; border-bottom-width: 2px; border-right-width: 2px; }
+
+  /* The index: big titles; the active one is solid, the rest recede. */
+  .bfx-mindex-list {
+    margin: 0;
+    padding: 4px 0 20vh;
+    list-style: none;
+  }
+
+  .bfx-mindex-list li {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    padding: 18px 0;
+    border-bottom: 1px solid var(--bfx-line);
+    cursor: pointer;
+  }
+
+  .bfx-mindex-num {
+    padding-top: 0.55em;
+    font-family: var(--bfx-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--bfx-ink-3);
+    transition: color 0.4s ease;
+  }
+
+  .bfx-mindex-body h3 {
+    margin: 0;
+    font-family: var(--bfx-head);
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    color: #C3CEE3;
+    transform-origin: left center;
+    transition: color 0.45s ease, transform 0.6s var(--bfx-ease);
+  }
+
+  .bfx-mindex-cat {
+    margin: 6px 0 0;
+    font-family: var(--bfx-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bfx-ink-3);
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Stats + link open under the active title (grid-rows 0fr → 1fr). */
+  .bfx-mindex-more {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.55s var(--bfx-ease);
+  }
+
+  .bfx-mindex-more > div {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .bfx-mindex-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 14px 0 12px;
+    font-family: var(--bfx-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--bfx-ink);
+  }
+
+  .bfx-mindex-list li.is-active .bfx-mindex-num { color: var(--bfx-blue); }
+  .bfx-mindex-list li.is-active h3 { color: var(--bfx-ink); transform: translateX(4px); }
+  .bfx-mindex-list li.is-active .bfx-mindex-cat { opacity: 1; color: var(--bfx-blue); }
+  .bfx-mindex-list li.is-active .bfx-mindex-more { grid-template-rows: 1fr; }
+  .bfx-mindex-list li.is-active .bfx-mindex-more > div { opacity: 1; transition-delay: 0.15s; }
+}
+
+/* ─── Footer (reworked) ──────────────────────────────────────────── */
+
+.bfx-fcta {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 2.5rem 4rem;
+  padding-bottom: clamp(3rem, 6vw, 5.5rem);
+  border-bottom: 1px solid var(--bfx-line);
+}
+
+.bfx-fcta-title {
+  margin: 0;
+  font-family: var(--bfx-head);
+  font-size: clamp(2.6rem, 6vw, 6rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  color: var(--bfx-ink);
+}
+
+.bfx-fcta-title em {
+  font-style: normal;
+  color: var(--bfx-blue);
+}
+
+.bfx-fcta-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.bfx-fcta-line > span {
+  display: inline-block;
+}
+
+.bfx-fcta-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  justify-self: end;
+}
+
+.bfx-fcta-mail {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 6px 14px;
+}
+
+.bfx-fcta-mail span {
+  grid-column: 1 / -1;
+  font-family: var(--bfx-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bfx-ink-3);
+}
+
+.bfx-fcta-mail a {
+  font-family: var(--bfx-head);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--bfx-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--bfx-line);
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.3s ease;
+}
+
+.bfx-fcta-mail a:hover {
+  text-decoration-color: var(--bfx-blue);
+}
+
+.bfx-fcta-mail button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--bfx-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bfx-blue);
+}
+
+.bfx-fgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem clamp(2rem, 5vw, 5rem);
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.bfx-fhead {
+  margin: 0 0 1.1rem;
+  font-family: var(--bfx-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bfx-ink-3);
+}
+
+/* Index: big numbered links; label rolls to a blue copy on hover. */
+.bfx-findex ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--bfx-line);
+}
+
+.bfx-findex li {
+  border-top: 1px solid var(--bfx-line);
+}
+
+.bfx-findex a {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 0;
+  color: var(--bfx-ink);
+  text-decoration: none;
+}
+
+.bfx-findex-num {
+  width: 1.75rem;
+  font-family: var(--bfx-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bfx-blue);
+}
+
+.bfx-findex-label {
+  position: relative;
+  display: inline-block;
+  height: 1.08em;
+  overflow: hidden;
+  font-family: var(--bfx-head);
+  font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.bfx-findex-label::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: var(--bfx-blue);
+}
+
+.bfx-findex-arrow,
+.bfx-fsocial-arrow {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  color: var(--bfx-ink-3);
+  transition: transform 0.5s var(--bfx-ease), color 0.3s ease;
+}
+
+/* Elsewhere */
+.bfx-fsocial {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--bfx-line);
+}
+
+.bfx-fsocial li {
+  border-top: 1px solid var(--bfx-line);
+}
+
+.bfx-fsocial a {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  font-family: var(--bfx-head);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--bfx-ink);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+/* Studio card */
+.bfx-fstudio-card {
+  padding: 22px;
+  border: 1px solid var(--bfx-line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #F7FAFF 0%, #EDF4FF 100%);
+}
+
+.bfx-fstudio-card > p:not(.bfx-fclock) {
+  margin: 14px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--bfx-ink-2);
+}
+
+.bfx-fclock {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--bfx-line);
+  font-family: var(--bfx-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bfx-ink-3);
+}
+
+.bfx-fclock i {
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22C55E;
+  animation: bfx-pulse 2.4s ease-out infinite;
+}
+
+.bfx-fclock strong {
+  font-family: var(--bfx-head);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--bfx-ink);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+/* Legal line */
+.bfx-flegal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.25rem;
+  border-top: 1px solid var(--bfx-line);
+}
+
+.bfx-flegal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 28px;
+  font-family: var(--bfx-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bfx-ink-3);
+}
+
+.bfx-flegal-links {
+  display: flex;
+  gap: 20px;
+}
+
+.bfx-flegal-links button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--bfx-ink-2);
+  transition: color 0.3s ease;
+}
+
+@media (hover: hover) {
+  .bfx-findex-label,
+  .bfx-findex-label::after {
+    transition: transform 0.5s var(--bfx-ease);
+  }
+
+  .bfx-findex a:hover .bfx-findex-label {
+    transform: translateY(-100%);
+  }
+
+  .bfx-findex a:hover .bfx-findex-arrow,
+  .bfx-fsocial a:hover .bfx-fsocial-arrow {
+    color: var(--bfx-blue);
+    transform: rotate(45deg);
+  }
+
+  .bfx-fsocial a:hover { color: var(--bfx-blue); }
+  .bfx-flegal-links button:hover { color: var(--bfx-blue); }
+}
+
+@media (max-width: 899px) {
+  .bfx-fcta,
+  .bfx-fgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bfx-fcta-side {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 639px) {
+  .bfx-flegal-meta {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

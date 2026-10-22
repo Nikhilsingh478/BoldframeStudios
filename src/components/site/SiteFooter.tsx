@@ -1,9 +1,17 @@
 /**
- * Footer — links up top; the giant BOLDFRAME STUDIOS wordmark (the hero's type,
- * same blue gradient) rises letter by letter as the page ends.
+ * Footer.
+ *
+ * 1. Closing statement — a large "Have a project in mind?" with the main
+ *    action and the email (copyable).
+ * 2. A three-part grid — a big numbered index of the page's sections, the
+ *    studio's other places online, and a studio card with a live India
+ *    clock.
+ * 3. The giant BOLDFRAME STUDIOS wordmark (the hero's type and gradient),
+ *    rising letter by letter as the page ends.
+ * 4. A quiet legal line with the rotating back-to-top badge.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { LogoMark } from './Logo';
@@ -33,6 +41,14 @@ function useIndiaTime() {
   return time;
 }
 
+function Arrow() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 interface FooterProps {
   onContactClick: () => void;
   onPrivacyClick: () => void;
@@ -41,11 +57,30 @@ interface FooterProps {
 
 export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: FooterProps) {
   const root = useRef<HTMLElement>(null);
+  const istTime = useIndiaTime();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const el = root.current;
     if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const q = gsap.utils.selector(el);
     const ctx = gsap.context(() => {
+      gsap.from(q('.bfx-fcta-line > span'), {
+        yPercent: 110,
+        duration: 1.2,
+        stagger: 0.08,
+        ease: 'expo.out',
+        scrollTrigger: { trigger: q('.bfx-fcta')[0], start: 'top 80%' },
+      });
+      gsap.from(q('.bfx-fcta-side, .bfx-fgrid > *'), {
+        y: 30,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.08,
+        ease: 'expo.out',
+        scrollTrigger: { trigger: q('.bfx-fcta')[0], start: 'top 70%' },
+      });
+      // Wordmark: unchanged.
       gsap.from(el.querySelectorAll('.bfx-foot-mark .bfx-ch-inner'), {
         yPercent: 110,
         duration: 1.3,
@@ -57,56 +92,89 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
     return () => ctx.revert();
   }, []);
 
-  const istTime = useIndiaTime();
-
   const go = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     scrollToId(id);
   };
 
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${CONTACT_EMAIL}`;
+    }
+  };
+
   return (
     <footer ref={root} className="bfx-footer">
-      <div className="bfx-wrap bfx-foot-cta">
-        <p className="bfx-foot-cta-text">
-          Ready when you are.
-          <span> Tell us about your project, we&rsquo;ll take it from there.</span>
+      {/* 1. Closing statement */}
+      <div className="bfx-wrap bfx-fcta">
+        <p className="bfx-fcta-title">
+          <span className="bfx-fcta-line"><span>Have a project</span></span>
+          <span className="bfx-fcta-line"><span>in mind? <em>Let&rsquo;s make it bold.</em></span></span>
         </p>
-        <div className="bfx-foot-cta-actions">
+        <div className="bfx-fcta-side">
           <ConnectButton label="Start a project" onClick={onContactClick} />
-          <a className="bfx-link" href={`mailto:${CONTACT_EMAIL}`}>
-            {CONTACT_EMAIL}
-          </a>
+          <div className="bfx-fcta-mail">
+            <span>Or write to us</span>
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            <button type="button" onClick={copy} aria-live="polite">{copied ? 'Copied' : 'Copy'}</button>
+          </div>
         </div>
       </div>
 
-      <div className="bfx-wrap bfx-foot-top">
-        <div className="bfx-foot-brand">
-          <LogoMark size={40} />
-          <p>
-            A design-led frontend studio building websites that look bold, load fast and
-            convert.
-          </p>
-          <a className="bfx-foot-email" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-        </div>
-
-        <nav className="bfx-foot-col" aria-label="Footer">
-          <span>Explore</span>
-          {NAV.map((n) => <a key={n.id} href={`#${n.id}`} onClick={(e) => go(e, n.id)}>{n.label}</a>)}
+      {/* 2. Index · Elsewhere · Studio */}
+      <div className="bfx-wrap bfx-fgrid">
+        <nav className="bfx-findex" aria-label="Footer">
+          <p className="bfx-fhead">Index</p>
+          <ol>
+            {NAV.map((n, i) => (
+              <li key={n.id} style={{ '--n': i } as CSSProperties}>
+                <a href={`#${n.id}`} onClick={(e) => go(e, n.id)}>
+                  <span className="bfx-findex-num">0{i + 1}</span>
+                  <span className="bfx-findex-label" data-text={n.label}>{n.label}</span>
+                  <span className="bfx-findex-arrow" aria-hidden="true"><Arrow /></span>
+                </a>
+              </li>
+            ))}
+          </ol>
         </nav>
 
-        <div className="bfx-foot-col">
-          <span>Connect</span>
-          {SOCIALS.map((s) => <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>)}
-          <a href="#contact" onClick={(e) => { e.preventDefault(); onContactClick(); }}>Start a project</a>
+        <div className="bfx-fblock">
+          <p className="bfx-fhead">Elsewhere</p>
+          <ul className="bfx-fsocial">
+            {SOCIALS.map((s) => (
+              <li key={s.href}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.label}
+                  <span className="bfx-fsocial-arrow" aria-hidden="true"><Arrow /></span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="bfx-foot-col">
-          <span>Legal</span>
-          <button type="button" onClick={onPrivacyClick}>Privacy Policy</button>
-          <button type="button" onClick={onTermsClick}>Terms of Service</button>
+        <div className="bfx-fblock bfx-fstudio">
+          <p className="bfx-fhead">Studio</p>
+          <div className="bfx-fstudio-card">
+            <LogoMark size={34} />
+            <p>
+              A design-led frontend studio building websites that look bold, load fast and
+              convert.
+            </p>
+            <p className="bfx-fclock">
+              <i aria-hidden="true" />
+              <span>India</span>
+              <strong>{istTime}</strong>
+              <span>IST</span>
+            </p>
+          </div>
         </div>
       </div>
 
+      {/* 3. Wordmark (unchanged) */}
       <div className="bfx-foot-mark" aria-hidden="true">
         {'BOLDFRAME STUDIOS'.split('').map((c, i) =>
           c === ' '
@@ -115,11 +183,13 @@ export function SiteFooter({ onContactClick, onPrivacyClick, onTermsClick }: Foo
         )}
       </div>
 
-      <div className="bfx-wrap bfx-foot-bottom">
-        <div className="bfx-foot-meta">
+      {/* 4. Legal line */}
+      <div className="bfx-wrap bfx-flegal">
+        <div className="bfx-flegal-meta">
           <span>© {new Date().getFullYear()} BoldFrame Studios</span>
-          <span className="bfx-foot-time">
-            <i aria-hidden="true" />Based in India · {istTime} IST
+          <span className="bfx-flegal-links">
+            <button type="button" onClick={onPrivacyClick}>Privacy</button>
+            <button type="button" onClick={onTermsClick}>Terms</button>
           </span>
         </div>
         <a href="#hero" className="bfx-totop" onClick={(e) => go(e, 'hero')} aria-label="Back to top">

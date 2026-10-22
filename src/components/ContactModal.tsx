@@ -2,12 +2,15 @@
  * Contact — "Start a project" dialog.
  *
  * Split panel: a brand-blue side with the pitch and what happens next, and
- * a form with floating labels, project-type tiles and an in-dialog success
- * state. Sends through EmailJS (loaded by App when the dialog opens).
- * Escape closes, focus is trapped and returned, page scroll is paused.
+ * a form with floating labels, project-type tiles and an in-dialog
+ * confirmation. Sends through EmailJS (App preloads it when the page is
+ * idle). Escape closes, focus is trapped and returned, page scroll pauses.
+ *
+ * Animation is plain CSS (transform/opacity, compositor-only) — no
+ * animation library — so opening never waits on extra JavaScript. The
+ * dialog stays mounted for its exit animation, then unmounts.
  */
 
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { setScrollLocked } from '../lib/smoothScroll';
 import { ConnectButton } from './site/ConnectButton';
@@ -35,10 +38,15 @@ const NEXT_STEPS = [
   'Once it’s a fit, we plan, design and build it with you.',
 ];
 
+const EXIT_MS = 380;
+
 const EMPTY = { name: '', email: '', phone: '', message: '' };
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const indiaTime = () =>
+  new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+  }).format(new Date());
 
 function Field({
   id, label, type = 'text', value, onChange, required, optional, textarea, autoComplete,
@@ -67,12 +75,23 @@ function Field({
 }
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
-  const reduce = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(isOpen);
   const [form, setForm] = useState(EMPTY);
   const [types, setTypes] = useState<string[]>([]);
   const [status, setStatus] = useState<Status>('idle');
+  const [sentAt, setSentAt] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // Stay mounted through the exit animation.
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      return;
+    }
+    const timer = window.setTimeout(() => setMounted(false), EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [isOpen]);
 
   const set = (key: keyof typeof EMPTY) => (v: string) => setForm((f) => ({ ...f, [key]: v }));
   const toggleType = (t: string) => setTypes((list) => (list.includes(t) ? list.filter((x) => x !== t) : [...list, t]));
@@ -84,11 +103,11 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         setForm(EMPTY);
         setTypes([]);
         setStatus('idle');
-      }, 400);
+      }, EXIT_MS + 50);
     }
   };
 
-  // Scroll lock, Escape, focus trap, focus return.
+  // Scroll lock, Escape, focus trap, focus return, mobile keyboard.
   useEffect(() => {
     if (!isOpen) return;
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -185,6 +204,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         },
         EMAILJS_PUBLIC_KEY,
       );
+      setSentAt(indiaTime());
       setStatus('sent');
     } catch (error) {
       console.error('Error submitting contact form:', error);
@@ -202,139 +222,139 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     }
   };
 
-  // Staggered children
-  const item = (i: number) => ({
-    initial: reduce ? false : { opacity: 0, y: 18 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, ease: EASE, delay: 0.18 + i * 0.05 },
-  });
+  if (!mounted) return null;
+
+  const firstName = form.name.trim().split(' ')[0];
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="cm-backdrop"
-          initial={reduce ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.3, delay: 0.1 } }}
-          transition={{ duration: 0.35 }}
-          onMouseDown={(e) => e.target === e.currentTarget && close()}
-        >
-          <motion.div
-            ref={panelRef}
-            className="cm-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="cm-title"
-            tabIndex={-1}
-            initial={reduce ? false : { opacity: 0, y: 40, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.98, transition: { duration: 0.3, ease: [0.4, 0, 1, 1] } }}
-            transition={{ duration: 0.75, ease: EASE }}
-          >
-            <button type="button" className="cm-close" onClick={close} aria-label="Close">
-              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </button>
+    <div
+      className={`cm-backdrop${isOpen ? '' : ' is-closing'}`}
+      onMouseDown={(e) => e.target === e.currentTarget && close()}
+    >
+      <div
+        ref={panelRef}
+        className={`cm-panel${status === 'sent' ? ' is-sent' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cm-title"
+        tabIndex={-1}
+      >
+        <button type="button" className="cm-close" onClick={close} aria-label="Close">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </button>
 
-            <aside className="cm-aside">
-              <motion.div {...item(0)}><LogoMark size={34} frame="#FFFFFF" letter="#FFFFFF" /></motion.div>
-              <motion.p className="cm-kicker" {...item(1)}>Start a project</motion.p>
-              <motion.h2 id="cm-title" {...item(2)}>Let&rsquo;s build something bold.</motion.h2>
-              <motion.p className="cm-intro" {...item(3)}>
-                A few lines about what you need is plenty. The more we know, the sharper our reply.
-              </motion.p>
+        <aside className="cm-aside">
+          <div>
+            <LogoMark size={34} frame="#FFFFFF" letter="#FFFFFF" />
+          </div>
+          <p className="cm-kicker">Start a project</p>
+          <h2 id="cm-title" >
+            Let&rsquo;s build something bold.
+          </h2>
+          <p className="cm-intro">
+            A few lines about what you need is plenty. The more we know, the sharper our reply.
+          </p>
 
-              <motion.ol className="cm-steps" {...item(4)}>
-                {NEXT_STEPS.map((step, i) => (
-                  <li key={step}><span>0{i + 1}</span>{step}</li>
-                ))}
-              </motion.ol>
+          <ol className="cm-steps">
+            {NEXT_STEPS.map((step, i) => (
+              <li key={step} className={status === 'sent' && i === 0 ? 'is-done' : undefined}>
+                <span>0{i + 1}</span>{step}
+              </li>
+            ))}
+          </ol>
 
-              <motion.div className="cm-direct" {...item(5)}>
-                <span>Prefer email?</span>
-                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-                <button type="button" onClick={copyEmail} aria-live="polite">{copied ? 'Copied' : 'Copy'}</button>
-              </motion.div>
-            </aside>
+          <div className="cm-direct">
+            <span>Prefer email?</span>
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            <button type="button" onClick={copyEmail} aria-live="polite">{copied ? 'Copied' : 'Copy'}</button>
+          </div>
+        </aside>
 
-            <div className="cm-main">
-              <AnimatePresence mode="wait" initial={false}>
-                {status === 'sent' ? (
-                  <motion.div
-                    key="sent"
-                    className="cm-sent"
-                    initial={reduce ? false : { opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6, ease: EASE }}
-                  >
-                    <svg className="cm-check" viewBox="0 0 64 64" aria-hidden="true">
-                      <circle cx="32" cy="32" r="30" />
-                      <path d="M20 33l8 8 16-17" />
-                    </svg>
-                    <h3>Thanks{form.name ? `, ${form.name.split(' ')[0]}` : ''}.</h3>
-                    <p>Your message is with us. We&rsquo;ll reply to <strong>{form.email}</strong> soon.</p>
-                    <ConnectButton label="Close" onClick={close} />
-                  </motion.div>
-                ) : (
-                  <motion.form
-                    key="form"
-                    className="cm-form"
-                    onSubmit={submit}
-                    exit={{ opacity: 0, y: -12, transition: { duration: 0.25 } }}
-                  >
-                    <motion.fieldset className="cm-types" {...item(1)}>
-                      <legend>What are you looking for?</legend>
-                      <div>
-                        {PROJECT_TYPES.map((t) => (
-                          <button
-                            key={t}
-                            type="button"
-                            className={types.includes(t) ? 'is-on' : undefined}
-                            aria-pressed={types.includes(t)}
-                            onClick={() => toggleType(t)}
-                          >
-                            <i aria-hidden="true" />{t}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.fieldset>
+        <div className="cm-main">
+          {status === 'sent' ? (
+            <div className="cm-sent" role="status">
+              <div className="cm-sent-badge" aria-hidden="true">
+                <span className="cm-sent-ring" />
+                <svg className="cm-check" viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="30" />
+                  <path d="M20 33l8 8 16-17" />
+                </svg>
+              </div>
 
-                    <motion.div className="cm-row" {...item(2)}>
-                      <Field id="cm-name" label="Your name" value={form.name} onChange={set('name')} required autoComplete="name" />
-                      <Field id="cm-email" label="Email" type="email" value={form.email} onChange={set('email')} required autoComplete="email" />
-                    </motion.div>
-                    <motion.div {...item(3)}>
-                      <Field id="cm-phone" label="Phone" type="tel" value={form.phone} onChange={set('phone')} optional autoComplete="tel" />
-                    </motion.div>
-                    <motion.div {...item(4)}>
-                      <Field id="cm-message" label="Tell us about the project" value={form.message} onChange={set('message')} required textarea />
-                    </motion.div>
+              <p className="cm-sent-label cm-rise" style={{ '--d': 2 } as React.CSSProperties}>Message received</p>
+              <h3 className="cm-rise" style={{ '--d': 3 } as React.CSSProperties}>
+                Thank you{firstName ? `, ${firstName}` : ''}.
+              </h3>
+              <p className="cm-sent-copy cm-rise" style={{ '--d': 4 } as React.CSSProperties}>
+                Your brief is with us. We read every message ourselves and will reply
+                to <strong>{form.email}</strong> with questions and next steps.
+              </p>
 
-                    {status === 'error' && (
-                      <p className="cm-error" role="alert">
-                        That didn&rsquo;t send. Please try again, or email{' '}
-                        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-                      </p>
-                    )}
+              <dl className="cm-receipt cm-rise" style={{ '--d': 5 } as React.CSSProperties}>
+                <div><dt>From</dt><dd>{form.name}</dd></div>
+                <div><dt>Reply to</dt><dd>{form.email}</dd></div>
+                <div><dt>Looking for</dt><dd>{types.length ? types.join(', ') : 'Not specified'}</dd></div>
+                <div><dt>Sent</dt><dd>{sentAt} IST</dd></div>
+              </dl>
 
-                    <motion.div className="cm-submit" {...item(5)}>
-                      <ConnectButton
-                        type="submit"
-                        label={status === 'sending' ? 'Sending…' : 'Send message'}
-                        disabled={status === 'sending'}
-                      />
-                      <span>We only use your details to reply.</span>
-                    </motion.div>
-                  </motion.form>
-                )}
-              </AnimatePresence>
+              <div className="cm-sent-actions cm-rise" style={{ '--d': 6 } as React.CSSProperties}>
+                <ConnectButton label="Back to the site" onClick={close} />
+                <a className="bfx-link" href={`mailto:${CONTACT_EMAIL}`}>
+                  Add something by email <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+                </a>
+              </div>
             </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          ) : (
+            <form className="cm-form" onSubmit={submit}>
+              <fieldset className="cm-types">
+                <legend>What are you looking for?</legend>
+                <div>
+                  {PROJECT_TYPES.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      className={types.includes(t) ? 'is-on' : undefined}
+                      aria-pressed={types.includes(t)}
+                      onClick={() => toggleType(t)}
+                    >
+                      <i aria-hidden="true" />{t}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div className="cm-row">
+                <Field id="cm-name" label="Your name" value={form.name} onChange={set('name')} required autoComplete="name" />
+                <Field id="cm-email" label="Email" type="email" value={form.email} onChange={set('email')} required autoComplete="email" />
+              </div>
+              <div>
+                <Field id="cm-phone" label="Phone" type="tel" value={form.phone} onChange={set('phone')} optional autoComplete="tel" />
+              </div>
+              <div>
+                <Field id="cm-message" label="Tell us about the project" value={form.message} onChange={set('message')} required textarea />
+              </div>
+
+              {status === 'error' && (
+                <p className="cm-error" role="alert">
+                  That didn&rsquo;t send. Please try again, or email{' '}
+                  <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+                </p>
+              )}
+
+              <div className="cm-submit">
+                <ConnectButton
+                  type="submit"
+                  label={status === 'sending' ? 'Sending…' : 'Send message'}
+                  disabled={status === 'sending'}
+                />
+                <span>We only use your details to reply.</span>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

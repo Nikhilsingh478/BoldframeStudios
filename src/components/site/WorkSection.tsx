@@ -1,12 +1,18 @@
 /**
- * Work — the six live projects as a stack of sticky cards. Each card pins
- * near the top while the next one slides over it; the card underneath eases
- * back (scale + dim). Phones and small tablets get a swipeable strip of
- * compact image tiles instead (native scroll-snap); a single details panel
- * below shows the centred project, with a counter, progress line and arrows.
+ * Work — the six live projects.
+ *
+ * Desktop: a stack of sticky cards. Each card pins near the top while the
+ * next one slides over it; the card underneath eases back (scale + dim).
+ *
+ * Phones / small tablets: a "scroll index". A framed preview window sticks
+ * at the top of the section and the projects are a list of large titles
+ * below it. Browsing is just scrolling: the title crossing the middle of
+ * the screen becomes active (stats + visit link appear) and its screenshot
+ * slides up into the frame over the previous one; scrolling back slides it
+ * away again. Transforms only.
  */
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { PROJECTS } from './data';
@@ -16,59 +22,98 @@ import { SectionLabel } from './SectionLabel';
 gsap.registerPlugin(ScrollTrigger);
 
 const host = (url: string) => new URL(url).host;
+const INDEX_MQ = '(max-width: 899px)';
 
-const STRIP_MQ = '(max-width: 899px)';
+function MobileIndex() {
+  const listRef = useRef<HTMLOListElement>(null);
+  const [active, setActive] = useState(0);
+
+  // Active row = the one crossing a band just below the sticky preview.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
+      }),
+      { rootMargin: '-56% 0px -40% 0px' },
+    );
+    list.querySelectorAll('li').forEach((li) => observer.observe(li));
+    return () => observer.disconnect();
+  }, []);
+
+  const focusRow = (i: number) => {
+    listRef.current?.querySelectorAll('li')[i]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  };
+
+  const current = PROJECTS[active];
+
+  return (
+    <div className="bfx-mindex">
+      <div className="bfx-mindex-stage" aria-hidden="true">
+        <div className="bfx-mindex-frame">
+          {PROJECTS.map((p, i) => (
+            <img
+              key={p.title}
+              src={p.image}
+              alt=""
+              loading="lazy"
+              className={i <= active ? 'is-in' : undefined}
+              style={{ zIndex: i }}
+            />
+          ))}
+          <span className="bfx-mindex-shade" />
+          <span className="bfx-mindex-count">0{active + 1} / 0{PROJECTS.length}</span>
+          <span className="bfx-mindex-host">{host(current.url)}</span>
+        </div>
+        <i className="bfx-mindex-c bfx-mindex-c--tl" />
+        <i className="bfx-mindex-c bfx-mindex-c--tr" />
+        <i className="bfx-mindex-c bfx-mindex-c--bl" />
+        <i className="bfx-mindex-c bfx-mindex-c--br" />
+      </div>
+
+      <ol ref={listRef} className="bfx-mindex-list">
+        {PROJECTS.map((p, i) => (
+          <li
+            key={p.title}
+            data-index={i}
+            className={i === active ? 'is-active' : undefined}
+            onClick={(e) => {
+              if (!(e.target as HTMLElement).closest('a')) focusRow(i);
+            }}
+          >
+            <span className="bfx-mindex-num">0{i + 1}</span>
+            <div className="bfx-mindex-body">
+              <h3>{p.title}</h3>
+              <p className="bfx-mindex-cat">{p.category}</p>
+              <div className="bfx-mindex-more">
+                <div>
+                  <p className="bfx-mindex-stats">
+                    <span>LCP {p.lcp.toFixed(2)}s</span>
+                    <span>CLS {p.cls}</span>
+                    <span>INP {p.inp > 0 ? `${p.inp}ms` : '—'}</span>
+                  </p>
+                  <a
+                    className="bfx-link"
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={i === active ? 0 : -1}
+                  >
+                    Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
 
 export function WorkSection() {
   const root = useRef<HTMLElement>(null);
-  const stack = useRef<HTMLDivElement>(null);
-  // Phones and small tablets show the projects as a swipeable strip.
-  const [active, setActive] = useState(0);
-
-  // Strip: track which card is centred.
-  useEffect(() => {
-    const track = stack.current;
-    if (!track) return;
-    const mq = window.matchMedia(STRIP_MQ);
-    let observer: IntersectionObserver | null = null;
-    const setup = () => {
-      observer?.disconnect();
-      observer = null;
-      if (!mq.matches) return;
-      observer = new IntersectionObserver(
-        (entries) => entries.forEach((e) => {
-          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
-        }),
-        { root: track, threshold: 0.6 },
-      );
-      track.querySelectorAll('.bfx-proj').forEach((c) => observer!.observe(c));
-    };
-    setup();
-    mq.addEventListener('change', setup);
-    return () => {
-      mq.removeEventListener('change', setup);
-      observer?.disconnect();
-    };
-  }, []);
-
-  // Strip: centre card i (smoothly) in the track.
-  const goTo = useCallback((i: number) => {
-    const track = stack.current;
-    const card = track?.querySelectorAll<HTMLElement>('.bfx-proj')[i];
-    if (!track || !card) return;
-    track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' });
-  }, []);
-
-  // Project index links: on the strip, bring the section in and slide to the
-  // card; on desktop, scroll to the card in the stack.
-  const openProject = (i: number) => {
-    if (window.matchMedia(STRIP_MQ).matches) {
-      scrollToId('work');
-      goTo(i);
-    } else {
-      scrollToId(`proj-${i + 1}`);
-    }
-  };
 
   useEffect(() => {
     const el = root.current;
@@ -118,15 +163,16 @@ export function WorkSection() {
         });
       });
 
-      mm.add(STRIP_MQ, () => {
-        // The strip slides in from the right once.
-        gsap.from(q('.bfx-proj'), {
-          x: 80,
-          opacity: 0,
-          duration: 1.1,
-          stagger: 0.08,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: q('.bfx-stack')[0], start: 'top 85%' },
+      mm.add(INDEX_MQ, () => {
+        // Index rows rise in once as they arrive.
+        q<HTMLElement>('.bfx-mindex-list li').forEach((li) => {
+          gsap.from(li, {
+            y: 30,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'expo.out',
+            scrollTrigger: { trigger: li, start: 'top 92%' },
+          });
         });
       });
     }, el);
@@ -153,7 +199,7 @@ export function WorkSection() {
             <ol className="bfx-work-toc" aria-label="Projects">
               {PROJECTS.map((p, i) => (
                 <li key={p.title}>
-                  <a href={`#proj-${i + 1}`} onClick={(e) => { e.preventDefault(); openProject(i); }}>
+                  <a href={`#proj-${i + 1}`} onClick={(e) => { e.preventDefault(); scrollToId(`proj-${i + 1}`); }}>
                     <span>0{i + 1}</span>{p.title}
                   </a>
                 </li>
@@ -162,15 +208,9 @@ export function WorkSection() {
           </div>
         </div>
 
-        <div ref={stack} className="bfx-stack">
+        <div className="bfx-stack">
           {PROJECTS.map((p, i) => (
-            <article
-              key={p.title}
-              id={`proj-${i + 1}`}
-              data-index={i}
-              className={`bfx-proj${i === active ? ' is-active' : ''}`}
-              style={{ '--i': i } as CSSProperties}
-            >
+            <article key={p.title} id={`proj-${i + 1}`} className="bfx-proj" style={{ '--i': i } as CSSProperties}>
               <div className="bfx-proj-inner">
                 <div className="bfx-proj-info">
                   <div className="bfx-proj-top">
@@ -197,11 +237,6 @@ export function WorkSection() {
                 <a className="bfx-proj-shot" href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${p.title} in a new tab`}>
                   <span className="bfx-proj-bar" aria-hidden="true"><i /><i /><i /><span>{host(p.url)}</span></span>
                   <span className="bfx-proj-img"><img src={p.image} alt={`${p.title} website`} loading="lazy" /></span>
-                  {/* Strip only: the title sits on the image */}
-                  <span className="bfx-proj-caption" aria-hidden="true">
-                    <span>0{i + 1}</span>
-                    <strong>{p.title}</strong>
-                  </span>
                 </a>
                 <span className="bfx-proj-shade" aria-hidden="true" />
               </div>
@@ -209,42 +244,7 @@ export function WorkSection() {
           ))}
         </div>
 
-        {/* Strip controls (phones): counter, progress, prev / next */}
-        <div className="bfx-strip-ui">
-          <span className="bfx-strip-count" aria-live="polite">
-            <strong>0{active + 1}</strong> / 0{PROJECTS.length}
-          </span>
-          <span className="bfx-strip-bar" aria-hidden="true">
-            <i style={{ transform: `scaleX(${(active + 1) / PROJECTS.length})` }} />
-          </span>
-          <span className="bfx-strip-nav">
-            <button type="button" onClick={() => goTo(Math.max(0, active - 1))} disabled={active === 0} aria-label="Previous project">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-            <button type="button" onClick={() => goTo(Math.min(PROJECTS.length - 1, active + 1))} disabled={active === PROJECTS.length - 1} aria-label="Next project">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-          </span>
-        </div>
-
-        {/* Strip details (phones): the centred project's info, one at a time */}
-        <div className="bfx-strip-detail" aria-live="polite">
-          <div key={active} className="bfx-strip-detail-inner">
-            <p className="bfx-strip-meta">
-              <span>{PROJECTS[active].category}</span>
-              <span>{PROJECTS[active].timeline}</span>
-            </p>
-            <p className="bfx-strip-desc">{PROJECTS[active].description}</p>
-            <dl className="bfx-strip-vitals">
-              <div><dt>LCP</dt><dd>{PROJECTS[active].lcp.toFixed(2)}s</dd></div>
-              <div><dt>CLS</dt><dd>{PROJECTS[active].cls}</dd></div>
-              <div><dt>INP</dt><dd>{PROJECTS[active].inp > 0 ? `${PROJECTS[active].inp}ms` : '—'}</dd></div>
-            </dl>
-            <a className="bfx-link" href={PROJECTS[active].url} target="_blank" rel="noopener noreferrer">
-              Visit {PROJECTS[active].title} <span className="bfx-link-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </div>
+        <MobileIndex />
       </div>
     </section>
   );

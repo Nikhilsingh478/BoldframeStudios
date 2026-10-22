@@ -14,14 +14,15 @@ const ResultsSection = lazy(() => import('./components/site/ResultsSection').the
 const TestimonialsSection = lazy(() => import('./components/site/TestimonialsSection').then(m => ({ default: m.TestimonialsSection })));
 const ContactSection = lazy(() => import('./components/site/ContactSection').then(m => ({ default: m.ContactSection })));
 const SiteFooter = lazy(() => import('./components/site/SiteFooter').then(m => ({ default: m.SiteFooter })));
-const ContactModal = lazy(() => import('./components/ContactModal').then(m => ({ default: m.ContactModal })));
+const loadContactModal = () => import('./components/ContactModal');
+const ContactModal = lazy(() => loadContactModal().then(m => ({ default: m.ContactModal })));
 const LegalModals = lazy(() => import('./components/LegalModals').then(m => ({ default: m.LegalModals })));
 
 export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
-  // Load EmailJS only when the contact form is opened
+  // Load EmailJS (on idle after page load, and again as a no-op on open)
   const loadContactScripts = () => {
     const emailJsPublicKey = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY || 'NwMPwoO6mOuR1IeSD';
     
@@ -49,6 +50,21 @@ export default function App() {
   };
 
   useEffect(() => initSmoothScroll(), []);
+
+  // Fetch the contact dialog and EmailJS while the visitor is browsing, so
+  // the first "Let's Connect" opens instantly instead of stalling on
+  // downloading and parsing them mid-animation.
+  useEffect(() => {
+    const idle = (cb: () => void) =>
+      'requestIdleCallback' in window
+        ? (window as any).requestIdleCallback(cb, { timeout: 4000 })
+        : window.setTimeout(cb, 2500);
+    const handle = window.setTimeout(() => idle(() => {
+      loadContactModal();
+      loadContactScripts();
+    }), 3500);
+    return () => window.clearTimeout(handle);
+  }, []);
 
   const openContactModal = () => {
     loadContactScripts();
