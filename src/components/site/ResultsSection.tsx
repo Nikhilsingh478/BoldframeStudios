@@ -1,7 +1,8 @@
 /**
- * Results — Core Web Vitals from the live builds. Headline stats count up
- * in view; the chart shows each project's Largest Contentful Paint against
- * Google's 2.5s "good" line (a real table, so it reads without the bars).
+ * Results — mobile Lighthouse runs of the live builds (reports in
+ * public/reports). Headline stats count up in view; the chart shows each
+ * project's Performance score against the 90 "good" line, as a real table
+ * so it reads without the bars, with a link to every report.
  */
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
@@ -12,24 +13,25 @@ import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SCALE_MAX = 3;
-const GOOD_LCP = 2.5;
+const SCALE_MAX = 100;
+const GOOD = 90;
 
-// Only builds measured with Core Web Vitals; sorted fastest first.
-const MEASURED = PROJECTS.flatMap((p) => (p.vitals ? [{ title: p.title, ...p.vitals }] : []));
-const BY_SPEED = [...MEASURED].sort((a, b) => a.lcp - b.lcp);
-const UNDER_ONE = MEASURED.filter((p) => p.lcp < 1).length;
-const ALL_ZERO_CLS = MEASURED.every((p) => Number(p.cls) === 0);
-const MAX_INP = Math.max(...MEASURED.map((p) => p.inp));
+// Projects with a Lighthouse report that belong in the chart; best first.
+const MEASURED = PROJECTS.flatMap((p) =>
+  p.lighthouse && p.lighthouse.chart !== false ? [{ title: p.title, ...p.lighthouse }] : [],
+).sort((a, b) => b.performance - a.performance || a.lcp - b.lcp);
+const TOP = MEASURED[0];
+const FASTEST = [...MEASURED].sort((a, b) => a.lcp - b.lcp)[0];
+const GOOD_COUNT = MEASURED.filter((p) => p.performance >= GOOD).length;
+const ALL_BP = MEASURED.every((p) => p.bestPractices === 100);
 const COUNT_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const ALL = `all ${COUNT_WORDS[MEASURED.length] ?? MEASURED.length}`;
 
 const STATS = [
-  { value: BY_SPEED[0].lcp, decimals: 2, suffix: 's', label: 'Fastest Largest Contentful Paint', note: BY_SPEED[0].title },
-  ...(ALL_ZERO_CLS
-    ? [{ value: 0, decimals: 0, suffix: '', label: 'Layout shift (CLS)', note: `On all ${COUNT_WORDS[MEASURED.length] ?? MEASURED.length} measured builds` }]
-    : []),
-  { value: UNDER_ONE, decimals: 0, suffix: `/${MEASURED.length}`, label: 'Builds under one second', note: 'Main content painted in < 1s' },
-  { value: MAX_INP, decimals: 0, prefix: '≤', suffix: 'ms', label: 'Slowest interaction (INP)', note: 'Google’s “good” limit is 200ms' },
+  { value: TOP.performance, decimals: 0, suffix: '', label: 'Top Performance score', note: TOP.title },
+  { value: GOOD_COUNT, decimals: 0, suffix: `/${MEASURED.length}`, label: 'Projects scoring 90+', note: 'Lighthouse Performance, mobile' },
+  ...(ALL_BP ? [{ value: 100, decimals: 0, suffix: '', label: 'Best practices', note: `On ${ALL} reports` }] : []),
+  { value: FASTEST.lcp, decimals: 1, suffix: 's', label: 'Fastest Largest Contentful Paint', note: FASTEST.title },
 ];
 
 export function ResultsSection() {
@@ -93,8 +95,8 @@ export function ResultsSection() {
             <span className="bfx-reveal"><span className="bfx-reveal-inner bfx-muted">not promised.</span></span>
           </h2>
           <p className="bfx-lede">
-            Core Web Vitals are how Google judges real-world speed and stability. Here is how our
-            live projects score.
+            Every live project is tested with Google Lighthouse on a mid-range phone over a slow
+            4G connection. These are the scores, and the full reports are linked below.
           </p>
         </div>
 
@@ -114,44 +116,50 @@ export function ResultsSection() {
 
         <div className={`bfx-res-chart${inView ? ' is-in' : ''}`}>
           <div className="bfx-res-chart-head">
-            <h3>Largest Contentful Paint, per project</h3>
-            <p>Seconds until the main content is visible. Lower is better. The dashed line marks Google&rsquo;s &ldquo;good&rdquo; limit of 2.5s.</p>
+            <h3>Lighthouse Performance, per project</h3>
+            <p>Mobile run, emulated Moto G Power on slow 4G. Scored out of 100; the dashed line marks 90, where Lighthouse rates a page &ldquo;good&rdquo;.</p>
           </div>
           {/* Phones: threshold label above the bars */}
           <div className="bfx-res-goodlabel" aria-hidden="true">
-            <span style={{ left: `${(GOOD_LCP / SCALE_MAX) * 100}%` }}>Good ≤ 2.5s</span>
+            <span style={{ left: `${(GOOD / SCALE_MAX) * 100}%` }}>Good ≥ 90</span>
           </div>
           <table className="bfx-res-table">
             <thead>
               <tr>
                 <th scope="col">Project</th>
+                <th scope="col">Performance</th>
                 <th scope="col">LCP</th>
                 <th scope="col">CLS</th>
-                <th scope="col">INP</th>
+                <th scope="col">Report</th>
               </tr>
             </thead>
             <tbody>
-              {BY_SPEED.map((p, i) => (
+              {MEASURED.map((p, i) => (
                 <tr key={p.title} style={{ '--i': i } as CSSProperties}>
                   <th scope="row"><span className="bfx-res-rank" aria-hidden="true">0{i + 1}</span>{p.title}</th>
                   <td>
-                    <span className="bfx-res-track" style={{ '--good': `${(GOOD_LCP / SCALE_MAX) * 100}%` } as CSSProperties}>
-                      <span className="bfx-res-bar" style={{ width: `${(p.lcp / SCALE_MAX) * 100}%` }} />
-                      <span className="bfx-res-bar-value">{p.lcp.toFixed(2)}s</span>
+                    <span className="bfx-res-track" style={{ '--good': `${(GOOD / SCALE_MAX) * 100}%` } as CSSProperties}>
+                      <span className="bfx-res-bar" style={{ width: `${(p.performance / SCALE_MAX) * 100}%` }} />
+                      <span className="bfx-res-bar-value">{p.performance}</span>
                     </span>
                   </td>
+                  <td className="bfx-res-num">{p.lcp.toFixed(1)}s</td>
                   <td className="bfx-res-num">{p.cls}</td>
-                  <td className="bfx-res-num">
-                    {p.inp > 0 ? `${p.inp}ms` : <span title="No interactions recorded in the measurement">—</span>}
+                  <td className="bfx-res-report">
+                    {p.report && (
+                      <a href={p.report} target="_blank" rel="noopener" aria-label={`${p.title} Lighthouse report (PDF)`}>
+                        PDF <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {/* Phones: seconds scale under the bars */}
+          {/* Phones: score scale under the bars */}
           <div className="bfx-res-axis" aria-hidden="true">
-            {[0, 1, 2, 3].map((t) => (
-              <span key={t} style={{ left: `${(t / SCALE_MAX) * 100}%` }}>{t}s</span>
+            {[0, 50, 100].map((t) => (
+              <span key={t} style={{ left: `${(t / SCALE_MAX) * 100}%` }}>{t}</span>
             ))}
           </div>
         </div>

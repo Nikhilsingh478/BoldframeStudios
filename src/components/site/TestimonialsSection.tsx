@@ -1,7 +1,8 @@
 /**
  * Testimonials — a deep navy band for contrast. Each quote sits beside the
- * project it's about; quotes rise in word by word, auto-advance every 3.8s
- * (paused on hover/focus) and can be stepped with the arrows.
+ * project it's about; quotes rise in word by word, auto-advance (longer
+ * quotes stay up longer; paused on hover/focus) and can be stepped with
+ * the arrows.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -12,7 +13,8 @@ import { SectionLabel } from './SectionLabel';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const INTERVAL = 3800;
+// Time on screen: a base plus reading time per word.
+const holdFor = (quote: string) => 2400 + quote.split(' ').length * 80;
 
 export function TestimonialsSection() {
   const root = useRef<HTMLElement>(null);
@@ -24,7 +26,7 @@ export function TestimonialsSection() {
 
   useEffect(() => {
     if (paused || count < 2) return;
-    const timer = window.setTimeout(() => go(1), INTERVAL);
+    const timer = window.setTimeout(() => go(1), holdFor(TESTIMONIALS[index].quote));
     return () => window.clearTimeout(timer);
   }, [index, paused, go]);
 
@@ -32,7 +34,7 @@ export function TestimonialsSection() {
   useEffect(() => {
     const el = root.current;
     if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const words = el.querySelectorAll('.bfx-quote .bfx-qw');
+    const words = el.querySelectorAll('.bfx-quote .is-active .bfx-qw');
     gsap.fromTo(words, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.018, ease: 'expo.out' });
   }, [index]);
 
@@ -104,11 +106,17 @@ export function TestimonialsSection() {
             <svg className="bfx-quote-mark" viewBox="0 0 48 36" aria-hidden="true">
               <path d="M0 36V22C0 9 7 2 19 0l2 6c-7 2-10 6-10 12h9v18H0zm27 0V22C27 9 34 2 46 0l2 6c-7 2-10 6-10 12h9v18H27z" fill="currentColor" />
             </svg>
-            <blockquote key={index}>
-              {t.quote.split(' ').map((w, i) => (
-                <span key={i} className="bfx-qw">{w} </span>
+            {/* All quotes share one grid cell, so the box keeps the height of
+                the longest and the page below never shifts as they rotate. */}
+            <div className="bfx-quote-stack">
+              {TESTIMONIALS.map((item, n) => (
+                <blockquote key={n === index ? `on-${index}` : n} className={n === index ? 'is-active' : undefined} aria-hidden={n !== index}>
+                  {item.quote.split(' ').map((w, i) => (
+                    <span key={i} className="bfx-qw">{w} </span>
+                  ))}
+                </blockquote>
               ))}
-            </blockquote>
+            </div>
             <figcaption>
               <strong>{t.company}</strong>
               <span>{t.role}</span>
@@ -126,7 +134,7 @@ export function TestimonialsSection() {
                 className={i === index ? 'is-active' : i < index ? 'is-done' : undefined}
                 onClick={() => setIndex(i)}
               >
-                <span style={i === index ? { animationDuration: `${INTERVAL}ms`, animationPlayState: paused ? 'paused' : 'running' } : undefined} />
+                <span style={i === index ? { animationDuration: `${holdFor(item.quote)}ms`, animationPlayState: paused ? 'paused' : 'running' } : undefined} />
               </button>
             ))}
           </div>

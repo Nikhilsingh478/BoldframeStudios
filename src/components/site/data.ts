@@ -1,5 +1,7 @@
 // Real BoldFrame content: projects, measured results, services, testimonials.
-// Figures come from the original case studies; nothing here is invented.
+// Lighthouse figures come from the reports in public/reports (mobile run:
+// emulated Moto G Power, slow 4G); Huuman's vitals from its case study.
+// Nothing here is invented.
 
 export const CONTACT_EMAIL = 'boldframestudios4@gmail.com';
 export const SOCIALS = [
@@ -8,7 +10,7 @@ export const SOCIALS = [
   { label: 'Portfolio', href: 'https://nikhilsinghcv.vercel.app' },
 ];
 
-/** Field-style Core Web Vitals, measured per build (the Results chart uses these). */
+/** Core Web Vitals from a case study (projects without a Lighthouse report). */
 export interface Vitals {
   lcp: number;
   cls: string;
@@ -21,18 +23,32 @@ export interface Project {
   description: string;
   tech: string[];
   timeline: string;
-  /** Core Web Vitals, for the projects measured that way. */
+  /** Core Web Vitals, for projects without a Lighthouse report. */
   vitals?: Vitals;
-  /** Lighthouse category scores, for projects measured with a Lighthouse run. */
-  /** Lighthouse scores (mobile run), and which three to show on the card. */
-  lighthouse?: {
-    scores: { performance?: number; seo: number; bestPractices: number; accessibility: number; cls: string };
-    show: ('performance' | 'seo' | 'bestPractices' | 'accessibility' | 'cls')[];
-  };
+  /** Mobile Lighthouse run (see public/reports). */
+  lighthouse?: Lighthouse;
   image: string;
   /** Which part of the screenshot to keep when a frame crops it (CSS object-position). */
   focus?: string;
   url: string;
+}
+
+export type ScoreKey = 'performance' | 'accessibility' | 'bestPractices' | 'seo' | 'cls';
+
+export interface Lighthouse {
+  performance: number;
+  accessibility: number;
+  bestPractices: number;
+  seo: number;
+  /** Largest Contentful Paint, seconds. */
+  lcp: number;
+  cls: string;
+  /** Path of the PDF report under public/, when published. */
+  report?: string;
+  /** The three figures shown on the project card. */
+  show: ScoreKey[];
+  /** Include in the Results chart (default true). */
+  chart?: boolean;
 }
 
 export interface Metric {
@@ -44,15 +60,15 @@ export interface Metric {
 /** The three figures shown on a project card: Lighthouse scores if measured that way, else vitals. */
 export function projectMetrics(p: Project): Metric[] {
   if (p.lighthouse) {
-    const { scores, show } = p.lighthouse;
-    const LH = {
-      performance: { label: 'Performance', short: 'PERF', value: String(scores.performance ?? '—') },
-      seo: { label: 'SEO score', short: 'SEO', value: String(scores.seo) },
-      bestPractices: { label: 'Best practices', short: 'BP', value: String(scores.bestPractices) },
-      accessibility: { label: 'Accessibility', short: 'A11Y', value: String(scores.accessibility) },
-      cls: { label: 'Layout shift', short: 'CLS', value: scores.cls },
+    const lh = p.lighthouse;
+    const LH: Record<ScoreKey, Metric> = {
+      performance: { label: 'Performance', short: 'PERF', value: String(lh.performance) },
+      accessibility: { label: 'Accessibility', short: 'A11Y', value: String(lh.accessibility) },
+      bestPractices: { label: 'Best practices', short: 'BP', value: String(lh.bestPractices) },
+      seo: { label: 'SEO score', short: 'SEO', value: String(lh.seo) },
+      cls: { label: 'Layout shift', short: 'CLS', value: lh.cls },
     };
-    return show.map((k) => LH[k]);
+    return lh.show.map((k) => LH[k]);
   }
   if (p.vitals) {
     const { lcp, cls, inp } = p.vitals;
@@ -74,8 +90,9 @@ export const PROJECTS: Project[] = [
     tech: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Firebase'],
     timeline: 'Ongoing',
     lighthouse: {
-      scores: { seo: 100, bestPractices: 100, accessibility: 93, cls: '0' },
+      performance: 70, accessibility: 93, bestPractices: 100, seo: 100, lcp: 4.8, cls: '0',
       show: ['seo', 'bestPractices', 'cls'],
+      chart: false,
     },
     image: '/thunderbold.webp',
     focus: '4% top',
@@ -89,11 +106,10 @@ export const PROJECTS: Project[] = [
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Gemini 2.5'],
     timeline: 'Early access',
     lighthouse: {
-      scores: { performance: 96, seo: 100, bestPractices: 100, accessibility: 100, cls: '0' },
+      performance: 96, accessibility: 100, bestPractices: 100, seo: 100, lcp: 2.3, cls: '0',
+      report: '/reports/report_recurra.pdf',
       show: ['performance', 'accessibility', 'seo'],
     },
-    // From the same mobile Lighthouse run (lab test: no INP measured).
-    vitals: { lcp: 2.3, cls: '0', inp: 0 },
     image: '/recurra.webp',
     url: 'https://recurraio.vercel.app/',
   },
@@ -116,7 +132,8 @@ export const PROJECTS: Project[] = [
     tech: ['React', 'Vite'],
     timeline: 'Live',
     lighthouse: {
-      scores: { performance: 91, seo: 100, bestPractices: 100, accessibility: 100, cls: '0.004' },
+      performance: 91, accessibility: 100, bestPractices: 100, seo: 100, lcp: 3.3, cls: '0.004',
+      report: '/reports/report_scc.pdf',
       show: ['performance', 'accessibility', 'seo'],
     },
     image: '/silkys.webp',
@@ -129,7 +146,11 @@ export const PROJECTS: Project[] = [
       'A playful seasonal landing page with spooky micro-interactions and custom GSAP motion, kept light so it loads fast and plays smoothly.',
     tech: ['GSAP', 'JavaScript', 'CSS'],
     timeline: '2 weeks',
-    vitals: { lcp: 0.88, cls: '0.00', inp: 48 },
+    lighthouse: {
+      performance: 90, accessibility: 89, bestPractices: 100, seo: 91, lcp: 3.2, cls: '0',
+      report: '/reports/report_halloween.pdf',
+      show: ['performance', 'bestPractices', 'seo'],
+    },
     image: '/p5.webp',
     url: 'https://halloween-two-rho.vercel.app/',
   },
@@ -140,7 +161,11 @@ export const PROJECTS: Project[] = [
       'A festive page with layered parallax (Rellax.js) and polished seasonal visuals, with parallax intensity tuned down on small screens.',
     tech: ['GSAP', 'Rellax.js', 'JavaScript'],
     timeline: '2 weeks',
-    vitals: { lcp: 0.53, cls: '0', inp: 0 },
+    lighthouse: {
+      performance: 90, accessibility: 85, bestPractices: 100, seo: 91, lcp: 3.4, cls: '0.002',
+      report: '/reports/report_ch.pdf',
+      show: ['performance', 'bestPractices', 'seo'],
+    },
     image: '/p6.webp',
     url: 'https://christmas-webpage.vercel.app/',
   },
@@ -184,9 +209,16 @@ export const SERVICES = [
 export const TESTIMONIALS = [
   {
     quote:
-      'The Huuman redesign brought our concept to life — smooth GSAP motion, responsive behavior, and stunning visuals. Exactly how we imagined our brand should feel.',
+      'The Huuman redesign brought our concept to life with smooth GSAP motion, responsive behavior, and stunning visuals. Exactly how we imagined our brand should feel.',
     role: 'Founder',
     company: 'Huuman',
     image: '/p1.webp',
+  },
+  {
+    quote:
+      'Used Recurra before my semester exams and it genuinely saved me a lot of time. The predictions weren’t random, and the priority ranking helped me decide what to study first. Really useful when you’re short on time and don’t know where to start.',
+    role: 'Student, early-access user',
+    company: 'Recurra',
+    image: '/recurra.webp',
   },
 ];
