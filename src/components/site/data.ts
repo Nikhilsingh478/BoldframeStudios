@@ -1,6 +1,6 @@
 // Real BoldFrame content: projects, measured results, services, testimonials.
 // Lighthouse figures come from the reports in public/reports (mobile run:
-// emulated Moto G Power, slow 4G); Huuman's vitals from its case study.
+// emulated Moto G Power, slow 4G).
 // Nothing here is invented.
 
 export const CONTACT_EMAIL = 'boldframestudios4@gmail.com';
@@ -125,9 +125,13 @@ export const PROJECTS: Project[] = [
       'A redesigned concept for the streetwear brand Huuman: GSAP and Shery.js creative motion, responsive behaviour across viewports and an optimised hero.',
     tech: ['GSAP', 'Shery.js', 'Tailwind CSS', 'JavaScript'],
     timeline: '2–3 months',
-    vitals: { lcp: 2.24, cls: '0.00', inp: 24 },
-    image: '/p1.webp',
-    url: 'https://huuman-responsive-updated.vercel.app/',
+    lighthouse: {
+      performance: 99, accessibility: 100, bestPractices: 100, seo: 100, lcp: 1.7, cls: '0',
+      report: '/reports/report_hu.pdf',
+      show: ['performance', 'accessibility', 'seo'],
+    },
+    image: '/huuman.webp',
+    url: 'https://huuman2.vercel.app/',
   },
   {
     title: 'Silky’s Coaching Classes',
@@ -199,7 +203,7 @@ export const SERVICES = [
     description:
       'Everything is planned in a written product requirements document, with the tech stack and functionality decided up front, then built in focused, tested iterations.',
     deliverables: ['Product requirements (PRD)', 'Tech stack & architecture', 'Websites, web apps & e-commerce'],
-    image: '/p1.webp',
+    image: '/huuman.webp',
   },
   {
     title: 'Security & Performance',
@@ -224,7 +228,7 @@ export const TESTIMONIALS = [
       'The Huuman redesign brought our concept to life with smooth GSAP motion, responsive behavior, and stunning visuals. Exactly how we imagined our brand should feel.',
     role: 'Founder',
     company: 'Huuman',
-    image: '/p1.webp',
+    image: '/huuman.webp',
   },
   {
     quote:
