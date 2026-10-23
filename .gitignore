@@ -1,2 +1,7 @@
 /node_modules
 .env
+
+# Private reference material (never publish)
+public/animation_reference_videos/
+dist/animation_reference_videos/
+brand/
