@@ -23,6 +23,9 @@ const MEASURED = PROJECTS.flatMap((p) =>
 // Still in development: named under the chart with a link to its report.
 const IN_PROGRESS = PROJECTS.filter((p) => p.lighthouse?.chart === false);
 const TOP = MEASURED[0];
+// Saved filename for a report download, e.g. "BoldFrame-Recurra-Lighthouse.pdf".
+const reportName = (title: string) =>
+  `BoldFrame-${title.replace(/[’']/g, '').replace(/[^A-Za-z0-9]+/g, '-')}-Lighthouse.pdf`;
 const FASTEST = [...MEASURED].sort((a, b) => a.lcp - b.lcp)[0];
 const GOOD_COUNT = MEASURED.filter((p) => p.performance >= GOOD).length;
 const ALL_BP = MEASURED.every((p) => p.bestPractices === 100);
@@ -98,7 +101,7 @@ export function ResultsSection() {
           </h2>
           <p className="bfx-lede">
             Every live project is tested with Google Lighthouse on a mid-range phone over a slow
-            4G connection. These are the scores, and the full reports are linked below.
+            4G connection. These are the scores, and every full report is below to download.
           </p>
         </div>
 
@@ -124,7 +127,7 @@ export function ResultsSection() {
               <p key={p.title} className="bfx-res-pending">
                 {p.title} is still in development, so it isn&rsquo;t charted yet.{' '}
                 {p.lighthouse?.report && (
-                  <a href={p.lighthouse.report} target="_blank" rel="noopener">Latest report <span aria-hidden="true">↗</span></a>
+                  <a href={p.lighthouse.report} download={reportName(p.title)}>Download latest report <span aria-hidden="true">↓</span></a>
                 )}
               </p>
             ))}
@@ -157,8 +160,8 @@ export function ResultsSection() {
                   <td className="bfx-res-num">{p.cls}</td>
                   <td className="bfx-res-report">
                     {p.report && (
-                      <a href={p.report} target="_blank" rel="noopener" aria-label={`${p.title} Lighthouse report (PDF)`}>
-                        PDF <span aria-hidden="true">↗</span>
+                      <a href={p.report} download={reportName(p.title)} aria-label={`Download ${p.title} Lighthouse report (PDF)`}>
+                        PDF <span aria-hidden="true">↓</span>
                       </a>
                     )}
                   </td>

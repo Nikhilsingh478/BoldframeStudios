@@ -611,7 +611,8 @@ html.bfx-loading body {
   right: 0;
   margin: 0;
   font-family: var(--bfx-display);
-  font-size: 13.24vw;
+  /* --tz cancels Android WebView text zoom (set in index.html). */
+  font-size: calc(13.24vw * var(--tz, 1));
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0;
@@ -1067,10 +1068,10 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
     white-space: nowrap;
   }
 
-  .bfx-line--one { font-size: 20.4vw; }
+  .bfx-line--one { font-size: calc(20.4vw * var(--tz, 1)); }
   /* A clear gap between the lines: touching, the T of STUDIOS joined the
      F above it and read as an E. */
-  .bfx-line--two { font-size: 29.8vw; margin-top: 2.6vw; }
+  .bfx-line--two { font-size: calc(29.8vw * var(--tz, 1)); margin-top: 2.6vw; }
 
   .bfx-hero-ui {
     left: 5vw;
@@ -2387,7 +2388,7 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
 .bfx-foot-mark {
   margin-top: clamp(3rem, 6vw, 5rem);
   font-family: var(--bfx-display);
-  font-size: 12.5vw;
+  font-size: calc(12.5vw * var(--tz, 1));
   line-height: 0.82;
   text-align: center;
   white-space: nowrap;

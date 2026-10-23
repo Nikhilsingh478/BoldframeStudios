@@ -61,6 +61,21 @@
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
         if (mode !== 'none') document.documentElement.classList.add('bfx-loading');
       })();
+      // Android in-app browsers (Instagram, Facebook...) apply the phone's
+      // font-size setting as text zoom: every font size is scaled, vw
+      // lengths are not, so the vw-sized hero word stops fitting its box.
+      // Measure the zoom (a 100px line renders at 100 x zoom) and expose
+      // its inverse as --tz for display type that must fit the layout.
+      (function () {
+        var root = document.documentElement;
+        var probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;top:0;left:0;visibility:hidden;pointer-events:none;font-size:100px;line-height:1;margin:0;padding:0;border:0';
+        probe.textContent = 'X';
+        root.appendChild(probe);
+        var zoom = probe.getBoundingClientRect().height / 100;
+        root.removeChild(probe);
+        if (zoom > 0.3 && Math.abs(zoom - 1) > 0.01) root.style.setProperty('--tz', String(1 / zoom));
+      })();
     </script>
 
     <!-- Favicon -->
@@ -94,12 +109,12 @@
     <link rel="preload" as="image" href="./hero/desktop_nikhil.webp" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="./hero/mobile_background.webp" media="(max-width: 767px)" />
     <link rel="preload" as="image" href="./hero/mobile_nikhil_portrait_vertical_4x5.webp" media="(max-width: 767px)" />
-    <script type="module" crossorigin src="./assets/index-Bpd2Vsux.js"></script>
+    <script type="module" crossorigin src="./assets/index-CeolLKNB.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/react-D3F3s8fL.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-DHr4LJbf.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-SrFrL72d.css">
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
