@@ -107,15 +107,28 @@ function MobileIndex() {
                   <p className="bfx-mindex-stats">
                     {projectMetrics(p).map((m) => <span key={m.short}>{m.short} {m.value}</span>)}
                   </p>
-                  <a
-                    className="bfx-link"
-                    href={p.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    tabIndex={i === active ? 0 : -1}
-                  >
-                    Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>
-                  </a>
+                  <div className="bfx-proj-links">
+                    <a
+                      className="bfx-link"
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      tabIndex={i === active ? 0 : -1}
+                    >
+                      Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    {p.lighthouse?.report && (
+                      <a
+                        className="bfx-link"
+                        href={p.lighthouse.report}
+                        target="_blank"
+                        rel="noopener"
+                        tabIndex={i === active ? 0 : -1}
+                      >
+                        Lighthouse report <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -236,9 +249,16 @@ export function WorkSection() {
                       <div key={m.label}><dt>{m.label}</dt><dd>{m.value}</dd></div>
                     ))}
                   </dl>
-                  <a className="bfx-link" href={p.url} target="_blank" rel="noopener noreferrer">
-                    Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>
-                  </a>
+                  <div className="bfx-proj-links">
+                    <a className="bfx-link" href={p.url} target="_blank" rel="noopener noreferrer">
+                      Visit live site <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    {p.lighthouse?.report && (
+                      <a className="bfx-link" href={p.lighthouse.report} target="_blank" rel="noopener">
+                        Lighthouse report <span className="bfx-link-arrow" aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 <a className="bfx-proj-shot" href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${p.title} in a new tab`}>

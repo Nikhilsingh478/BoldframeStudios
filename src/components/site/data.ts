@@ -51,6 +51,10 @@ export interface Lighthouse {
   chart?: boolean;
 }
 
+/** Saved filename for a report download, e.g. "BoldFrame-Recurra-Lighthouse.pdf". */
+export const reportFileName = (title: string) =>
+  `BoldFrame-${title.replace(/[’']/g, '').replace(/[^A-Za-z0-9]+/g, '-')}-Lighthouse.pdf`;
+
 export interface Metric {
   label: string; // long form, e.g. "Largest paint"
   short: string; // compact form, e.g. "LCP"

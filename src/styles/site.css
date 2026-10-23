@@ -1205,6 +1205,12 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
   transform-origin: left;
 }
 
+.bfx-proj-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+
 .bfx-link-arrow {
   color: var(--bfx-blue);
   transition: transform 0.45s var(--bfx-ease);
@@ -2009,30 +2015,60 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
   margin-top: 0.35rem;
 }
 
-.bfx-res-pending a {
+.bfx-res-chart-head .bfx-res-pending a {
+  font-weight: 500;
   color: var(--bfx-blue);
   text-underline-offset: 3px;
   white-space: nowrap;
 }
 
 .bfx-res-report {
-  width: 4.5rem;
+  width: 9.5rem;
   text-align: right;
 }
 
+.bfx-res-report-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .bfx-res-report a {
-  font-family: var(--bfx-mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--bfx-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--bfx-line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bfx-ink);
   text-decoration: none;
   white-space: nowrap;
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 }
 
 .bfx-res-report a:hover,
 .bfx-res-report a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border-color: var(--bfx-blue);
+  background: var(--bfx-blue);
+  color: #fff;
+}
+
+.bfx-res-report a.bfx-res-dl {
+  width: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+.bfx-res-dl svg {
+  width: 15px;
+  height: 15px;
+}
+
+.bfx-res-report-long {
+  display: none;
 }
 
 /* ─── Testimonials (navy band) ───────────────────────────────────── */
@@ -3738,11 +3774,22 @@ body:has(.bfx-modal) .bfx-header {
     text-align: left;
   }
 
+  .bfx-res-report-links {
+    gap: 8px;
+  }
+
   .bfx-res-report a {
-    display: inline-block;
-    margin: -8px 0;
-    padding: 8px 12px 8px 0;
-    font-size: 11px;
+    min-height: 36px;
+    font-size: 13px;
+  }
+
+  .bfx-res-report a.bfx-res-dl {
+    width: auto;
+    padding: 0 14px;
+  }
+
+  .bfx-res-report-long {
+    display: inline;
   }
 }
 
