@@ -16,10 +16,12 @@ gsap.registerPlugin(ScrollTrigger);
 const SCALE_MAX = 100;
 const GOOD = 90;
 
-// Projects with a Lighthouse report that belong in the chart; best first.
+// Finished projects with a Lighthouse report; best first.
 const MEASURED = PROJECTS.flatMap((p) =>
   p.lighthouse && p.lighthouse.chart !== false ? [{ title: p.title, ...p.lighthouse }] : [],
 ).sort((a, b) => b.performance - a.performance || a.lcp - b.lcp);
+// Still in development: named under the chart with a link to its report.
+const IN_PROGRESS = PROJECTS.filter((p) => p.lighthouse?.chart === false);
 const TOP = MEASURED[0];
 const FASTEST = [...MEASURED].sort((a, b) => a.lcp - b.lcp)[0];
 const GOOD_COUNT = MEASURED.filter((p) => p.performance >= GOOD).length;
@@ -29,7 +31,7 @@ const ALL = `all ${COUNT_WORDS[MEASURED.length] ?? MEASURED.length}`;
 
 const STATS = [
   { value: TOP.performance, decimals: 0, suffix: '', label: 'Top Performance score', note: TOP.title },
-  { value: GOOD_COUNT, decimals: 0, suffix: `/${MEASURED.length}`, label: 'Projects scoring 90+', note: 'Lighthouse Performance, mobile' },
+  { value: GOOD_COUNT, decimals: 0, suffix: `/${MEASURED.length}`, label: 'Projects scoring 90+', note: 'Finished projects, mobile' },
   ...(ALL_BP ? [{ value: 100, decimals: 0, suffix: '', label: 'Best practices', note: `On ${ALL} reports` }] : []),
   { value: FASTEST.lcp, decimals: 1, suffix: 's', label: 'Fastest Largest Contentful Paint', note: FASTEST.title },
 ];
@@ -116,8 +118,16 @@ export function ResultsSection() {
 
         <div className={`bfx-res-chart${inView ? ' is-in' : ''}`}>
           <div className="bfx-res-chart-head">
-            <h3>Lighthouse Performance, per project</h3>
+            <h3>Lighthouse Performance, finished projects</h3>
             <p>Mobile run, emulated Moto G Power on slow 4G. Scored out of 100; the dashed line marks 90, where Lighthouse rates a page &ldquo;good&rdquo;.</p>
+            {IN_PROGRESS.map((p) => (
+              <p key={p.title} className="bfx-res-pending">
+                {p.title} is still in development, so it isn&rsquo;t charted yet.{' '}
+                {p.lighthouse?.report && (
+                  <a href={p.lighthouse.report} target="_blank" rel="noopener">Latest report <span aria-hidden="true">↗</span></a>
+                )}
+              </p>
+            ))}
           </div>
           {/* Phones: threshold label above the bars */}
           <div className="bfx-res-goodlabel" aria-hidden="true">

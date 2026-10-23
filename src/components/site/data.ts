@@ -47,7 +47,7 @@ export interface Lighthouse {
   report?: string;
   /** The three figures shown on the project card. */
   show: ScoreKey[];
-  /** Include in the Results chart (default true). */
+  /** Include in the Results chart (default true); off while a build is still in development. */
   chart?: boolean;
 }
 
@@ -90,7 +90,8 @@ export const PROJECTS: Project[] = [
     tech: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Firebase'],
     timeline: 'Ongoing',
     lighthouse: {
-      performance: 70, accessibility: 93, bestPractices: 100, seo: 100, lcp: 4.8, cls: '0',
+      performance: 77, accessibility: 93, bestPractices: 100, seo: 100, lcp: 4.3, cls: '0',
+      report: '/reports/report_tb.pdf',
       show: ['seo', 'bestPractices', 'cls'],
       chart: false,
     },
@@ -209,6 +210,13 @@ export const SERVICES = [
 export const TESTIMONIALS = [
   {
     quote:
+      'As the person managing Thunderbold, I’m happy with how the website has come together. The shopping experience feels clean and easy to navigate, and managing products, orders, and inventory has become much more convenient. We’re still working on improvements, but I’m excited to see the platform grow and get better over time.',
+    role: 'Manages the platform',
+    company: 'Thunderbold',
+    image: '/thunderbold.webp',
+  },
+  {
+    quote:
       'The Huuman redesign brought our concept to life with smooth GSAP motion, responsive behavior, and stunning visuals. Exactly how we imagined our brand should feel.',
     role: 'Founder',
     company: 'Huuman',
@@ -220,5 +228,12 @@ export const TESTIMONIALS = [
     role: 'Student, early-access user',
     company: 'Recurra',
     image: '/recurra.webp',
+  },
+  {
+    quote:
+      'I really liked how simple and clear everything is. Parents can quickly find information about classes, teaching approach, and contact details without any confusion.',
+    role: 'Coaching institute',
+    company: 'Silky’s Coaching Classes',
+    image: '/silkys.webp',
   },
 ];

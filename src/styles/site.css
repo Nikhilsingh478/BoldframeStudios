@@ -2004,6 +2004,16 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
   white-space: nowrap;
 }
 
+.bfx-res-chart-head .bfx-res-pending {
+  margin-top: 0.35rem;
+}
+
+.bfx-res-pending a {
+  color: var(--bfx-blue);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
 .bfx-res-report {
   width: 4.5rem;
   text-align: right;
