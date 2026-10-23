@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content" />
 
     <title>BoldFrame Studios</title>
     <meta
@@ -57,6 +57,8 @@
           }
         } catch (e) { mode = 'short'; }
         document.documentElement.setAttribute('data-intro', mode);
+        // No pinch-zoom on iOS (Safari ignores user-scalable=no).
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
         if (mode !== 'none') document.documentElement.classList.add('bfx-loading');
       })();
     </script>

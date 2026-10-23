@@ -50,6 +50,11 @@ body {
 
 html {
   background: var(--bfx-bg);
+  /* No double-tap zoom; keep text at the size we set even where a
+     browser or in-app webview would auto-scale it. */
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -1063,7 +1068,9 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
   }
 
   .bfx-line--one { font-size: 20.4vw; }
-  .bfx-line--two { font-size: 29.8vw; }
+  /* A clear gap between the lines: touching, the T of STUDIOS joined the
+     F above it and read as an E. */
+  .bfx-line--two { font-size: 29.8vw; margin-top: 2.6vw; }
 
   .bfx-hero-ui {
     left: 5vw;

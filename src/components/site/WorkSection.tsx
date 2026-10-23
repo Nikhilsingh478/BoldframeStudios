@@ -75,7 +75,7 @@ function MobileIndex() {
               alt=""
               loading="lazy"
               className={i <= active ? 'is-in' : undefined}
-              style={{ zIndex: i }}
+              style={{ zIndex: i, objectPosition: p.focus }}
             />
           ))}
           <span className="bfx-mindex-shade" />
@@ -250,7 +250,7 @@ export function WorkSection() {
 
                 <a className="bfx-proj-shot" href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${p.title} in a new tab`}>
                   <span className="bfx-proj-bar" aria-hidden="true"><i /><i /><i /><span>{host(p.url)}</span></span>
-                  <span className="bfx-proj-img"><img src={p.image} alt={`${p.title} website`} loading="lazy" /></span>
+                  <span className="bfx-proj-img"><img src={p.image} alt={`${p.title} website`} loading="lazy" style={p.focus ? { objectPosition: p.focus } : undefined} /></span>
                 </a>
                 <span className="bfx-proj-shade" aria-hidden="true" />
               </div>

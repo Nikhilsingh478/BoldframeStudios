@@ -24,8 +24,14 @@ export interface Project {
   /** Core Web Vitals, for the projects measured that way. */
   vitals?: Vitals;
   /** Lighthouse category scores, for projects measured with a Lighthouse run. */
-  lighthouse?: { seo: number; bestPractices: number; accessibility: number; cls: string };
+  /** Lighthouse scores (mobile run), and which three to show on the card. */
+  lighthouse?: {
+    scores: { seo: number; bestPractices: number; accessibility: number; cls: string };
+    show: ('seo' | 'bestPractices' | 'accessibility' | 'cls')[];
+  };
   image: string;
+  /** Which part of the screenshot to keep when a frame crops it (CSS object-position). */
+  focus?: string;
   url: string;
 }
 
@@ -46,12 +52,14 @@ export function projectMetrics(p: Project): Metric[] {
     ];
   }
   if (p.lighthouse) {
-    const { seo, bestPractices, cls } = p.lighthouse;
-    return [
-      { label: 'SEO score', short: 'SEO', value: String(seo) },
-      { label: 'Best practices', short: 'BP', value: String(bestPractices) },
-      { label: 'Layout shift', short: 'CLS', value: cls },
-    ];
+    const { scores, show } = p.lighthouse;
+    const LH = {
+      seo: { label: 'SEO score', short: 'SEO', value: String(scores.seo) },
+      bestPractices: { label: 'Best practices', short: 'BP', value: String(scores.bestPractices) },
+      accessibility: { label: 'Accessibility', short: 'A11Y', value: String(scores.accessibility) },
+      cls: { label: 'Layout shift', short: 'CLS', value: scores.cls },
+    };
+    return show.map((k) => LH[k]);
   }
   return [];
 }
@@ -64,9 +72,27 @@ export const PROJECTS: Project[] = [
       'An ongoing fashion commerce platform built beyond the storefront: product discovery, cart and checkout, customer accounts, inventory and a custom admin panel for orders, returns and reporting.',
     tech: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Firebase'],
     timeline: 'Ongoing',
-    lighthouse: { seo: 100, bestPractices: 100, accessibility: 93, cls: '0' },
+    lighthouse: {
+      scores: { seo: 100, bestPractices: 100, accessibility: 93, cls: '0' },
+      show: ['seo', 'bestPractices', 'cls'],
+    },
     image: '/thunderbold.webp',
+    focus: '4% top',
     url: 'https://www.thunderbold.shop/',
+  },
+  {
+    title: 'Recurra',
+    category: 'AI exam-prep web app',
+    description:
+      'An exam-pattern analysis tool for university students: upload a syllabus and previous question papers, and Recurra ranks the questions and topics most likely to appear, unit by unit.',
+    tech: ['React', 'Vite', 'Tailwind CSS'],
+    timeline: 'Early access',
+    lighthouse: {
+      scores: { seo: 100, bestPractices: 96, accessibility: 96, cls: '0' },
+      show: ['seo', 'accessibility', 'cls'],
+    },
+    image: '/recurra.webp',
+    url: 'https://recurraio.vercel.app/',
   },
   {
     title: 'Huuman',
@@ -89,17 +115,6 @@ export const PROJECTS: Project[] = [
     vitals: { lcp: 2.33, cls: '0', inp: 40 },
     image: '/p2.webp',
     url: 'https://spas-one.vercel.app/',
-  },
-  {
-    title: 'Organic Green Tea Store',
-    category: 'E-commerce frontend',
-    description:
-      'A sales-driven storefront for an organic tea brand, plus an admin dashboard with detailed tracking and graphs. Frontend complete for both.',
-    tech: ['React', 'TypeScript', 'shadcn/ui', 'Tailwind CSS'],
-    timeline: 'Frontend complete',
-    vitals: { lcp: 0.42, cls: '0', inp: 8 },
-    image: '/p4.webp',
-    url: 'https://organic-india-clone-garden.vercel.app/',
   },
   {
     title: 'Halloween',
@@ -156,7 +171,7 @@ export const SERVICES = [
     description:
       'Before launch we review security and optimise performance: fast loads, stable layouts and the technical groundwork search engines reward.',
     deliverables: ['Security review', 'Core Web Vitals & 90+ Lighthouse', 'SEO-ready structure'],
-    image: '/p4.webp',
+    image: '/recurra.webp',
   },
 ];
 
@@ -174,12 +189,5 @@ export const TESTIMONIALS = [
     role: 'Owner',
     company: 'Roseberry Massage Spa',
     image: '/p2.webp',
-  },
-  {
-    quote:
-      'The organic store frontend feels both fresh and premium. From product pages to admin dashboards, everything runs fast and looks professional.',
-    role: 'Operations Manager',
-    company: 'Organic Green Tea Store',
-    image: '/p4.webp',
   },
 ];
