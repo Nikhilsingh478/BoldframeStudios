@@ -248,7 +248,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
         <aside className="cm-aside">
           <div>
-            <LogoMark size={34} frame="#FFFFFF" letter="#FFFFFF" />
+            <LogoMark size={38} fill="#FFFFFF" />
           </div>
           <p className="cm-kicker">Start a project</p>
           <h2 id="cm-title" >

@@ -84,13 +84,13 @@ export default function App() {
         <meta property="og:title" content="BoldFrame Studios" />
         <meta property="og:description" content="BoldFrame Studios: research, design and development for secure, fast websites and web apps." />
         <meta property="og:url" content="https://boldframestudios.in/" />
-        <meta property="og:image" content="/preview.png" />
+        <meta property="og:image" content="https://boldframestudios.in/preview.png" />
         <meta property="og:site_name" content="BoldFrame Studios" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="BoldFrame Studios" />
         <meta name="twitter:description" content="BoldFrame Studios: research, design and development for secure, fast websites and web apps." />
-        <meta name="twitter:image" content="/preview.png" />
+        <meta name="twitter:image" content="https://boldframestudios.in/preview.png" />
         {/* Viewport & Fallbacks */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
