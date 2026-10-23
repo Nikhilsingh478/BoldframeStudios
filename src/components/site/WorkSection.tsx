@@ -27,14 +27,20 @@ const INDEX_MQ = '(max-width: 899px)';
 function MobileIndex() {
   const listRef = useRef<HTMLOListElement>(null);
   const [active, setActive] = useState(0);
+  // While a tap-triggered scroll runs, scrolling must not change the
+  // selection (rows pass through the detection band on the way).
+  const tapLock = useRef(0);
 
-  // Active row = the one crossing a band just below the sticky preview.
+  // Active row = the one crossing a band just below the sticky preview
+  // (56–60% down the screen).
   useEffect(() => {
     const list = listRef.current;
     if (!list) return;
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
+        if (e.isIntersecting && performance.now() > tapLock.current) {
+          setActive(Number((e.target as HTMLElement).dataset.index));
+        }
       }),
       { rootMargin: '-56% 0px -40% 0px' },
     );
@@ -42,8 +48,18 @@ function MobileIndex() {
     return () => observer.disconnect();
   }, []);
 
+  // Tap: select that project now, then scroll its top to just above the
+  // band, so the band sits inside the tapped row (centring it put the band
+  // on the row below, which then became active).
   const focusRow = (i: number) => {
-    listRef.current?.querySelectorAll('li')[i]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const row = listRef.current?.querySelectorAll('li')[i];
+    if (!row) return;
+    tapLock.current = performance.now() + 1200;
+    setActive(i);
+    requestAnimationFrame(() => {
+      const top = row.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.48;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
   };
 
   const current = PROJECTS[active];

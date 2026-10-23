@@ -9,6 +9,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
+import { SectionLabel } from '../site/SectionLabel';
 
 const CHECKPOINTS = [
   { id: '01', title: 'UNDERSTAND', copy: 'Map your problem end to end and the outcome you need.' },
@@ -64,14 +65,11 @@ export function Journey() {
   return (
     <section id="journey" className="bf-section bf-jr" aria-labelledby="bf-jr-title">
       <div className="bf-container">
-        <div className="bf-jr-meta" aria-hidden="true">
-          <span>BFS / PROCESS</span>
-          <span className="bf-jr-meta-range">01—05</span>
-        </div>
+        <SectionLabel index="04">Process</SectionLabel>
 
-        <h2 id="bf-jr-title" className="bf-jr-title">
-          <span className="bf-jr-title-from">FROM ROUGH IDEA</span>
-          <span className="bf-jr-title-to">TO SHARP EXPERIENCE.</span>
+        <h2 id="bf-jr-title" className="bfx-h2 bf-jr-heading">
+          <span className="bf-jr-heading-line">From a rough idea</span>
+          <span className="bf-jr-heading-line bfx-muted">to a working product.</span>
         </h2>
 
         <div ref={trackRef} className={`bf-jr-track${drawn ? ' is-drawn' : ''}`}>
@@ -124,11 +122,10 @@ export function Journey() {
           animate={closingInView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.9, ease: EASE }}
         >
-          <span className="bf-jr-result-label">THE RESULT?</span>
+          <span className="bf-jr-result-label">The result</span>
           <p className="bf-jr-result-text">
-            <span className="bf-jr-result-lead">A PRODUCT THAT</span>
-            <span>DOESN&rsquo;T FEEL</span>
-            <span>INTERCHANGEABLE.</span>
+            Software that solves{' '}
+            <span className="bfx-blue">the problem it was built for.</span>
           </p>
         </motion.div>
       </div>

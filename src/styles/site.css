@@ -2667,33 +2667,23 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
 .bf-jr-result-label {
   display: block;
   margin-bottom: 1rem;
-  font-family: var(--bf-font-body);
-  font-size: var(--bf-text-micro);
+  font-family: var(--bfx-mono);
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--bf-accent);
 }
 
 .bf-jr-result-text {
   margin: 0;
-  font-family: var(--bf-font-display);
-  font-size: var(--bf-text-3xl);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.98;
+  font-family: var(--bfx-head);
+  font-size: clamp(2rem, 4.2vw, 3.75rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+  text-wrap: balance;
   color: var(--bf-text-primary);
-}
-
-.bf-jr-result-text span {
-  display: block;
-}
-
-.bf-jr-result-lead {
-  margin-bottom: 0.15em;
-  font-size: 0.55em;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--bf-text-secondary);
 }
 
 /* ─── Narrow screens: vertical line ─── */
@@ -4196,4 +4186,54 @@ body:has(.bfx-modal) .bfx-header {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Process heading: same type as the other section headings. */
+.bf-jr-heading-line {
+  display: block;
+}
+
+/* ─── Results stats, phones: one compact panel, 2 × 2 with hairlines ─── */
+@media (max-width: 639px) {
+  .bfx-res-stats {
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--bfx-line);
+    border-radius: 20px;
+    background: var(--bfx-surface);
+    box-shadow: 0 18px 40px -30px rgba(10, 50, 140, 0.45);
+  }
+
+  .bfx-res-stat {
+    padding: 18px 16px 16px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .bfx-res-stat:nth-child(odd) { border-right: 1px solid var(--bfx-line); }
+  .bfx-res-stat:nth-child(n + 3) { border-top: 1px solid var(--bfx-line); }
+
+  .bfx-res-value {
+    font-size: 34px;
+    letter-spacing: -0.045em;
+  }
+
+  .bfx-res-label {
+    margin-top: 10px;
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .bfx-res-note {
+    margin-top: 4px;
+    font-size: 10px;
+    line-height: 1.4;
+  }
+}
+
+/* Clients: wider, 16:9 project image. */
+.bfx-testi-media {
+  aspect-ratio: 16 / 9;
 }
