@@ -4244,3 +4244,32 @@ body:has(.bfx-modal) .bfx-header {
 .bfx-testi-media {
   aspect-ratio: 16 / 9;
 }
+
+/* ─── Desktop: show screenshots at (close to) their real 16:9 shape ── */
+@media (min-width: 900px) {
+  /* What we do: wider, shorter preview */
+  .bfx-svc-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
+
+  .bfx-svc-frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Selected work: the screenshot column sets the card's height */
+  .bfx-proj-inner {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    min-height: 0;
+    align-items: center;
+  }
+
+  .bfx-proj-img {
+    flex: none;
+    aspect-ratio: 16 / 9;
+  }
+
+  .bfx-proj-img img {
+    inset: 0;
+    height: 100%;
+  }
+}

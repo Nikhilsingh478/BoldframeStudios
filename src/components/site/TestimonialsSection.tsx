@@ -23,7 +23,7 @@ export function TestimonialsSection() {
   const go = useCallback((dir: number) => setIndex((i) => (i + dir + count) % count), [count]);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || count < 2) return;
     const timer = window.setTimeout(() => go(1), INTERVAL);
     return () => window.clearTimeout(timer);
   }, [index, paused, go]);
@@ -80,14 +80,16 @@ export function TestimonialsSection() {
               <span className="bfx-reveal"><span className="bfx-reveal-inner">In their words.</span></span>
             </h2>
           </div>
-          <div className="bfx-testi-nav">
-            <button type="button" onClick={() => go(-1)} aria-label="Previous testimonial">
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-            <button type="button" onClick={() => go(1)} aria-label="Next testimonial">
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-          </div>
+          {count > 1 && (
+            <div className="bfx-testi-nav">
+              <button type="button" onClick={() => go(-1)} aria-label="Previous testimonial">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+              <button type="button" onClick={() => go(1)} aria-label="Next testimonial">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="bfx-testi-body">
@@ -114,19 +116,21 @@ export function TestimonialsSection() {
           </figure>
         </div>
 
-        <div className="bfx-testi-progress" aria-hidden="true">
-          {TESTIMONIALS.map((item, i) => (
-            <button
-              key={item.company}
-              type="button"
-              tabIndex={-1}
-              className={i === index ? 'is-active' : i < index ? 'is-done' : undefined}
-              onClick={() => setIndex(i)}
-            >
-              <span style={i === index ? { animationDuration: `${INTERVAL}ms`, animationPlayState: paused ? 'paused' : 'running' } : undefined} />
-            </button>
-          ))}
-        </div>
+        {count > 1 && (
+          <div className="bfx-testi-progress" aria-hidden="true">
+            {TESTIMONIALS.map((item, i) => (
+              <button
+                key={item.company}
+                type="button"
+                tabIndex={-1}
+                className={i === index ? 'is-active' : i < index ? 'is-done' : undefined}
+                onClick={() => setIndex(i)}
+              >
+                <span style={i === index ? { animationDuration: `${INTERVAL}ms`, animationPlayState: paused ? 'paused' : 'running' } : undefined} />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

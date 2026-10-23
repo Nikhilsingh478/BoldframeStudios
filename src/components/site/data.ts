@@ -41,16 +41,8 @@ export interface Metric {
   value: string;
 }
 
-/** The three figures shown for a project, whichever way it was measured. */
+/** The three figures shown on a project card: Lighthouse scores if measured that way, else vitals. */
 export function projectMetrics(p: Project): Metric[] {
-  if (p.vitals) {
-    const { lcp, cls, inp } = p.vitals;
-    return [
-      { label: 'Largest paint', short: 'LCP', value: `${lcp.toFixed(2)}s` },
-      { label: 'Layout shift', short: 'CLS', value: cls },
-      { label: 'Interaction', short: 'INP', value: inp > 0 ? `${inp}ms` : '—' },
-    ];
-  }
   if (p.lighthouse) {
     const { scores, show } = p.lighthouse;
     const LH = {
@@ -61,6 +53,14 @@ export function projectMetrics(p: Project): Metric[] {
       cls: { label: 'Layout shift', short: 'CLS', value: scores.cls },
     };
     return show.map((k) => LH[k]);
+  }
+  if (p.vitals) {
+    const { lcp, cls, inp } = p.vitals;
+    return [
+      { label: 'Largest paint', short: 'LCP', value: `${lcp.toFixed(2)}s` },
+      { label: 'Layout shift', short: 'CLS', value: cls },
+      { label: 'Interaction', short: 'INP', value: inp > 0 ? `${inp}ms` : '—' },
+    ];
   }
   return [];
 }
@@ -92,6 +92,8 @@ export const PROJECTS: Project[] = [
       scores: { performance: 96, seo: 100, bestPractices: 100, accessibility: 100, cls: '0' },
       show: ['performance', 'accessibility', 'seo'],
     },
+    // From the same mobile Lighthouse run (lab test: no INP measured).
+    vitals: { lcp: 2.3, cls: '0', inp: 0 },
     image: '/recurra.webp',
     url: 'https://recurraio.vercel.app/',
   },
@@ -107,15 +109,18 @@ export const PROJECTS: Project[] = [
     url: 'https://huuman-responsive-updated.vercel.app/',
   },
   {
-    title: 'Roseberry Massage Spa',
-    category: 'Booking-focused landing page',
+    title: 'Silky’s Coaching Classes',
+    category: 'Coaching institute website',
     description:
-      'A landing page for a London spa built around bookings: contact form, WhatsApp call-to-action, service pages and session booking flows.',
-    tech: ['GSAP', 'Tailwind CSS', 'JavaScript'],
-    timeline: '1 month',
-    vitals: { lcp: 2.33, cls: '0', inp: 40 },
-    image: '/p2.webp',
-    url: 'https://spas-one.vercel.app/',
+      'A website for a coaching institute in Bhusawal with 30+ years of teaching: tuition from Jr KG to 10th, built around local search and getting parents to call or WhatsApp in one tap.',
+    tech: ['React', 'Vite'],
+    timeline: 'Live',
+    lighthouse: {
+      scores: { performance: 91, seo: 100, bestPractices: 100, accessibility: 100, cls: '0.004' },
+      show: ['performance', 'accessibility', 'seo'],
+    },
+    image: '/silkys.webp',
+    url: 'https://silkyscoachingclasses.vercel.app/',
   },
   {
     title: 'Halloween',
@@ -156,7 +161,7 @@ export const SERVICES = [
     description:
       'We study your brand (colour palette, typography, tone) and what you want people to feel and do, then design an interface that belongs to it, not to a template.',
     deliverables: ['Brand study: palette & typography', 'Desktop & mobile UI', 'Interaction & motion design'],
-    image: '/p2.webp',
+    image: '/silkys.webp',
   },
   {
     title: 'Product Development',
@@ -183,12 +188,5 @@ export const TESTIMONIALS = [
     role: 'Founder',
     company: 'Huuman',
     image: '/p1.webp',
-  },
-  {
-    quote:
-      'Our spa website turned out elegant, fast, and inviting. The booking experience feels natural and beautifully animated — clients often compliment the site.',
-    role: 'Owner',
-    company: 'Roseberry Massage Spa',
-    image: '/p2.webp',
   },
 ];

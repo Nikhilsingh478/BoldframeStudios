@@ -167,14 +167,7 @@ export function WorkSection() {
             scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 18%', scrub: true },
           });
         });
-        // Screenshot drifts inside its frame while the card is in view.
-        q<HTMLElement>('.bfx-proj-shot img').forEach((img) => {
-          gsap.fromTo(img, { yPercent: -4 }, {
-            yPercent: 4,
-            ease: 'none',
-            scrollTrigger: { trigger: img.closest('.bfx-proj'), start: 'top bottom', end: 'bottom top', scrub: true },
-          });
-        });
+        // (No drift on the screenshot: it's shown whole, at its own shape.)
       });
 
       mm.add(INDEX_MQ, () => {
