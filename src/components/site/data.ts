@@ -26,8 +26,8 @@ export interface Project {
   /** Lighthouse category scores, for projects measured with a Lighthouse run. */
   /** Lighthouse scores (mobile run), and which three to show on the card. */
   lighthouse?: {
-    scores: { seo: number; bestPractices: number; accessibility: number; cls: string };
-    show: ('seo' | 'bestPractices' | 'accessibility' | 'cls')[];
+    scores: { performance?: number; seo: number; bestPractices: number; accessibility: number; cls: string };
+    show: ('performance' | 'seo' | 'bestPractices' | 'accessibility' | 'cls')[];
   };
   image: string;
   /** Which part of the screenshot to keep when a frame crops it (CSS object-position). */
@@ -54,6 +54,7 @@ export function projectMetrics(p: Project): Metric[] {
   if (p.lighthouse) {
     const { scores, show } = p.lighthouse;
     const LH = {
+      performance: { label: 'Performance', short: 'PERF', value: String(scores.performance ?? '—') },
       seo: { label: 'SEO score', short: 'SEO', value: String(scores.seo) },
       bestPractices: { label: 'Best practices', short: 'BP', value: String(scores.bestPractices) },
       accessibility: { label: 'Accessibility', short: 'A11Y', value: String(scores.accessibility) },
@@ -84,12 +85,12 @@ export const PROJECTS: Project[] = [
     title: 'Recurra',
     category: 'AI exam-prep web app',
     description:
-      'An exam-pattern analysis tool for university students: upload a syllabus and previous question papers, and Recurra ranks the questions and topics most likely to appear, unit by unit.',
-    tech: ['React', 'Vite', 'Tailwind CSS'],
+      'Paste a syllabus and previous papers, and Recurra finds the questions that keep repeating, drops anything off-syllabus and ranks what to study unit by unit, with a skip plan and a PDF report.',
+    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Gemini 2.5'],
     timeline: 'Early access',
     lighthouse: {
-      scores: { seo: 100, bestPractices: 96, accessibility: 96, cls: '0' },
-      show: ['seo', 'accessibility', 'cls'],
+      scores: { performance: 96, seo: 100, bestPractices: 100, accessibility: 100, cls: '0' },
+      show: ['performance', 'accessibility', 'seo'],
     },
     image: '/recurra.webp',
     url: 'https://recurraio.vercel.app/',
