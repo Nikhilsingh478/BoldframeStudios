@@ -4253,7 +4253,8 @@ body:has(.bfx-modal) .bfx-header {
   }
 
   .bfx-svc-frame {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 9; /* until the screenshot loads; then its own ratio */
+    transition: aspect-ratio 0.5s var(--bfx-ease);
   }
 
   /* Selected work: the screenshot column sets the card's height */
@@ -4263,13 +4264,15 @@ body:has(.bfx-modal) .bfx-header {
     align-items: center;
   }
 
+  /* The screenshot sets its own height: no fixed frame, so no cropping. */
   .bfx-proj-img {
     flex: none;
-    aspect-ratio: 16 / 9;
   }
 
   .bfx-proj-img img {
-    inset: 0;
-    height: 100%;
+    position: static;
+    display: block;
+    width: 100%;
+    height: auto;
   }
 }

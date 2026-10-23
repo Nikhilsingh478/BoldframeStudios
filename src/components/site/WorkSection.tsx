@@ -243,7 +243,7 @@ export function WorkSection() {
 
                 <a className="bfx-proj-shot" href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${p.title} in a new tab`}>
                   <span className="bfx-proj-bar" aria-hidden="true"><i /><i /><i /><span>{host(p.url)}</span></span>
-                  <span className="bfx-proj-img"><img src={p.image} alt={`${p.title} website`} loading="lazy" style={p.focus ? { objectPosition: p.focus } : undefined} /></span>
+                  <span className="bfx-proj-img"><img src={p.image} alt={`${p.title} website`} width={1920} height={1080} loading="lazy" style={p.focus ? { objectPosition: p.focus } : undefined} /></span>
                 </a>
                 <span className="bfx-proj-shade" aria-hidden="true" />
               </div>

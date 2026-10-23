@@ -15,6 +15,9 @@ gsap.registerPlugin(ScrollTrigger);
 export function ServicesSection() {
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  // Each screenshot's real width/height ratio, so the preview frame takes
+  // the shape of the one showing and never crops it.
+  const [ratios, setRatios] = useState<Record<number, number>>({});
 
   // Active row = the one crossing the vertical middle of the viewport.
   useEffect(() => {
@@ -96,9 +99,19 @@ export function ServicesSection() {
           </ol>
 
           <aside className="bfx-svc-preview" aria-hidden="true">
-            <div className="bfx-svc-frame">
+            <div className="bfx-svc-frame" style={ratios[active] ? { aspectRatio: String(ratios[active]) } : undefined}>
               {SERVICES.map((s, i) => (
-                <img key={s.title} src={s.image} alt="" className={i === active ? 'is-active' : undefined} loading="lazy" />
+                <img
+                  key={s.title}
+                  src={s.image}
+                  alt=""
+                  className={i === active ? 'is-active' : undefined}
+                  loading="lazy"
+                  onLoad={(e) => {
+                    const { naturalWidth: w, naturalHeight: h } = e.currentTarget;
+                    if (w && h) setRatios((r) => ({ ...r, [i]: w / h }));
+                  }}
+                />
               ))}
               <span className="bfx-svc-badge">0{active + 1} / 0{SERVICES.length}</span>
             </div>
