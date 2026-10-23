@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 80 80">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2E7BFF"/>
-      <stop offset="100%" stop-color="#0846D2"/>
-    </linearGradient>
-  </defs>
-  <rect width="80" height="80" rx="16" fill="url(#bg)"/>
-  <rect x="13" y="13" width="54" height="54" stroke="#FFFFFF" stroke-width="3" fill="none"/>
-  <path d="M30 25 L30 55 M30 25 L45 25 C50 25 50 32 45 32 L30 32 M30 32 L47 32 C52 32 52 40 52 43 C52 48 48 55 42 55 L30 55"
-        stroke="#FFFFFF" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 80 80"><defs><linearGradient id="a" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#2e7bff"/><stop offset="100%" stop-color="#0846d2"/></linearGradient></defs><rect width="80" height="80" fill="url(#a)" rx="16"/><path fill="none" stroke="#fff" stroke-width="3" d="M13 13h54v54H13z"/><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.5" d="M30 25v30m0-30h15c5 0 5 7 0 7H30m0 0h17c5 0 5 8 5 11 0 5-4 12-10 12H30"/></svg>

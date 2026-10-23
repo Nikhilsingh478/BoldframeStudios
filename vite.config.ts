@@ -14,8 +14,10 @@ export default defineConfig({
       webp: { quality: 80 },
       avif: { quality: 50 },
       svg: { multipass: true },
-      // Strip metadata to reduce bytes
-      cache: true,
+      // No cache: the plugin keys its cache by file name only and writes it
+      // to the project root, so a replaced image kept its stale optimised
+      // copy (and littered the root with hero/, *.webp, favicon copies).
+      cache: false,
     }),
   ],
   resolve: {
