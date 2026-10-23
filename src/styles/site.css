@@ -1514,8 +1514,16 @@ html.bfx-intro-go[data-intro='short'] .bfx-word-fill .bfx-ch-inner {
 .bfx-svc-more p {
   max-width: 34rem;
   margin: 1rem 0 0;
-  line-height: 1.65;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
   color: var(--bfx-ink-2);
+}
+
+/* Tighter leading for the Results and Contact intros (other ledes keep 1.65). */
+.bfx-results .bfx-lede,
+.bfx-contact-copy .bfx-lede {
+  line-height: 1.5;
+  letter-spacing: -0.005em;
 }
 
 .bfx-svc-more ul {

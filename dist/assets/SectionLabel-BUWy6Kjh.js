@@ -1,0 +1,1 @@
+import{j as a}from"./index-DrCOw_zH.js";function r({index:e,children:s,dark:l=!1}){return a.jsxs("p",{className:`bfx-label${l?" bfx-label--dark":""}`,children:[a.jsx("span",{className:"bfx-label-index",children:e}),a.jsx("span",{className:"bfx-label-rule","aria-hidden":"true"}),a.jsx("span",{children:s})]})}export{r as S};
